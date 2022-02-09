@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "969582871143",
+    "project_id": "lasershifterv2",
+    "storage_bucket": "lasershifterv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969582871143:android:1bfae348d252e1dc924ac2",
+        "android_client_info": {
+          "package_name": "com.JackyWu.LaserShifterV2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969582871143-mbip5s7adc6klg78s7717sf8kaus4vse.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQeHoeMjQ4dGDwV1z7GuB-FqjSHTpraV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969582871143-mbip5s7adc6klg78s7717sf8kaus4vse.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969582871143-hvg0il5ugc0q0ji1hs8ki4m1mkafenie.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.JackyWu.LaserShifterV2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
