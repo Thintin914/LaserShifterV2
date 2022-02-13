@@ -14,6 +14,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
     public static CommonUI Instance;
     public static FirebaseFirestore db;
+    public ObjectDescription mapObjectData;
 
     private Button closeButton;
     public PopupNotice popupNotice;
@@ -82,6 +83,15 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             isConnectedToMaster = true;
         else
             canChangeRoom = true;
+    }
+
+    public void LeaveRoom()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            canChangeRoom = false;
+            PhotonNetwork.LeaveRoom();
+        }
     }
 
     public override void OnJoinedRoom()

@@ -7,12 +7,16 @@ using System;
 public class GameUI : MonoBehaviour
 {
     public TMP_InputField commentBar;
+    public SelectionBox selectionBox;
+
     private void Awake()
     {
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
         commentBar = transform.GetChild(0).GetComponent<TMP_InputField>();
+        selectionBox = transform.GetChild(1).GetComponent<SelectionBox>();
+
         commentBar.onEndEdit.RemoveAllListeners();
         commentBar.onEndEdit.AddListener(async (value) =>
         {
@@ -28,12 +32,15 @@ public class GameUI : MonoBehaviour
 
                     if (command[0] == "room" && command.Length > 1)
                     {
+                        UISwitcher.Instance.SetUI("Game");
                         await CommonUI.Instance.GoToRoom(command[1]);
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
                     }
                     else if (command[0] == "editor")
                     {
+                        UISwitcher.Instance.SetUI("Editor");
+                        CommonUI.Instance.LeaveRoom();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nMap Editor", 2);
                     }
@@ -48,11 +55,24 @@ public class GameUI : MonoBehaviour
 
     public void SwitchUI(string uiName)
     {
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+        commentBar.gameObject.SetActive(true);
+        selectionBox.RemoveGrid();
+
         if (uiName == "Game")
         {
             gameObject.SetActive(true);
         }
-        else
+        else if (uiName == "Editor")
+        {
+            gameObject.SetActive(true);
+            selectionBox.gameObject.SetActive(true);
+            selectionBox.CreateGrid();
+        }
+        else 
         {
             gameObject.SetActive(false);
         }
