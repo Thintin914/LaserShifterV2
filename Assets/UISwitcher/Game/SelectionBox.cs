@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
 using System.Threading;
+using TMPro;
 
 public class SelectionBox : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class SelectionBox : MonoBehaviour
     private int ignoreMask;
 
     public List<ObjectDetails> objectDetails;
+    private TextMeshProUGUI descriptionText;
+
     public class CurrentHoldingObject
     {
         public GameObject mapObject { get; set; }
@@ -25,6 +28,11 @@ public class SelectionBox : MonoBehaviour
     {
         "SmallMap", "MediumMap", "LargeMap"
     };
+
+    private void Awake()
+    {
+        //descriptionText = 
+    }
 
     public void CreateGrid()
     {
@@ -147,7 +155,7 @@ public class SelectionBox : MonoBehaviour
                 {
                     currentHoldingObject.mapObject.transform.position = hit.point + Vector3.up * currentHoldingObject.height;
                 }
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonDown(0))
                 {
                     currentHoldingObject.mapObject.layer = LayerMask.NameToLayer("Built");
                     currentHoldingObject.mapObject.GetComponent<ObjectDetails>().rotationIndex = currentHoldingObject.rotationIndex;
@@ -185,7 +193,7 @@ public class SelectionBox : MonoBehaviour
             notDraggingObjectCancelSource = new CancellationTokenSource();
             while (true)
             {
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonDown(0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit hit, 1000))
