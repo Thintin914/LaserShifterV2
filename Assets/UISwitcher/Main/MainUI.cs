@@ -7,14 +7,16 @@ public class MainUI : MonoBehaviour
 {
     private Button registerButton;
     private Button loginButton;
+    private Button backButton;
 
     private void Awake()
     {
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
-        registerButton = transform.GetChild(0).GetComponent<Button>();
-        loginButton = transform.GetChild(1).GetComponent<Button>();
+        registerButton = transform.GetChild(1).GetComponent<Button>();
+        loginButton = transform.GetChild(2).GetComponent<Button>();
+        backButton = transform.GetChild(3).GetComponent<Button>();
     }
 
     public void SwitchUI(string uiName)
@@ -32,6 +34,12 @@ public class MainUI : MonoBehaviour
             loginButton.onClick.AddListener(() =>
             {
                 UISwitcher.Instance.SetUI("Login");
+            });
+
+            backButton.onClick.RemoveAllListeners();
+            backButton.onClick.AddListener(() =>
+            {
+                UISwitcher.Instance.SetUI("SplashScreen");
             });
         }
         else
