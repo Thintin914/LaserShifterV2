@@ -126,17 +126,20 @@ public class SelectionBox : MonoBehaviour
     CancellationTokenSource dragHoldingObjectCancelSource = null;
     public async void DragCurrentHoldingObject()
     {
+        if (currentHoldingObject.mapObject == null) return;
+
         if (dragHoldingObjectCancelSource != null)
         {
             dragHoldingObjectCancelSource.Cancel();
             dragHoldingObjectCancelSource.Dispose();
             dragHoldingObjectCancelSource = null;
         }
-        dragHoldingObjectCancelSource = new CancellationTokenSource();
+        await Task.Yield();
 
-        currentHoldingObject.height = currentHoldingObject.mapObject.GetComponent<Renderer>().bounds.size.y;
         try
         {
+            dragHoldingObjectCancelSource = new CancellationTokenSource();
+            currentHoldingObject.height = currentHoldingObject.mapObject.GetComponent<Renderer>().bounds.size.y;
             while (true)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -144,21 +147,18 @@ public class SelectionBox : MonoBehaviour
                 {
                     currentHoldingObject.mapObject.transform.position = hit.point + Vector3.up * currentHoldingObject.height;
                 }
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonUp(0))
                 {
                     currentHoldingObject.mapObject.layer = LayerMask.NameToLayer("Built");
                     currentHoldingObject.mapObject.GetComponent<ObjectDetails>().rotationIndex = currentHoldingObject.rotationIndex;
                     currentHoldingObject.mapObject = null;
 
-                    if (dragHoldingObjectCancelSource != null)
-                    {
-                        dragHoldingObjectCancelSource.Cancel();
-                        dragHoldingObjectCancelSource.Dispose();
-                        dragHoldingObjectCancelSource = null;
-                    }
+                    dragHoldingObjectCancelSource.Cancel();
+                    dragHoldingObjectCancelSource.Dispose();
+                    dragHoldingObjectCancelSource = null;
 
-                    await Task.Yield();
                     NotDraggingObject();
+                    return;
                 }
                 await Task.Yield();
             }
@@ -178,12 +178,14 @@ public class SelectionBox : MonoBehaviour
             notDraggingObjectCancelSource.Dispose();
             notDraggingObjectCancelSource = null;
         }
-        notDraggingObjectCancelSource = new CancellationTokenSource();
+        await Task.Yield();
+
         try
         {
+            notDraggingObjectCancelSource = new CancellationTokenSource();
             while (true)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonUp(0))
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     if (Physics.Raycast(ray, out RaycastHit hit, 1000))
@@ -194,14 +196,12 @@ public class SelectionBox : MonoBehaviour
                             currentHoldingObject.rotationIndex = hit.transform.GetComponent<ObjectDetails>().rotationIndex;
                             currentHoldingObject.mapObject.layer = LayerMask.NameToLayer("Building");
 
-                            if (notDraggingObjectCancelSource != null)
-                            {
-                                notDraggingObjectCancelSource.Cancel();
-                                notDraggingObjectCancelSource.Dispose();
-                                notDraggingObjectCancelSource = null;
-                            }
+                            notDraggingObjectCancelSource.Cancel();
+                            notDraggingObjectCancelSource.Dispose();
+                            notDraggingObjectCancelSource = null;
 
                             DragCurrentHoldingObject();
+                            return;
                         }
                     }
                 }
