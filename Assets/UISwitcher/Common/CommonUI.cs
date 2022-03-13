@@ -14,7 +14,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
     public static CommonUI Instance;
     public static FirebaseFirestore db;
-    public ObjectDescription mapObjectData;
 
     private Button closeButton;
     public PopupNotice popupNotice;
@@ -48,23 +47,13 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         if (isConnectedToMaster == false)
         {
             PhotonNetwork.ConnectUsingSettings();
-            Task waitConnectTask = new Task(() =>
-            {
-                while (isConnectedToMaster == false) { };
-            });
-            waitConnectTask.Start();
-            await Task.WhenAll(waitConnectTask);
+            while (isConnectedToMaster == false) { await Task.Delay(50); };
         }
         if (PhotonNetwork.InRoom)
         {
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
-            Task waitLeaveTask = new Task(() =>
-            {
-                while (canChangeRoom == false) { };
-            });
-            waitLeaveTask.Start();
-            await Task.WhenAll(waitLeaveTask);
+            while (canChangeRoom == false) { await Task.Delay(50); };
         }
 
         RoomOptions roomOptions = new RoomOptions()
@@ -89,6 +78,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     {
         if (PhotonNetwork.InRoom)
         {
+            Debug.Log("Leave Room.");
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
         }

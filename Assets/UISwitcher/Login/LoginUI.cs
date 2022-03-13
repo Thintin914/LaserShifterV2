@@ -64,9 +64,8 @@ public class LoginUI : MonoBehaviour
                 CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                 CommonUI.Instance.popupNotice.Show($"Welcome,\nGuest#{Random.Range(1000, 9999)}", 2);
                 CommonUI.Instance.username = usernameField.text;
-                await CommonUI.Instance.GoToRoom("1");
 
-                UISwitcher.Instance.SetUI("Game");
+                UISwitcher.Instance.SetUI("Studio");
             });
 
             comfirmButton.onClick.RemoveAllListeners();
@@ -97,9 +96,8 @@ public class LoginUI : MonoBehaviour
                                 CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                                 CommonUI.Instance.popupNotice.Show($"Welcome,\n{usernameField.text}", 2);
                                 CommonUI.Instance.username = usernameField.text;
-                                await CommonUI.Instance.GoToRoom("1");
 
-                                UISwitcher.Instance.SetUI("Game");
+                                UISwitcher.Instance.SetUI("Studio");
                                 comfirmButton.gameObject.SetActive(true);
                                 return;
                             }

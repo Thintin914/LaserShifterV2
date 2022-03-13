@@ -7,15 +7,12 @@ using System;
 public class GameUI : MonoBehaviour
 {
     public TMP_InputField commentBar;
-    public SelectionBox selectionBox;
-
     private void Awake()
     {
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
         commentBar = transform.GetChild(0).GetComponent<TMP_InputField>();
-        selectionBox = transform.GetChild(1).GetComponent<SelectionBox>();
 
         commentBar.onEndEdit.RemoveAllListeners();
         commentBar.onEndEdit.AddListener(async (value) =>
@@ -39,10 +36,16 @@ public class GameUI : MonoBehaviour
                     }
                     else if (command[0] == "editor")
                     {
-                        UISwitcher.Instance.SetUI("Editor");
                         CommonUI.Instance.LeaveRoom();
+                        UISwitcher.Instance.SetUI("Editor");
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nMap Editor", 2);
+                    }
+                    else if (command[0] == "studio")
+                    {
+                        CommonUI.Instance.LeaveRoom();
+                        UISwitcher.Instance.SetUI("Studio");
+                        CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
                     }
 
                     commentBar.gameObject.SetActive(true);
@@ -59,8 +62,6 @@ public class GameUI : MonoBehaviour
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
-        commentBar.gameObject.SetActive(true);
-        selectionBox.RemoveGrid();
 
         if (uiName == "Game")
         {
@@ -69,8 +70,16 @@ public class GameUI : MonoBehaviour
         else if (uiName == "Editor")
         {
             gameObject.SetActive(true);
-            selectionBox.gameObject.SetActive(true);
-            selectionBox.CreateGrid();
+            commentBar.gameObject.SetActive(true);
+            EditorUI.Instance.SetUp();
+            EditorUI.Instance.gameObject.SetActive(true);
+        }
+        else if (uiName == "Studio")
+        {
+            gameObject.SetActive(true);
+            commentBar.gameObject.SetActive(true);
+            StudioUI.Instance.GoToStudio();
+            StudioUI.Instance.gameObject.SetActive(true);
         }
         else 
         {
