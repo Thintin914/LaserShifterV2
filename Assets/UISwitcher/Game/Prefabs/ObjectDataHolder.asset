@@ -14,8 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   details:
   - objectName: Ground
-    spacing: 5
+    spacing: 1
     model: {fileID: 2985761991689670217, guid: 707a0b7f6414e944386a14f8f1005f10, type: 3}
+    logic: 
   - objectName: Setting Cube
     spacing: 1
     model: {fileID: 1668999668113326815, guid: 1275649cd2588b64a9f853b7530651fe, type: 3}
+    logic: "function start()\n\tprint ('Testing')\nend"
+  - objectName: Laser Sender
+    spacing: 1
+    model: {fileID: 1668999668113326815, guid: 1275649cd2588b64a9f853b7530651fe, type: 3}
+    logic: 

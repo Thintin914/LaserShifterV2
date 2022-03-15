@@ -7,8 +7,11 @@ using System;
 public class GameUI : MonoBehaviour
 {
     public TMP_InputField commentBar;
+    public static GameUI Instance;
     private void Awake()
     {
+        Instance = this;
+
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
@@ -38,6 +41,7 @@ public class GameUI : MonoBehaviour
                     {
                         CommonUI.Instance.LeaveRoom();
                         UISwitcher.Instance.SetUI("Editor");
+                        EditorUI.Instance.SetUp();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nMap Editor", 2);
                     }
@@ -45,6 +49,7 @@ public class GameUI : MonoBehaviour
                     {
                         CommonUI.Instance.LeaveRoom();
                         UISwitcher.Instance.SetUI("Studio");
+                        StudioUI.Instance.GoToStudio();
                         CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
                     }
 
@@ -58,7 +63,7 @@ public class GameUI : MonoBehaviour
 
     public void SwitchUI(string uiName)
     {
-        for(int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }
@@ -67,23 +72,15 @@ public class GameUI : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        else if (uiName == "Editor")
-        {
-            gameObject.SetActive(true);
-            commentBar.gameObject.SetActive(true);
-            EditorUI.Instance.SetUp();
-            EditorUI.Instance.gameObject.SetActive(true);
-        }
-        else if (uiName == "Studio")
-        {
-            gameObject.SetActive(true);
-            commentBar.gameObject.SetActive(true);
-            StudioUI.Instance.GoToStudio();
-            StudioUI.Instance.gameObject.SetActive(true);
-        }
         else 
         {
             gameObject.SetActive(false);
         }
+    }
+
+    public void ShowCommentBar()
+    {
+        gameObject.SetActive(true);
+        commentBar.gameObject.SetActive(true);
     }
 }

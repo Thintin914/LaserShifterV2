@@ -66,6 +66,7 @@ public class LoginUI : MonoBehaviour
                 CommonUI.Instance.username = usernameField.text;
 
                 UISwitcher.Instance.SetUI("Studio");
+                StudioUI.Instance.GoToStudio();
             });
 
             comfirmButton.onClick.RemoveAllListeners();
@@ -98,6 +99,7 @@ public class LoginUI : MonoBehaviour
                                 CommonUI.Instance.username = usernameField.text;
 
                                 UISwitcher.Instance.SetUI("Studio");
+                                StudioUI.Instance.GoToStudio();
                                 comfirmButton.gameObject.SetActive(true);
                                 return;
                             }

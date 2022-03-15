@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MapObject: MonoBehaviour
 {
+    public string objectTag;
     public string objectName;
     public float x, y, z;
 }

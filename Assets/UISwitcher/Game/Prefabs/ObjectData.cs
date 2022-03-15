@@ -13,6 +13,8 @@ public class ObjectData : ScriptableObject
         public string objectName;
         public float spacing;
         public GameObject model;
+        [TextArea(10, 60)]
+        public string logic;
     }
 
     public int GetSpawnIndex(string name)
