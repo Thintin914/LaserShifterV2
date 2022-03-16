@@ -49,29 +49,65 @@ public class EditorUI : MonoBehaviour
         selectObjectButton.onClick.RemoveAllListeners();
         selectObjectButton.onClick.AddListener(() =>
         {
-            if (!isSelectBoxOpened)
+            if (!isObjectEditorOpened)
             {
-                isSelectBoxOpened = true;
-                if (mapObjectSelectionBoxs.Count > 0) mapObjectSelectionBoxs.Clear();
-                foreach (SelectObjectDescription s in selectObjectDescriptions)
+                if (!isSelectBoxOpened)
                 {
-                    MapObjectSelectionBox box = Instantiate(selectObjectBoxPrefab).GetComponent<MapObjectSelectionBox>();
-                    box.description.text = $"<size='12'>{s.title}</size>\n<size='8'>{s.description}</size>";
-                    box.referenceKey = s.referenceKey.Equals("") ? s.title : s.referenceKey;
-                    mapObjectSelectionBoxs.Add(box);
-                    box.transform.SetParent(LeftVerticalLayout);
-                    box.transform.localScale = Vector3.one;
+                    isSelectBoxOpened = true;
+                    if (mapObjectSelectionBoxs.Count > 0) mapObjectSelectionBoxs.Clear();
+                    foreach (SelectObjectDescription s in selectObjectDescriptions)
+                    {
+                        MapObjectSelectionBox box = Instantiate(selectObjectBoxPrefab).GetComponent<MapObjectSelectionBox>();
+                        box.description.text = $"<size='12'>{s.title}</size>\n<size='8'>{s.description}</size>";
+                        box.referenceKey = s.referenceKey.Equals("") ? s.title : s.referenceKey;
+                        mapObjectSelectionBoxs.Add(box);
+                        box.transform.SetParent(LeftVerticalLayout);
+                        box.transform.localScale = Vector3.one;
+                    }
+                }
+                else
+                {
+                    isSelectBoxOpened = false;
+                    selectBoxOffset = 0;
+                    foreach (MapObjectSelectionBox s in mapObjectSelectionBoxs)
+                    {
+                        Destroy(s.gameObject);
+                    }
+                    mapObjectSelectionBoxs.Clear();
                 }
             }
             else
             {
-                isSelectBoxOpened = false;
-                selectBoxOffset = 0;
-                foreach(MapObjectSelectionBox s in mapObjectSelectionBoxs)
+                isObjectEditorOpened = false;
+                string logic = null;
+                foreach(ObjectParameter o in objectParameterBoxs)
                 {
-                    Destroy(s.gameObject);
+                    if (o.title.Equals("Tag"))
+                    {
+                        currentMapObject.mapObject.objectTag = o.content.text;
+                        continue;
+                    }
+                    if (o.title.Equals("Logic"))
+                    {
+                        logic = o.content.text;
+                        continue;
+                    }
                 }
-                mapObjectSelectionBoxs.Clear();
+                int index = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
+                if (logic.Equals(objectData.details[index].logic))
+                {
+                    currentMapObject.mapObject.logic = "default";
+                }
+                else
+                {
+                    currentMapObject.mapObject.logic = logic;
+                }
+
+                foreach (ObjectParameter o in objectParameterBoxs)
+                {
+                    Destroy(o.content.transform.parent.gameObject);
+                }
+                objectParameterBoxs.Clear();
             }
         });
 
@@ -217,7 +253,6 @@ public class EditorUI : MonoBehaviour
     private float selectBoxOffset = 0;
     private void Update()
     {
-        ControlCamera();
         if (isSelectBoxOpened)
         {
             selectBoxOffset += Input.mouseScrollDelta.y * 20;
@@ -226,6 +261,7 @@ public class EditorUI : MonoBehaviour
         }
 
         if (isObjectEditorOpened) return;
+        ControlCamera();
         if (!isSelecting)
         {
             if (Input.GetMouseButtonDown(0))
@@ -251,9 +287,10 @@ public class EditorUI : MonoBehaviour
                 {
                     if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
                     {
-                        isSelecting = true;
+                        selectBoxOffset = 0;
+                        LeftVerticalLayout.transform.position = selectBoxOrginalPosition;
+
                         isObjectEditorOpened = true;
-                        selectObjectButton.gameObject.SetActive(false);
                         if (isSelectBoxOpened)
                         {
                             isSelectBoxOpened = false;
@@ -288,7 +325,8 @@ public class EditorUI : MonoBehaviour
                             tempObj.transform.SetParent(LeftVerticalLayout);
                             tempObj.transform.localScale = Vector3.one;
                             tempObj.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = s.title;
-                            tempTxt.text = s.description;
+                            if (s.title.Equals("Logic"))
+                                tempTxt.text = currentMapObject.mapObject.logic.Equals("default") ? s.description : currentMapObject.mapObject.logic;
                             objectParameterBoxs.Add(new ObjectParameter() { title = s.title, content = tempTxt });
                         }
                     }

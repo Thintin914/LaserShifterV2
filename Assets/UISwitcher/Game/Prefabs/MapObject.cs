@@ -7,4 +7,5 @@ public class MapObject: MonoBehaviour
     public string objectTag;
     public string objectName;
     public float x, y, z;
+    public string logic = "default";
 }
