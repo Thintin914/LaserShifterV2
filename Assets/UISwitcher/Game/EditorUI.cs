@@ -426,6 +426,16 @@ public class EditorUI : MonoBehaviour
                                         }
                                         objectParameterBoxs.Clear();
                                     });
+
+                                    tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+                                    {
+                                        isObjectEditorOpened = false;
+                                        foreach (ObjectParameter o in objectParameterBoxs)
+                                        {
+                                            Destroy(o.content.transform.parent.gameObject);
+                                        }
+                                        objectParameterBoxs.Clear();
+                                    });
                                 }
                             }
                             objectParameterBoxs.Add(new ObjectParameter() { title = s.title, content = tempTxt });
