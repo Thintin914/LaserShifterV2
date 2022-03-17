@@ -336,7 +336,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8877571515436184209}
         m_TargetAssemblyTypeName: MapObjectSelectionBox, Assembly-CSharp
-        m_MethodName: OnClick
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -359,5 +359,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   description: {fileID: 7611081085521522544}
-  button: {fileID: 0}
+  button: {fileID: 7611081085781968853}
   referenceKey: 

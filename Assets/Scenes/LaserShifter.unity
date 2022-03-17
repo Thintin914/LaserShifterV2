@@ -928,7 +928,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -1868,6 +1868,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdec9209d14549142b726e631000e119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectBoxPrefab: {fileID: 7611081085781968859, guid: 4438fccf787b7ca419b9d8ee1844fc92, type: 3}
+  selectBoxs: []
 --- !u!1 &467736594
 GameObject:
   m_ObjectHideFlags: 0
@@ -9906,8 +9908,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0

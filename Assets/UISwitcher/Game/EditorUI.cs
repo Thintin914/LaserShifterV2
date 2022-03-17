@@ -72,6 +72,14 @@ public class EditorUI : MonoBehaviour
                         MapObjectSelectionBox box = Instantiate(selectObjectBoxPrefab).GetComponent<MapObjectSelectionBox>();
                         box.description.text = $"<size='12'>{s.title}</size>\n<size='8'>{s.description}</size>";
                         box.referenceKey = s.referenceKey.Equals("") ? s.title : s.referenceKey;
+                        box.button.onClick.RemoveAllListeners();
+                        box.button.onClick.AddListener(() =>
+                        {
+                            int index = objectData.GetSpawnIndex(box.referenceKey);
+                            Vector3 pos = GetGroundSpawnPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                            SpawnMapObject(pos, index, true);
+                            LeftVerticalLayout.gameObject.SetActive(false);
+                        });
                         mapObjectSelectionBoxs.Add(box);
                         box.transform.SetParent(LeftVerticalLayout);
                         box.transform.localScale = Vector3.one;
@@ -114,7 +122,6 @@ public class EditorUI : MonoBehaviour
         objectMask = 1 << LayerMask.NameToLayer("Base");
         currentMapObject = new CurrentMapObject();
     }
-
 
     public void SwitchUI(string uiName)
     {
@@ -304,6 +311,11 @@ public class EditorUI : MonoBehaviour
         return temp;
     }
 
+    //public ConstructLevel(string json)
+    //{
+    //    string[]
+    //}
+
     public class CurrentMapObject
     {
         public MeshRenderer renderer { get; set; }
@@ -407,15 +419,6 @@ public class EditorUI : MonoBehaviour
                                     {
                                         mapObjects.Remove(currentMapObject.mapObject);
                                         Destroy(currentMapObject.mapObject.gameObject);
-                                        isObjectEditorOpened = false;
-                                        foreach (ObjectParameter o in objectParameterBoxs)
-                                        {
-                                            Destroy(o.content.transform.parent.gameObject);
-                                        }
-                                        objectParameterBoxs.Clear();
-                                    });
-                                    tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
-                                    {
                                         isObjectEditorOpened = false;
                                         foreach (ObjectParameter o in objectParameterBoxs)
                                         {
