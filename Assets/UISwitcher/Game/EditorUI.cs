@@ -56,6 +56,7 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Goal", description = "Pass the level when is triggered.", referenceKey = "Laser Receiver" });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Laser Sender", description = "Fire a laser in a direction." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Mirror", description = "Reflect the laser in its facing direction." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Small Plane", description = "A small plane" });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();

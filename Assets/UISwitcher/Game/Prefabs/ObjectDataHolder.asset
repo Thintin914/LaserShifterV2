@@ -23,7 +23,8 @@ MonoBehaviour:
     model: {fileID: 3154528644967333449, guid: 8f1de80a6c3c50347a4f66f005207024, type: 3}
     hiddenLogic: "function callback()\n\tif CS.UISwitcher.Instance.currentUIName
       == \"Testing\" then\n\t\tCS.UISwitcher.Instance:SetUI(\"Editor\")\n\tend\nend"
-    logic: "function start()\n\tGame:StartTimer(60, callback)\nend"
+    logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
+      this.transform)\n\tGame:StartTimer(60, callback)\nend"
   - objectName: Laser Sender
     spacing: 1
     model: {fileID: 8048060174132114619, guid: e9963569b5d21064e8c42f0b849b7600, type: 3}
@@ -48,3 +49,9 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function onTrigger()\n\tthis.transform:Rotate(CS.UnityEngine.Vector3.up 
       * 15);\nend"
+  - objectName: Small Plane
+    spacing: 0.5
+    model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
+    hiddenLogic: 
+    logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
+      this.transform)\nend"

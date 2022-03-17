@@ -5,6 +5,7 @@ using TMPro;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using UnityEngine.Networking;
 
 public class GameUI : MonoBehaviour
 {
@@ -133,6 +134,49 @@ public class GameUI : MonoBehaviour
             Debug.Log("Timer Complete");
             timerDisplay.gameObject.SetActive(false);
             callback?.Invoke();
+        }
+    }
+
+    public static async Task<Texture2D> GetRemoteTexture(string url)
+    {
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
+        {
+            var asyncOp = www.SendWebRequest();
+
+            while (asyncOp.isDone == false)
+                await Task.Delay(1000 / 30);//30 hertz
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                return DownloadHandlerTexture.GetContent(www);
+            }
+            return null;
+        }
+    }
+
+    public async void SetTexture(string url, Transform trans)
+    {
+        Debug.Log(trans.name);
+        Texture2D tex = await GetRemoteTexture(url);
+
+        MeshRenderer rend = trans.GetComponent<MeshRenderer>();
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
+        rend.GetPropertyBlock(block);
+        block.SetTexture("_MainTex", tex);
+        rend.SetPropertyBlock(block);
+
+        if (trans.childCount < 0) return;
+
+        for (int i = 0; i < trans.childCount; i++)
+        {
+            if (trans.GetChild(i).GetComponent<MeshRenderer>())
+            {
+                MeshRenderer childRend = trans.GetChild(i).GetComponent<MeshRenderer>();
+                MaterialPropertyBlock childBlock = new MaterialPropertyBlock();
+                childRend.GetPropertyBlock(childBlock);
+                childBlock.SetTexture("_MainTex", tex);
+                childRend.SetPropertyBlock(childBlock);
+            }
         }
     }
 }
