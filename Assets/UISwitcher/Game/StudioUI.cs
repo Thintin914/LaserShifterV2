@@ -63,8 +63,8 @@ public class StudioUI : MonoBehaviour
                         temp.button.onClick.RemoveAllListeners();
                         temp.button.onClick.AddListener(() =>
                         {
-                            Debug.Log(castedLevel);
                             Remove();
+                            EditorUI.Instance.ConstructLevel(castedLevel);
                         });
                         temp.transform.SetParent(VerticalLayout);
                         temp.transform.localScale = Vector3.one;
