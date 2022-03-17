@@ -44,35 +44,53 @@ public class StudioUI : MonoBehaviour
                 {
                     isReeditOpeded = true;
 
+                    if (selectBoxs.Count == 0)
+                    {
+                        foreach (MapObjectSelectionBox b in selectBoxs)
+                        {
+                            Destroy(b.gameObject);
+                        }
+                        selectBoxs.Clear();
+
+                        List<object> levelNames = new List<object>();
+                        Dictionary<string, object> levelDict = levelSnapShot.ToDictionary();
+                        foreach (KeyValuePair<string, object> pair in levelDict)
+                        {
+                            levelNames = pair.Value as List<object>;
+                        }
+                        foreach (object o in levelNames)
+                        {
+                            string castedLevel = string.Format("{0}", o);
+                            string levelName = castedLevel.Split('\n', '\r')[0];
+                            MapObjectSelectionBox temp = Instantiate(selectBoxPrefab).GetComponent<MapObjectSelectionBox>();
+                            temp.description.text = $"<size='14'>{levelName}</size>";
+                            temp.button.onClick.RemoveAllListeners();
+                            temp.button.onClick.AddListener(() =>
+                            {
+                                Remove();
+                                UISwitcher.Instance.SetUI("Editor");
+                                EditorUI.Instance.SetUp(false);
+                                EditorUI.Instance.ConstructLevel(castedLevel);
+                            });
+                            temp.transform.SetParent(VerticalLayout);
+                            temp.transform.localScale = Vector3.one;
+                            selectBoxs.Add(temp);
+                        }
+                    }
+                    else
+                    {
+                        foreach (MapObjectSelectionBox b in selectBoxs)
+                        {
+                            b.gameObject.SetActive(true);
+                        }
+                    }
+                }
+                else
+                {
+                    isReeditOpeded = false;
                     foreach (MapObjectSelectionBox b in selectBoxs)
                     {
-                        Destroy(b.gameObject);
-                    }
-                    selectBoxs.Clear();
-
-                    List<object> levelNames = new List<object>();
-                    Dictionary<string, object> levelDict = levelSnapShot.ToDictionary();
-                    foreach(KeyValuePair<string, object> pair in levelDict)
-                    {
-                        levelNames = pair.Value as List<object>;
-                    }
-                    foreach(object o in levelNames)
-                    {
-                        string castedLevel = string.Format("{0}", o);
-                        string levelName = castedLevel.Split('\n', '\r')[0];
-                        MapObjectSelectionBox temp = Instantiate(selectBoxPrefab).GetComponent<MapObjectSelectionBox>();
-                        temp.description.text = $"<size='14'>{levelName}</size>";
-                        temp.button.onClick.RemoveAllListeners();
-                        temp.button.onClick.AddListener(() =>
-                        {
-                            Remove();
-                            UISwitcher.Instance.SetUI("Editor");
-                            EditorUI.Instance.SetUp(false);
-                            EditorUI.Instance.ConstructLevel(castedLevel);
-                        });
-                        temp.transform.SetParent(VerticalLayout);
-                        temp.transform.localScale = Vector3.one;
-                        selectBoxs.Add(temp);
+                        b.gameObject.SetActive(false);
                     }
                 }
             }
@@ -102,6 +120,7 @@ public class StudioUI : MonoBehaviour
         {
             Destroy(playerHolder);
             Destroy(studioModelHolder);
+            Remove();
             gameObject.SetActive(false);
         }
     }

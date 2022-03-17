@@ -19,6 +19,8 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public PopupNotice popupNotice;
     public string username;
     public string currentRoomName;
+    public Camera dynamicCamera, mainCamera;
+    public Transform lookAt;
 
     private void Awake()
     {
@@ -87,6 +89,24 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Join Room " + currentRoomName);
+    }
+
+
+    public void EnableDynamicCamera(bool isEnable, Transform target)
+    {
+        dynamicCamera.gameObject.SetActive(isEnable);
+        if (isEnable)
+        {
+            mainCamera.gameObject.SetActive(false);
+            lookAt.SetParent(target);
+            lookAt.position = Vector3.zero;
+        }
+        else
+        {
+            mainCamera.gameObject.SetActive(true);
+            mainCamera.transform.position = new Vector3(0, 100, -100);
+            lookAt.SetParent(null);
+        }
     }
 
     public class PopupNotice

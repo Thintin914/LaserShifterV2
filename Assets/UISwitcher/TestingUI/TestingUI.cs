@@ -161,6 +161,8 @@ public class TestingUI : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+            if (CommonUI.Instance.dynamicCamera.gameObject.activeSelf)
+                CommonUI.Instance.EnableDynamicCamera(false, null);
         }
     }
 
@@ -190,6 +192,7 @@ public class TestingUI : MonoBehaviour
             return;
         }
 
+        bool hasAssignedPlayer = false;
         foreach (MapObject m in EditorUI.Instance.mapObjects)
         {
             string logic = null;
@@ -209,6 +212,8 @@ public class TestingUI : MonoBehaviour
                 player.transform.position += Vector3.down * 0.5f;
                 testingPlayers.Add(temp);
                 m.gameObject.SetActive(false);
+                if (!hasAssignedPlayer)
+                    CommonUI.Instance.EnableDynamicCamera(true, temp.transform);
             }
         }
     }

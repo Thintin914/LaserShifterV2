@@ -51,7 +51,7 @@ MonoBehaviour:
       * 15);\nend"
   - objectName: Small Plane
     spacing: 0.5
-    model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
+    model: {fileID: 800621998114977334, guid: 94daae825d012734c835a63243f60f97, type: 3}
     hiddenLogic: 
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\nend"
