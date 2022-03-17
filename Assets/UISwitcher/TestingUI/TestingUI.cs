@@ -16,6 +16,7 @@ public class TestingUI : MonoBehaviour
     public string result = "Fail";
     private Transform levelBar;
     private TMP_InputField levelInputField;
+
     private Button levelComfireButton, levelCancelButton;
     private void Awake()
     {
@@ -107,28 +108,30 @@ public class TestingUI : MonoBehaviour
         resultButton.onClick.RemoveAllListeners();
         resultButton.onClick.AddListener(() =>
         {
-            levelBar.gameObject.SetActive(true);
+            if (string.IsNullOrEmpty(CommonUI.Instance.username))
+            {
+                UISwitcher.Instance.SetUI("Editor");
+                CommonUI.Instance.popupNotice.Show("Cannot add map in guest mode.", 1);
+                return;
+            }
+            if (result.Equals("Fail"))
+            {
+                UISwitcher.Instance.SetUI("Editor");
+                CommonUI.Instance.popupNotice.Show("Test Run Failed.", 1);
+            }
+            else
+            {
+                UISwitcher.Instance.SetUI("Editor");
+                CommonUI.Instance.popupNotice.Show("Test Run Success.", 1);
+            }
         });
 
-        //resultButton.onClick.AddListener(() =>
-        //{
-        //    if (string.IsNullOrEmpty(CommonUI.Instance.username))
-        //    {
-        //        UISwitcher.Instance.SetUI("Editor");
-        //        CommonUI.Instance.popupNotice.Show("Cannot add map in guest mode.", 1);
-        //        return;
-        //    }
-        //    if (result.Equals("Fail"))
-        //    {
-        //        UISwitcher.Instance.SetUI("Editor");
-        //        CommonUI.Instance.popupNotice.Show("Test Run Failed.", 1);
-        //    }
-        //    else
-        //    {
-        //        UISwitcher.Instance.SetUI("Editor");
-        //        CommonUI.Instance.popupNotice.Show("Test Run Success.", 1);
-        //    }
-        //});
+        tempButton = transform.GetChild(1).GetComponent<Button>();
+        tempButton.onClick.RemoveAllListeners();
+        tempButton.onClick.AddListener(() =>
+        {
+            levelBar.gameObject.SetActive(true);
+        });
     }
 
     public void SwitchUI(string uiName)
