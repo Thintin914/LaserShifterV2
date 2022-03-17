@@ -64,7 +64,18 @@ public class TestingUI : MonoBehaviour
                 {
                     allLevels = pair.Value as List<object>;
                 }
-                allLevels.Add(jsonMapObjects);
+
+                // replace level with same name
+                int count = 0;
+                foreach(string s in allLevels)
+                {
+                    if (s.Split('\n','\r')[0].Equals(levelInputField.text))
+                    {
+                        allLevels[count] = jsonMapObjects;
+                        break;
+                    }
+                    count++;
+                }
 
                 Dictionary<string, object> leveldict = new Dictionary<string, object>
                 {
@@ -181,7 +192,6 @@ public class TestingUI : MonoBehaviour
             string hiddenLogic = EditorUI.Instance.objectData.details[index].hiddenLogic;
             string shownLogic = EditorUI.Instance.objectData.details[index].logic;
             logic = m.logic.Equals("default") ? hiddenLogic + "\n" + shownLogic : hiddenLogic + "\n" + m.logic;
-            Debug.Log(logic);
             if (logic != "\n" && logic != "\nnon-editable")
                 m.GetComponent<EntityCustomAction>().onLoadLogic(logic);
 
