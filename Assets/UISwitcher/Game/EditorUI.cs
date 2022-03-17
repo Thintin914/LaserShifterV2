@@ -115,6 +115,7 @@ public class EditorUI : MonoBehaviour
         currentMapObject = new CurrentMapObject();
     }
 
+
     public void SwitchUI(string uiName)
     {
         if (uiName == "Editor")
@@ -406,6 +407,15 @@ public class EditorUI : MonoBehaviour
                                     {
                                         mapObjects.Remove(currentMapObject.mapObject);
                                         Destroy(currentMapObject.mapObject.gameObject);
+                                        isObjectEditorOpened = false;
+                                        foreach (ObjectParameter o in objectParameterBoxs)
+                                        {
+                                            Destroy(o.content.transform.parent.gameObject);
+                                        }
+                                        objectParameterBoxs.Clear();
+                                    });
+                                    tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+                                    {
                                         isObjectEditorOpened = false;
                                         foreach (ObjectParameter o in objectParameterBoxs)
                                         {
