@@ -424,6 +424,15 @@ public class EditorUI : MonoBehaviour
                                 if (currentMapObject.mapObject.objectName.Equals("Setting Cube"))
                                 {
                                     tempObj.transform.GetChild(2).gameObject.SetActive(false);
+                                    tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+                                    {
+                                        isObjectEditorOpened = false;
+                                        foreach (ObjectParameter o in objectParameterBoxs)
+                                        {
+                                            Destroy(o.content.transform.parent.gameObject);
+                                        }
+                                        objectParameterBoxs.Clear();
+                                    });
                                 }
                                 else
                                 {
