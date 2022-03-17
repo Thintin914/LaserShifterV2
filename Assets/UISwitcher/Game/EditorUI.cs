@@ -311,10 +311,22 @@ public class EditorUI : MonoBehaviour
         return temp;
     }
 
-    //public ConstructLevel(string json)
-    //{
-    //    string[]
-    //}
+    public void ConstructLevel(string json)
+    {
+        foreach(MapObject m in mapObjects)
+        {
+            Destroy(m.gameObject);
+        }
+        mapObjects.Clear();
+
+        string[] seperatedJson = json.Split('\n', '\r');
+        string levelName = seperatedJson[0];
+        for(int i = 1; i < seperatedJson.Length; i++)
+        {
+            MapObject mapObject = JsonUtility.FromJson<MapObject>(seperatedJson[i]);
+            mapObjects.Add(SpawnMapObject(new Vector3(mapObject.x, mapObject.y, mapObject.z), objectData.GetSpawnIndex(mapObject.objectName)));
+        }
+    }
 
     public class CurrentMapObject
     {
