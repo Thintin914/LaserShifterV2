@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
+using UnityEngine.EventSystems;
 
 public class EditorUI : MonoBehaviour
 {
@@ -15,9 +16,19 @@ public class EditorUI : MonoBehaviour
     public List<SelectObjectDescription> objectParameterDescriptions = new List<SelectObjectDescription>();
     public List<ObjectParameter> objectParameterBoxs = new List<ObjectParameter>();
     private CurrentMapObject currentMapObject;
-    private Button selectObjectButton;
+    private Button selectObjectButton, toTestingButton;
     public Transform LeftVerticalLayout;
     public GameObject selectObjectBoxPrefab, objectParameterBoxPrefab, largeObjectParameterBoxPrefab;
+
+    [HideInInspector]public Quaternion[] allRotations = new Quaternion[]
+    {
+        Quaternion.Euler(0,0,0), Quaternion.Euler(45,0,0), Quaternion.Euler(90,0,0), Quaternion.Euler(135,0,0), Quaternion.Euler(180,0,0),
+        Quaternion.Euler(225,0,0), Quaternion.Euler(270,0,0), Quaternion.Euler(315,0,0),
+        Quaternion.Euler(0,45,0), Quaternion.Euler(0,90,0), Quaternion.Euler(0,135,0), Quaternion.Euler(0,180,0),
+        Quaternion.Euler(0,225,0), Quaternion.Euler(0,270,0), Quaternion.Euler(0,315,0), Quaternion.Euler(0,360,0),
+        Quaternion.Euler(0,0,45), Quaternion.Euler(0,0,90), Quaternion.Euler(0,0,135), Quaternion.Euler(0,0,180),
+        Quaternion.Euler(0,0,225), Quaternion.Euler(0,0,270), Quaternion.Euler(0,0,315), Quaternion.Euler(0,0,360)
+    };
 
     [System.Serializable]
     public class SelectObjectDescription
@@ -42,8 +53,9 @@ public class EditorUI : MonoBehaviour
         selectBoxOrginalPosition = LeftVerticalLayout.position;
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Ground", description = "Floor of the level." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Spawn Point", description = "Player spawn position. Multiple spawn points will randomise the spawn position." });
-        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Goal", description = "Pass the level when is triggered." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Goal", description = "Pass the level when is triggered.", referenceKey = "Laser Receiver" });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Laser Sender", description = "Fire a laser in a direction." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Mirror", description = "Reflect the laser in its facing direction." });
 
         selectObjectButton = transform.GetChild(1).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
@@ -79,36 +91,20 @@ public class EditorUI : MonoBehaviour
             else
             {
                 isObjectEditorOpened = false;
-                string logic = null;
-                foreach(ObjectParameter o in objectParameterBoxs)
-                {
-                    if (o.title.Equals("Tag"))
-                    {
-                        currentMapObject.mapObject.objectTag = o.content.text;
-                        continue;
-                    }
-                    if (o.title.Equals("Logic"))
-                    {
-                        logic = o.content.text;
-                        continue;
-                    }
-                }
-                int index = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
-                if (logic.Equals(objectData.details[index].logic))
-                {
-                    currentMapObject.mapObject.logic = "default";
-                }
-                else
-                {
-                    currentMapObject.mapObject.logic = logic;
-                }
-
-                foreach (ObjectParameter o in objectParameterBoxs)
-                {
-                    Destroy(o.content.transform.parent.gameObject);
-                }
-                objectParameterBoxs.Clear();
+                SaveLogic();
             }
+        });
+
+        toTestingButton = transform.GetChild(3).GetComponent<Button>();
+        toTestingButton.onClick.RemoveAllListeners();
+        toTestingButton.onClick.AddListener(() =>
+        {
+            if (isObjectEditorOpened)
+            {
+                SaveLogic();
+            }
+            UISwitcher.Instance.SetUI("Testing");
+            TestingUI.Instance.SetUp();
         });
 
         Instance = this;
@@ -124,6 +120,21 @@ public class EditorUI : MonoBehaviour
         if (uiName == "Editor")
         {
             gameObject.SetActive(true);
+            GameUI.Instance.StopTimer();
+            if (mapObjects.Count > 0)
+            {
+                foreach(MapObject m in mapObjects)
+                {
+                    m.GetComponent<EntityCustomAction>().CollectGarbage();
+                }
+            }
+            if (TestingUI.Instance.testingPlayers.Count > 0)
+            {
+                foreach(GameObject g in TestingUI.Instance.testingPlayers)
+                {
+                    Destroy(g);
+                }
+            }
         }
         else
         {
@@ -151,13 +162,49 @@ public class EditorUI : MonoBehaviour
         SpawnMapObject(midPoint, 1).gameObject.layer = LayerMask.NameToLayer("Built");
     }
 
+    public void SaveLogic()
+    {
+        string logic = null;
+        foreach (ObjectParameter o in objectParameterBoxs)
+        {
+            if (o.title.Equals("Tag"))
+            {
+                currentMapObject.mapObject.objectTag = o.content.text;
+                continue;
+            }
+            if (o.title.Equals("Logic"))
+            {
+                logic = o.content.text;
+                continue;
+            }
+        }
+        int index = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
+        if (logic.Equals(objectData.details[index].logic))
+        {
+            currentMapObject.mapObject.logic = "default";
+        }
+        else
+        {
+            currentMapObject.mapObject.logic = logic;
+        }
+
+        foreach (ObjectParameter o in objectParameterBoxs)
+        {
+            Destroy(o.content.transform.parent.gameObject);
+        }
+        objectParameterBoxs.Clear();
+    }
+
     public void Remove()
     {
-        foreach (MapObject m in mapObjects)
+        if (!UISwitcher.Instance.currentUIName.Equals("Testing"))
         {
-            Destroy(m.gameObject);
+            foreach (MapObject m in mapObjects)
+            {
+                Destroy(m.gameObject);
+            }
+            mapObjects.Clear();
         }
-        mapObjects.Clear();
 
         isSelectBoxOpened = false;
         foreach (MapObjectSelectionBox s in mapObjectSelectionBoxs)
@@ -224,8 +271,24 @@ public class EditorUI : MonoBehaviour
     public MapObject SpawnMapObject(Vector3 position, int spawnIndex, bool keepFollow = false)
     {
         MapObject temp = Instantiate(objectData.details[spawnIndex].model, position, Quaternion.identity).AddComponent<MapObject>();
+        temp.gameObject.AddComponent<EntityCustomAction>();
         temp.gameObject.layer = LayerMask.NameToLayer("Building");
-        currentMapObject.renderer = temp.GetComponent<MeshRenderer>();
+
+        if (temp.GetComponent<MeshRenderer>())
+        {
+            currentMapObject.renderer = temp.GetComponent<MeshRenderer>();
+        }
+        else
+        {
+            for(int i = 0; i < temp.transform.childCount; i++)
+            {
+                if (temp.transform.GetChild(i).GetComponent<MeshRenderer>())
+                {
+                    currentMapObject.renderer = temp.transform.GetChild(i).GetComponent<MeshRenderer>();
+                    break;
+                }
+            }
+        }
         currentMapObject.mapObject = temp;
         temp.transform.position += Vector3.up * (currentMapObject.renderer.bounds.size.y * 0.5f);
 
@@ -251,6 +314,7 @@ public class EditorUI : MonoBehaviour
     private int spawnIndex = 0;
     private Vector3 selectBoxOrginalPosition;
     private float selectBoxOffset = 0;
+    private float selectMapObjectHeightOffset = 0;
     private void Update()
     {
         if (isSelectBoxOpened)
@@ -264,7 +328,7 @@ public class EditorUI : MonoBehaviour
         ControlCamera();
         if (!isSelecting)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, 2500, groundMask))
@@ -276,11 +340,12 @@ public class EditorUI : MonoBehaviour
                         currentMapObject.mapObject.gameObject.layer = LayerMask.NameToLayer("Building");
                         spawnIndex = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
                         isSelecting = true;
+                        selectMapObjectHeightOffset = 0;
                         if (isSelectBoxOpened) LeftVerticalLayout.gameObject.SetActive(false);
                     }
                 }
             }
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, 2500, groundMask) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
@@ -327,6 +392,29 @@ public class EditorUI : MonoBehaviour
                             tempObj.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = s.title;
                             if (s.title.Equals("Logic"))
                                 tempTxt.text = currentMapObject.mapObject.logic.Equals("default") ? s.description : currentMapObject.mapObject.logic;
+                            if (s.description.Equals("non-editable"))
+                                tempTxt.enabled = false;
+                            if (s.referenceKey.Equals("large"))
+                            {
+                                if (currentMapObject.mapObject.objectName.Equals("Setting Cube"))
+                                {
+                                    tempObj.transform.GetChild(2).gameObject.SetActive(false);
+                                }
+                                else
+                                {
+                                    tempObj.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
+                                    {
+                                        mapObjects.Remove(currentMapObject.mapObject);
+                                        Destroy(currentMapObject.mapObject.gameObject);
+                                        isObjectEditorOpened = false;
+                                        foreach (ObjectParameter o in objectParameterBoxs)
+                                        {
+                                            Destroy(o.content.transform.parent.gameObject);
+                                        }
+                                        objectParameterBoxs.Clear();
+                                    });
+                                }
+                            }
                             objectParameterBoxs.Add(new ObjectParameter() { title = s.title, content = tempTxt });
                         }
                     }
@@ -335,11 +423,12 @@ public class EditorUI : MonoBehaviour
         }
         else
         {
+            selectMapObjectHeightOffset += Input.mouseScrollDelta.y * 0.25f;
             Vector3 raycastPosition = GetGroundSpawnPoint(cam.ScreenToWorldPoint(Input.mousePosition));
             Vector3 offsetPosition = Vector3Int.FloorToInt(raycastPosition / objectData.details[spawnIndex].spacing);
             offsetPosition = offsetPosition * objectData.details[spawnIndex].spacing;
-            currentMapObject.mapObject.transform.position = new Vector3(offsetPosition.x, raycastPosition.y, offsetPosition.z) + Vector3.up * (currentMapObject.renderer.bounds.size.y * 0.5f);
-            if (Input.GetMouseButtonDown(0))
+            currentMapObject.mapObject.transform.position = new Vector3(offsetPosition.x, raycastPosition.y, offsetPosition.z) + Vector3.up * (currentMapObject.renderer.bounds.size.y * 0.5f) + Vector3.up * selectMapObjectHeightOffset;
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 currentMapObject.mapObject.gameObject.layer = LayerMask.NameToLayer("Built");
                 if (currentMapObject.mapObject.objectName.Equals("Ground")) currentMapObject.mapObject.transform.position += Vector3.up * 0.1f;
@@ -348,6 +437,11 @@ public class EditorUI : MonoBehaviour
                 currentMapObject.mapObject.z = currentMapObject.mapObject.transform.position.z;
                 isSelecting = false;
                 if (isSelectBoxOpened) LeftVerticalLayout.gameObject.SetActive(true);
+            }
+            if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
+            {
+                currentMapObject.mapObject.rotationalIndex = (currentMapObject.mapObject.rotationalIndex + 1) % allRotations.Length;
+                currentMapObject.mapObject.transform.rotation = allRotations[currentMapObject.mapObject.rotationalIndex];
             }
         }
     }

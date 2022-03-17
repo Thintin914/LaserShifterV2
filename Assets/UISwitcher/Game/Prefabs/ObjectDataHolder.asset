@@ -16,12 +16,35 @@ MonoBehaviour:
   - objectName: Ground
     spacing: 1
     model: {fileID: 2985761991689670217, guid: 707a0b7f6414e944386a14f8f1005f10, type: 3}
-    logic: 
+    hiddenLogic: 
+    logic: non-editable
   - objectName: Setting Cube
     spacing: 1
-    model: {fileID: 1668999668113326815, guid: 1275649cd2588b64a9f853b7530651fe, type: 3}
-    logic: "function start()\n\tprint ('Testing')\nend"
+    model: {fileID: 3154528644967333449, guid: 8f1de80a6c3c50347a4f66f005207024, type: 3}
+    hiddenLogic: "function callback()\n\tif CS.UISwitcher.Instance.currentUIName
+      == \"Testing\" then\n\t\tCS.UISwitcher.Instance:SetUI(\"Editor\")\n\tend\nend"
+    logic: "function start()\n\tGame:StartTimer(60, callback)\nend"
   - objectName: Laser Sender
     spacing: 1
-    model: {fileID: 1668999668113326815, guid: 1275649cd2588b64a9f853b7530651fe, type: 3}
+    model: {fileID: 8048060174132114619, guid: e9963569b5d21064e8c42f0b849b7600, type: 3}
+    hiddenLogic: 
     logic: 
+  - objectName: Spawn Point
+    spacing: 0.5
+    model: {fileID: 6349090038555141664, guid: c6852daff4efdf94aad8f4ded41d7f40, type: 3}
+    hiddenLogic: 
+    logic: non-editable
+  - objectName: Laser Receiver
+    spacing: 1
+    model: {fileID: 1225572508051941441, guid: 12d616fa8c4696847a8b3d5fca7ca75d, type: 3}
+    hiddenLogic: 
+    logic: 'function start()
+
+
+      end'
+  - objectName: Mirror
+    spacing: 1
+    model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
+    hiddenLogic: 
+    logic: "function onTrigger()\n\tthis.transform:Rotate(CS.UnityEngine.Vector3.up 
+      * 15);\nend"

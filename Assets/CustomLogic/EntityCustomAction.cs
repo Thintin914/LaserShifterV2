@@ -13,6 +13,7 @@ public class EntityCustomAction : MonoBehaviour
     public MapObject mapObject;
     public LifeCycle cycle;
 
+    public List<string> allFunctions = new List<string>();
     public void onLoadLogic(string logic)
     {
         mapObject = GetComponent<MapObject>();
@@ -26,8 +27,8 @@ public class EntityCustomAction : MonoBehaviour
 
         scriptEnv.Set("self", mapObject);
         scriptEnv.Set("this", this);
+        scriptEnv.Set("Game", GameUI.Instance);
 
-        List<string> allFunctions = new List<string>();
         string[] allLines = logic.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
         for (int k = 0; k < allLines.Length; k++)
@@ -60,5 +61,30 @@ public class EntityCustomAction : MonoBehaviour
             cycle.functions.Add(allFunctions[k], action);
         }
         cycle.Trigger("start");
+    }
+
+    private void OnDestroy()
+    {
+        CollectGarbage();
+    }
+
+    private void OnDisable()
+    {
+        CollectGarbage();
+    }
+
+    public void CollectGarbage()
+    {
+        for(int i = 0; i < allFunctions.Count; i++)
+        {
+            if (cycle.loopingFunction.ContainsKey(allFunctions[i]))
+                cycle.loopingFunction[allFunctions[i]].Cancel();
+        }
+        if (cycle != null)
+        cycle.loopingFunction.Clear();
+        allFunctions.Clear();
+
+        if (scriptEnv != null)
+        scriptEnv?.Dispose();
     }
 }

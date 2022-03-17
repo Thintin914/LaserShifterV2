@@ -57,7 +57,7 @@ public class LoginUI : MonoBehaviour
             });
 
             guestButton.onClick.RemoveAllListeners();
-            guestButton.onClick.AddListener(async () =>
+            guestButton.onClick.AddListener(() =>
             {
                 gameObject.SetActive(false);
 
@@ -82,7 +82,7 @@ public class LoginUI : MonoBehaviour
                 comfirmButton.gameObject.SetActive(false);
 
                 DocumentReference usernameDocRef = CommonUI.db.Collection("users").Document(usernameField.text);
-                await usernameDocRef.GetSnapshotAsync().ContinueWithOnMainThread(async task =>
+                await usernameDocRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
                 {
                     if (task.Result.Exists)
                     {

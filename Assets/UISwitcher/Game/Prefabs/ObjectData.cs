@@ -14,6 +14,8 @@ public class ObjectData : ScriptableObject
         public float spacing;
         public GameObject model;
         [TextArea(10, 60)]
+        public string hiddenLogic;
+        [TextArea(10, 60)]
         public string logic;
     }
 

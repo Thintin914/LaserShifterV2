@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7461529269049134412}
   - component: {fileID: 5774589727593562857}
   - component: {fileID: 8631009644724450851}
+  - component: {fileID: 5555578542401699513}
   m_Layer: 0
   m_Name: Light_Color_Changer_Mirror
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7838372192385161206}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.4656496, y: -6.5604396, z: 10.089976}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -82,3 +83,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5555578542401699513
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838372192385161206}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.45, y: 3.84, z: 1.33}
+  m_Center: {x: 0, y: 0.00000032782555, z: 0.32512224}
