@@ -66,20 +66,25 @@ public class TestingUI : MonoBehaviour
                 }
 
                 // replace level with same name
+                bool isReplaced = false;
                 int count = 0;
                 foreach(string s in allLevels)
                 {
                     if (s.Split('\n','\r')[0].Equals(levelInputField.text))
                     {
                         allLevels[count] = jsonMapObjects;
+                        isReplaced = true;
                         break;
                     }
                     count++;
                 }
-
+                if (!isReplaced)
+                {
+                    allLevels.Add(jsonMapObjects);
+                }
                 Dictionary<string, object> leveldict = new Dictionary<string, object>
                 {
-                    {"createdLevels", allLevels }
+                    {"createdLevels", allLevels}
                 };
                 await levelDocRef.UpdateAsync(leveldict);
             }
