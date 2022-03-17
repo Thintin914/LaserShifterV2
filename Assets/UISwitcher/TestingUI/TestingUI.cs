@@ -159,7 +159,7 @@ public class TestingUI : MonoBehaviour
         }
     }
 
-    public void SetUp(bool fetchLogic = true)
+    public void SetUp()
     {
         bool hasSpawnPoint = false;
         bool hasGoal = false;
@@ -203,6 +203,7 @@ public class TestingUI : MonoBehaviour
                 player.transform.SetParent(temp.transform);
                 player.transform.position += Vector3.down * 0.5f;
                 testingPlayers.Add(temp);
+                m.gameObject.SetActive(false);
             }
         }
     }

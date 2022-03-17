@@ -117,7 +117,7 @@ public class EditorUI : MonoBehaviour
 
         Instance = this;
         cam = Camera.main;
-        speed = 20 * Time.deltaTime;
+        speed = 10 * Time.deltaTime;
         groundMask = (1 << LayerMask.NameToLayer("Base")) | (1 << LayerMask.NameToLayer("Built"));
         objectMask = 1 << LayerMask.NameToLayer("Base");
         currentMapObject = new CurrentMapObject();
@@ -134,6 +134,8 @@ public class EditorUI : MonoBehaviour
                 foreach(MapObject m in mapObjects)
                 {
                     m.GetComponent<EntityCustomAction>().CollectGarbage();
+                    if (m.objectName.Equals("Spawn Point"))
+                        m.gameObject.SetActive(true);
                 }
             }
             if (TestingUI.Instance.testingPlayers.Count > 0)
@@ -156,7 +158,7 @@ public class EditorUI : MonoBehaviour
     }
 
     private bool isEditorSetUp = false;
-    public void SetUp()
+    public void SetUp(bool spawnDefaultMap = true)
     {
         isEditorSetUp = true;
         Remove();
@@ -164,9 +166,11 @@ public class EditorUI : MonoBehaviour
         GameUI.Instance.ShowCommentBar();
         cam.transform.position = new Vector3(0, 100, -100);
         currentMapObject.mapObject = new MapObject() { objectName = "" };
+
+        if (!spawnDefaultMap) return;
         Vector3 midPoint = (GetGroundSpawnPoint(cam.ViewportToWorldPoint(new Vector3(0, 1, cam.nearClipPlane))) + GetGroundSpawnPoint(cam.ViewportToWorldPoint(new Vector3(1, 0, cam.nearClipPlane)))) / 2;
         SpawnMapObject(midPoint, 0).gameObject.layer = LayerMask.NameToLayer("Built");
-        if (currentMapObject.mapObject.objectName.Equals("Ground")) currentMapObject.mapObject.transform.position += Vector3.up * 0.1f;
+        currentMapObject.mapObject.transform.position += Vector3.up * 0.1f;
         SpawnMapObject(midPoint, 1).gameObject.layer = LayerMask.NameToLayer("Built");
     }
 
@@ -326,6 +330,7 @@ public class EditorUI : MonoBehaviour
             SerializedMapObject serializedMapObject = JsonUtility.FromJson<SerializedMapObject>(seperatedJson[i]);
             MapObject mapObject = SpawnMapObject(new Vector3(serializedMapObject.x, serializedMapObject.y, serializedMapObject.z), objectData.GetSpawnIndex(serializedMapObject.objectName));
             mapObject.logic = serializedMapObject.logic;
+            mapObject.objectTag = serializedMapObject.objectTag;
             mapObject.gameObject.layer = LayerMask.NameToLayer("Built");
         }
     }
