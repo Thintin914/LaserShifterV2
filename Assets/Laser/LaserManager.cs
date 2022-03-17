@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class LaserManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void ShotLaser(Transform from, string property)
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

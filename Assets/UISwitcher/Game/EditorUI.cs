@@ -332,6 +332,8 @@ public class EditorUI : MonoBehaviour
             MapObject mapObject = SpawnMapObject(new Vector3(serializedMapObject.x, serializedMapObject.y, serializedMapObject.z), objectData.GetSpawnIndex(serializedMapObject.objectName));
             mapObject.logic = serializedMapObject.logic;
             mapObject.objectTag = serializedMapObject.objectTag;
+            mapObject.rotationalIndex = serializedMapObject.rotationalIndex;
+            mapObject.transform.rotation = allRotations[serializedMapObject.rotationalIndex];
             mapObject.gameObject.layer = LayerMask.NameToLayer("Built");
         }
     }
