@@ -401,7 +401,6 @@ GameObject:
   - component: {fileID: 2371887919818472627}
   - component: {fileID: 4386513802095842508}
   - component: {fileID: 414859893396316303}
-  - component: {fileID: 2178715030090532667}
   m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
@@ -510,66 +509,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4386513802095842508}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2178715030090532667}
-        m_TargetAssemblyTypeName: EditorUI, Assembly-CSharp
-        m_MethodName: BackBtn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &2178715030090532667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6797172350150024090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 017a32bf31f838c4e80b96306cef7938, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectData: {fileID: 0}
-  mapObjects: []
-  mapObjectSelectionBoxs: []
-  selectObjectDescriptions: []
-  objectParameterDescriptions: []
-  objectParameterBoxs: []
-  LeftVerticalLayout: {fileID: 0}
-  selectObjectBoxPrefab: {fileID: 0}
-  objectParameterBoxPrefab: {fileID: 0}
-  largeObjectParameterBoxPrefab: {fileID: 0}
-  allRotations:
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
-  - {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-  - {x: 0.9238795, y: 0, z: 0, w: 0.38268343}
-  - {x: 1, y: 0, z: 0, w: -0.00000004371139}
-  - {x: 0.92387956, y: 0, z: 0, w: -0.3826834}
-  - {x: 0.70710677, y: 0, z: 0, w: -0.70710677}
-  - {x: 0.3826835, y: 0, z: 0, w: -0.9238795}
-  - {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
-  - {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
-  - {x: 0, y: 0.9238795, z: 0, w: 0.38268343}
-  - {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  - {x: 0, y: 0.92387956, z: 0, w: -0.3826834}
-  - {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
-  - {x: 0, y: 0.3826835, z: 0, w: -0.9238795}
-  - {x: 0, y: -0.00000008742278, z: 0, w: -1}
-  - {x: 0, y: 0, z: 0.38268346, w: 0.9238795}
-  - {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
-  - {x: 0, y: 0, z: 0.9238795, w: 0.38268343}
-  - {x: 0, y: 0, z: 1, w: -0.00000004371139}
-  - {x: 0, y: 0, z: 0.92387956, w: -0.3826834}
-  - {x: 0, y: 0, z: 0.70710677, w: -0.70710677}
-  - {x: 0, y: 0, z: 0.3826835, w: -0.9238795}
-  - {x: 0, y: 0, z: -0.00000008742278, w: -1}
+      m_Calls: []
 --- !u!1 &7752752810697999848
 GameObject:
   m_ObjectHideFlags: 0
