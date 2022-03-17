@@ -66,7 +66,10 @@ public class StudioUI : MonoBehaviour
                         temp.button.onClick.AddListener(() =>
                         {
                             Remove();
+                            EditorUI.Instance.SetUp();
                             EditorUI.Instance.ConstructLevel(castedLevel);
+                            UISwitcher.Instance.SetUI("Testing");
+                            TestingUI.Instance.SetUp();
                         });
                         temp.transform.SetParent(VerticalLayout);
                         temp.transform.localScale = Vector3.one;
