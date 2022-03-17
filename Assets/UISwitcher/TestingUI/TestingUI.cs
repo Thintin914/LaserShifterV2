@@ -148,7 +148,7 @@ public class TestingUI : MonoBehaviour
         }
     }
 
-    public void SetUp()
+    public void SetUp(bool fetchLogic = true)
     {
         bool hasSpawnPoint = false;
         bool hasGoal = false;
@@ -176,10 +176,12 @@ public class TestingUI : MonoBehaviour
 
         foreach (MapObject m in EditorUI.Instance.mapObjects)
         {
+            string logic = null;
             int index = EditorUI.Instance.objectData.GetSpawnIndex(m.objectName);
             string hiddenLogic = EditorUI.Instance.objectData.details[index].hiddenLogic;
             string shownLogic = EditorUI.Instance.objectData.details[index].logic;
-            string logic = m.logic.Equals("default") ? hiddenLogic + "\n" + shownLogic : hiddenLogic + "\n" + m.logic;
+            logic = m.logic.Equals("default") ? hiddenLogic + "\n" + shownLogic : hiddenLogic + "\n" + m.logic;
+            Debug.Log(logic);
             if (logic != "\n" && logic != "\nnon-editable")
                 m.GetComponent<EntityCustomAction>().onLoadLogic(logic);
 

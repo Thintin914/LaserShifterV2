@@ -323,9 +323,10 @@ public class EditorUI : MonoBehaviour
         string levelName = seperatedJson[0];
         for(int i = 1; i < seperatedJson.Length - 1; i++)
         {
-            SerializedMapObject mapObject = JsonUtility.FromJson<SerializedMapObject>(seperatedJson[i]);
-
-            mapObjects.Add(SpawnMapObject(new Vector3(mapObject.x, mapObject.y, mapObject.z), objectData.GetSpawnIndex(mapObject.objectName)));
+            SerializedMapObject serializedMapObject = JsonUtility.FromJson<SerializedMapObject>(seperatedJson[i]);
+            MapObject mapObject = SpawnMapObject(new Vector3(serializedMapObject.x, serializedMapObject.y, serializedMapObject.z), objectData.GetSpawnIndex(serializedMapObject.objectName));
+            mapObject.logic = serializedMapObject.logic;
+            mapObject.gameObject.layer = LayerMask.NameToLayer("Built");
         }
     }
 
