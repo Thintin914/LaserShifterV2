@@ -121,6 +121,7 @@ public class EditorUI : MonoBehaviour
         speed = 10 * Time.deltaTime;
         groundMask = (1 << LayerMask.NameToLayer("Base")) | (1 << LayerMask.NameToLayer("Built"));
         objectMask = 1 << LayerMask.NameToLayer("Base");
+        ignoreBaseMask = ~(1 << LayerMask.NameToLayer("Base"));
         currentMapObject = new CurrentMapObject();
     }
 
@@ -260,7 +261,7 @@ public class EditorUI : MonoBehaviour
         }
     }
 
-    LayerMask groundMask, objectMask;
+    LayerMask groundMask, objectMask, ignoreBaseMask;
     public Vector3 GetGroundSpawnPoint(Vector3 position)
     {
         var ray = new Ray(position, cam.transform.forward);
@@ -366,7 +367,7 @@ public class EditorUI : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, 2500, groundMask))
+                if (Physics.Raycast(ray, out RaycastHit hit, 2500, ignoreBaseMask))
                 {
                     if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
                     {
@@ -383,7 +384,7 @@ public class EditorUI : MonoBehaviour
             if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, 2500, groundMask) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
+                if (Physics.Raycast(ray, out RaycastHit hit, 2500, ignoreBaseMask) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
                 {
                     if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Built"))
                     {
@@ -449,23 +450,13 @@ public class EditorUI : MonoBehaviour
                                     tempObj.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
                                     {
                                         mapObjects.Remove(currentMapObject.mapObject);
-                                        Destroy(currentMapObject.mapObject.gameObject);
-                                        isObjectEditorOpened = false;
-                                        foreach (ObjectParameter o in objectParameterBoxs)
-                                        {
-                                            Destroy(o.content.transform.parent.gameObject);
-                                        }
-                                        objectParameterBoxs.Clear();
+                                        SaveLogic();
                                     });
 
                                     tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
                                     {
                                         isObjectEditorOpened = false;
-                                        foreach (ObjectParameter o in objectParameterBoxs)
-                                        {
-                                            Destroy(o.content.transform.parent.gameObject);
-                                        }
-                                        objectParameterBoxs.Clear();
+                                        SaveLogic();
                                     });
                                 }
                             }
