@@ -108,16 +108,16 @@ public class RegisterUI : MonoBehaviour
 
                     if (!usernameSnapshot.Exists)
                     {
-                        DocumentReference docRef = CommonUI.db.Collection("users").Document(usernameField.text);
                         Dictionary<string, object> dict = new Dictionary<string, object>
                         {
                             {"name", usernameField.text },
                             {"pw", passwordField.text },
                             {"passedLevel", 0 },
                             {"winAsFirst", 0 },
-                            {"badge", new string[0] }
+                            {"badge", new string[0] },
+                            {"createdLevels", 0 }
                         };
-                        await docRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added User"));
+                        await usernameDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added User"));
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show("Registered", 2);

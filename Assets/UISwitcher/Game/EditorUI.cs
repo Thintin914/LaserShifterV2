@@ -57,7 +57,7 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Laser Sender", description = "Fire a laser in a direction." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Mirror", description = "Reflect the laser in its facing direction." });
 
-        selectObjectButton = transform.GetChild(1).GetComponent<Button>();
+        selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
         selectObjectButton.onClick.AddListener(() =>
         {
@@ -95,7 +95,7 @@ public class EditorUI : MonoBehaviour
             }
         });
 
-        toTestingButton = transform.GetChild(3).GetComponent<Button>();
+        toTestingButton = transform.GetChild(2).GetComponent<Button>();
         toTestingButton.onClick.RemoveAllListeners();
         toTestingButton.onClick.AddListener(() =>
         {
