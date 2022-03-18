@@ -9,12 +9,14 @@ using Firebase.Extensions;
 public class StudioUI : MonoBehaviour
 {
     public static StudioUI Instance;
-    public GameObject selectBoxPrefab,studioModel;
+    public GameObject selectBoxPrefab, studioModel, removeButtonPrefab;
     private GameObject studioModelHolder,playerHolder;
     public List<MapObjectSelectionBox> selectBoxs = new List<MapObjectSelectionBox>();
     private Button reeditButton;
-    private Transform VerticalLayout;
+    public Transform verticalLayout;
 
+    public List<Button> removeButtons = new List<Button>();
+    public List<object> allLevels = new List<object>();
 
     private bool isReeditOpeded = false;
     private void Awake()
@@ -23,7 +25,7 @@ public class StudioUI : MonoBehaviour
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
-        VerticalLayout = transform.GetChild(1);
+        vecticalLayoutOriginalPosition = verticalLayout.localPosition;
 
         reeditButton = transform.GetChild(0).GetComponent<Button>();
         reeditButton.onClick.RemoveAllListeners();
@@ -37,7 +39,7 @@ public class StudioUI : MonoBehaviour
             }
             DocumentReference levelDocRef = CommonUI.db.Collection("levels").Document(CommonUI.Instance.username);
             DocumentSnapshot levelSnapShot = await levelDocRef.GetSnapshotAsync();
-
+            selectBoxOffset = 0;
             if (levelSnapShot.Exists)
             {
                 if (!isReeditOpeded)
@@ -60,11 +62,13 @@ public class StudioUI : MonoBehaviour
                         }
                         foreach (object o in levelNames)
                         {
+                            allLevels.Add(o);
                             string castedLevel = string.Format("{0}", o);
                             string levelName = castedLevel.Split('\n', '\r')[0];
+
                             MapObjectSelectionBox temp = Instantiate(selectBoxPrefab).GetComponent<MapObjectSelectionBox>();
                             temp.description.text = $"<size='14'>{levelName}</size>";
-                            temp.button.onClick.RemoveAllListeners();
+                            selectBoxs.Add(temp);
                             temp.button.onClick.AddListener(() =>
                             {
                                 Remove();
@@ -72,14 +76,35 @@ public class StudioUI : MonoBehaviour
                                 EditorUI.Instance.SetUp(false);
                                 EditorUI.Instance.ConstructLevel(castedLevel);
                             });
-                            temp.transform.SetParent(VerticalLayout);
+
+                            Button removeButton = Instantiate(removeButtonPrefab).GetComponent<Button>();
+                            removeButton.transform.SetParent(verticalLayout);
+                            removeButton.transform.localScale = Vector3.one;
+                            removeButtons.Add(removeButton);
+                            removeButton.onClick.AddListener(() =>
+                            {
+                                allLevels.Remove(o);
+                                selectBoxs.Remove(temp);
+                                removeButtons.Remove(removeButton);
+                                Dictionary<string, object> update = new Dictionary<string, object>
+                                {
+                                    {"createdLevels", allLevels }
+                                };
+                                levelDocRef.UpdateAsync(update);
+                                Destroy(temp.gameObject);
+                                Destroy(removeButton.gameObject);
+                            });
+                            temp.transform.SetParent(verticalLayout);
                             temp.transform.localScale = Vector3.one;
-                            selectBoxs.Add(temp);
                         }
                     }
                     else
                     {
                         foreach (MapObjectSelectionBox b in selectBoxs)
+                        {
+                            b.gameObject.SetActive(true);
+                        }
+                        foreach (Button b in removeButtons)
                         {
                             b.gameObject.SetActive(true);
                         }
@@ -89,6 +114,10 @@ public class StudioUI : MonoBehaviour
                 {
                     isReeditOpeded = false;
                     foreach (MapObjectSelectionBox b in selectBoxs)
+                    {
+                        b.gameObject.SetActive(false);
+                    }
+                    foreach (Button b in removeButtons)
                     {
                         b.gameObject.SetActive(false);
                     }
@@ -118,8 +147,10 @@ public class StudioUI : MonoBehaviour
         }
         else
         {
-            Destroy(playerHolder);
-            Destroy(studioModelHolder);
+            if (playerHolder)
+                Destroy(playerHolder);
+            if (studioModelHolder)
+                Destroy(studioModelHolder);
             Remove();
             gameObject.SetActive(false);
         }
@@ -139,5 +170,23 @@ public class StudioUI : MonoBehaviour
             Destroy(b.gameObject);
         }
         selectBoxs.Clear();
+        foreach (Button b in removeButtons)
+        {
+            Destroy(b.gameObject);
+        }
+        removeButtons.Clear();
+        allLevels.Clear();
+    }
+
+    private float selectBoxOffset = 0;
+    [SerializeField]private Vector3 vecticalLayoutOriginalPosition;
+    private void Update()
+    {
+        if (isReeditOpeded)
+        {
+            selectBoxOffset += Input.mouseScrollDelta.y * 20;
+            if (selectBoxOffset < 0) selectBoxOffset = 0;
+            verticalLayout.localPosition = vecticalLayoutOriginalPosition + Vector3.up * selectBoxOffset;
+        }
     }
 }

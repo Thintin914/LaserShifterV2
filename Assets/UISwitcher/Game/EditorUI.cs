@@ -138,6 +138,8 @@ public class EditorUI : MonoBehaviour
                     m.GetComponent<EntityCustomAction>().CollectGarbage();
                     if (m.objectName.Equals("Spawn Point"))
                         m.gameObject.SetActive(true);
+                    m.transform.position = new Vector3(m.x, m.y, m.z);
+                    m.transform.rotation = Quaternion.Euler(m.x, m.y, m.z);
                 }
             }
             if (TestingUI.Instance.testingPlayers.Count > 0)
@@ -438,11 +440,7 @@ public class EditorUI : MonoBehaviour
                                     tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
                                     {
                                         isObjectEditorOpened = false;
-                                        foreach (ObjectParameter o in objectParameterBoxs)
-                                        {
-                                            Destroy(o.content.transform.parent.gameObject);
-                                        }
-                                        objectParameterBoxs.Clear();
+                                        SaveLogic();
                                     });
                                 }
                                 else
@@ -450,11 +448,20 @@ public class EditorUI : MonoBehaviour
                                     tempObj.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
                                     {
                                         mapObjects.Remove(currentMapObject.mapObject);
-                                        SaveLogic();
+                                        Destroy(currentMapObject.mapObject.gameObject);
+                                        isSelecting = false;
+                                        isObjectEditorOpened = false;
+                                        foreach (ObjectParameter o in objectParameterBoxs)
+                                        {
+                                            Destroy(o.content.transform.parent.gameObject);
+                                        }
+                                        objectParameterBoxs.Clear();
+
                                     });
 
                                     tempObj.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
                                     {
+                                        isSelecting = false;
                                         isObjectEditorOpened = false;
                                         SaveLogic();
                                     });

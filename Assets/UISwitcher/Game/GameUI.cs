@@ -13,6 +13,8 @@ public class GameUI : MonoBehaviour
     public static GameUI Instance;
     public float timer;
     public TextMeshProUGUI timerDisplay;
+    public ColorPresets colorPresets;
+
     private void Awake()
     {
         Instance = this;
@@ -159,8 +161,14 @@ public class GameUI : MonoBehaviour
         Debug.Log(trans.name);
         Texture2D tex = await GetRemoteTexture(url);
 
+        Material defaultMaterial = colorPresets.GetColorSet("White").material;
+
         MeshRenderer rend = trans.GetComponent<MeshRenderer>();
         MaterialPropertyBlock block = new MaterialPropertyBlock();
+        if (rend.material != null)
+        {
+            rend.material = defaultMaterial;
+        }
         rend.GetPropertyBlock(block);
         block.SetTexture("_MainTex", tex);
         rend.SetPropertyBlock(block);
@@ -172,6 +180,10 @@ public class GameUI : MonoBehaviour
             if (trans.GetChild(i).GetComponent<MeshRenderer>())
             {
                 MeshRenderer childRend = trans.GetChild(i).GetComponent<MeshRenderer>();
+                if (rend.material != null)
+                {
+                    rend.material = defaultMaterial;
+                }
                 MaterialPropertyBlock childBlock = new MaterialPropertyBlock();
                 childRend.GetPropertyBlock(childBlock);
                 childBlock.SetTexture("_MainTex", tex);
