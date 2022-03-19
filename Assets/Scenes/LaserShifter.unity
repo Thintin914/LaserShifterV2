@@ -178,6 +178,7 @@ MonoBehaviour:
   currentRoomName: 
   dynamicCamera: {fileID: 1800518287}
   mainCamera: {fileID: 963194227}
+  currentCamera: {fileID: 0}
   lookAt: {fileID: 773133942}
 --- !u!1 &45017541
 GameObject:
@@ -222,6 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04aa577ec51807641837a6f6e0d009b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  laserPrefab: {fileID: 1269871307345169233, guid: 1fa33fd1395a5374c94758e797865258, type: 3}
+  basicProperty: 'sender: <name>;'
 --- !u!1 &89112327
 GameObject:
   m_ObjectHideFlags: 0
@@ -4943,6 +4946,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880276969}
   m_CullTransparentMesh: 1
+--- !u!1 &897273977
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 897273979}
+  - component: {fileID: 897273978}
+  m_Layer: 0
+  m_Name: UniqueIDHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &897273978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897273977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e36aa2ff9e96d4f8af3904b5825844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &897273979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897273977}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &902232075
 GameObject:
   m_ObjectHideFlags: 0
@@ -7182,6 +7228,7 @@ MonoBehaviour:
   selectObjectBoxPrefab: {fileID: 7611081085781968859, guid: 4438fccf787b7ca419b9d8ee1844fc92, type: 3}
   objectParameterBoxPrefab: {fileID: 1277318339661018463, guid: 143bcdc50f3ebba44a82e504dc0744bd, type: 3}
   largeObjectParameterBoxPrefab: {fileID: 8621851070061113061, guid: 12e694a448fe2ad4e93c740bac2144b3, type: 3}
+  currentUuid: 0
   allRotations:
   - {x: 0, y: 0, z: 0, w: 1}
   - {x: 0.38268346, y: 0, z: 0, w: 0.9238795}

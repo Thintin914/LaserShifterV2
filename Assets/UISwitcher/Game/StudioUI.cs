@@ -135,15 +135,10 @@ public class StudioUI : MonoBehaviour
     {
         if (uiName == "Studio")
         {
-            int rand = Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
-            GameObject temp = Instantiate(TestingUI.Instance.playerOuterPrefab,new Vector3(1,2.5f, 1), Quaternion.identity);
-            GameObject player = Instantiate(TestingUI.Instance.playerPrefabs[rand],new Vector3(1,2.5f,1),Quaternion.identity);
-            player.transform.SetParent(temp.transform);
-            player.transform.position += Vector3.down * 0.5f;
             studioModelHolder = Instantiate(studioModel, new Vector3(-1.32f,0,-4.34f), Quaternion.Euler(0,53.2f,0));
             studioModelHolder.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+            playerHolder = TestingUI.Instance.SpawnTestingPlayer(new Vector3(1,2.5f,1));
             gameObject.SetActive(true);
-            playerHolder = temp;
         }
         else
         {
@@ -152,13 +147,13 @@ public class StudioUI : MonoBehaviour
             if (studioModelHolder)
                 Destroy(studioModelHolder);
             Remove();
+            isReeditOpeded = false;
             gameObject.SetActive(false);
         }
     }
 
     public void GoToStudio()
     {
-        Debug.Log("Go To Studio");
         Remove();
         GameUI.Instance.ShowCommentBar();
     }

@@ -20,6 +20,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public string username;
     public string currentRoomName;
     public Camera dynamicCamera, mainCamera;
+    public Camera currentCamera;
     public Transform lookAt;
 
     private void Awake()
@@ -27,6 +28,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         Instance = this;
         db = FirebaseFirestore.DefaultInstance;
 
+        currentCamera = mainCamera;
         closeButton = transform.GetChild(0).GetComponent<Button>();
         closeButton.onClick.AddListener(() =>
         {
@@ -97,12 +99,14 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         dynamicCamera.gameObject.SetActive(isEnable);
         if (isEnable)
         {
+            currentCamera = dynamicCamera;
             mainCamera.gameObject.SetActive(false);
             lookAt.SetParent(target);
             lookAt.position = Vector3.zero;
         }
         else
         {
+            currentCamera = mainCamera;
             mainCamera.gameObject.SetActive(true);
             mainCamera.transform.position = new Vector3(0, 100, -100);
             lookAt.SetParent(null);

@@ -5,6 +5,7 @@ using XLua;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using Photon.Pun;
 
 public class EntityCustomAction : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class EntityCustomAction : MonoBehaviour
     public LifeCycle cycle;
 
     public List<string> allFunctions = new List<string>();
+
     public void onLoadLogic(string logic)
     {
         mapObject = GetComponent<MapObject>();
@@ -28,6 +30,7 @@ public class EntityCustomAction : MonoBehaviour
         scriptEnv.Set("self", mapObject);
         scriptEnv.Set("this", this);
         scriptEnv.Set("Game", GameUI.Instance);
+        scriptEnv.Set("UISwitcher", UISwitcher.Instance);
 
         string[] allLines = logic.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -47,7 +50,7 @@ public class EntityCustomAction : MonoBehaviour
             }
         }
 
-        luaEnv.DoString(logic, "chunk", scriptEnv);
+        luaEnv.DoString(GameUI.luaLibrary + "\n" + logic, "chunk", scriptEnv);
 
         cycle = new LifeCycle()
         {
@@ -86,5 +89,14 @@ public class EntityCustomAction : MonoBehaviour
 
         if (scriptEnv != null)
         scriptEnv?.Dispose();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Laser"))
+        {
+            Laser laser = collision.transform.GetComponent<Laser>();
+            cycle.Trigger("onLaserHit", laser.spanwer, laser.source);
+        }
     }
 }

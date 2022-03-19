@@ -20,6 +20,8 @@ public class EditorUI : MonoBehaviour
     public Transform LeftVerticalLayout;
     public GameObject selectObjectBoxPrefab, objectParameterBoxPrefab, largeObjectParameterBoxPrefab;
 
+    public int currentUuid = 0;
+
     [HideInInspector]public Quaternion[] allRotations = new Quaternion[]
     {
         Quaternion.Euler(0,0,0), Quaternion.Euler(45,0,0), Quaternion.Euler(90,0,0), Quaternion.Euler(135,0,0), Quaternion.Euler(180,0,0),
@@ -130,6 +132,7 @@ public class EditorUI : MonoBehaviour
         if (uiName == "Editor")
         {
             gameObject.SetActive(true);
+            GameUI.Instance.ShowCommentBar();
             GameUI.Instance.StopTimer();
             if (mapObjects.Count > 0)
             {
@@ -139,14 +142,15 @@ public class EditorUI : MonoBehaviour
                     if (m.objectName.Equals("Spawn Point"))
                         m.gameObject.SetActive(true);
                     m.transform.position = new Vector3(m.x, m.y, m.z);
-                    m.transform.rotation = Quaternion.Euler(m.x, m.y, m.z);
+                    m.transform.rotation = allRotations[m.rotationalIndex];
                 }
             }
             if (TestingUI.Instance.testingPlayers.Count > 0)
             {
-                foreach(GameObject g in TestingUI.Instance.testingPlayers)
+                foreach(PlayerTriggerer g in TestingUI.Instance.testingPlayers)
                 {
-                    Destroy(g);
+                    if (g != null)
+                    Destroy(g.gameObject);
                 }
             }
         }
@@ -166,8 +170,6 @@ public class EditorUI : MonoBehaviour
     {
         isEditorSetUp = true;
         Remove();
-
-        GameUI.Instance.ShowCommentBar();
         cam.transform.position = new Vector3(0, 100, -100);
         currentMapObject.mapObject = new MapObject() { objectName = "" };
 
@@ -220,6 +222,8 @@ public class EditorUI : MonoBehaviour
                 Destroy(m.gameObject);
             }
             mapObjects.Clear();
+
+            currentUuid = 0;
         }
 
         isSelectBoxOpened = false;
@@ -287,6 +291,9 @@ public class EditorUI : MonoBehaviour
     public MapObject SpawnMapObject(Vector3 position, int spawnIndex, bool keepFollow = false)
     {
         MapObject temp = Instantiate(objectData.details[spawnIndex].model, position, Quaternion.identity).AddComponent<MapObject>();
+        temp.uuid = currentUuid;
+        currentUuid++;
+
         temp.gameObject.AddComponent<EntityCustomAction>();
         temp.gameObject.layer = LayerMask.NameToLayer("Building");
 

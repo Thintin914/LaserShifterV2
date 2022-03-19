@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.Networking;
+using XLua;
 
 public class GameUI : MonoBehaviour
 {
@@ -15,10 +16,15 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI timerDisplay;
     public ColorPresets colorPresets;
 
+    public static string luaLibrary = @"
+local Unity = CS.UnityEngine
+local Vector3 = Unity.Vector3
+local Quaternion = Unity.Quaternion
+";
+
     private void Awake()
     {
         Instance = this;
-
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
@@ -158,7 +164,6 @@ public class GameUI : MonoBehaviour
 
     public async void SetTexture(string url, Transform trans)
     {
-        Debug.Log(trans.name);
         Texture2D tex = await GetRemoteTexture(url);
 
         Material defaultMaterial = colorPresets.GetColorSet("White").material;
@@ -190,5 +195,18 @@ public class GameUI : MonoBehaviour
                 childRend.SetPropertyBlock(childBlock);
             }
         }
+    }
+
+    public Laser ShotLaser(Transform t, Transform source, Vector3 rotation, float speed, string property)
+    {
+        return LaserManager.Instance.ShotLaser(t, source, rotation, speed, property);
+    }
+
+    [CSharpCallLua]
+    public delegate void OnWinDelegate(Transform winner);
+    public event OnWinDelegate OnWinEvent;
+    public void TriggerWinEvent(Transform winner)
+    {
+        OnWinEvent?.Invoke(winner);
     }
 }

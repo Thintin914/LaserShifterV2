@@ -17,20 +17,23 @@ MonoBehaviour:
     spacing: 1
     model: {fileID: 2985761991689670217, guid: 707a0b7f6414e944386a14f8f1005f10, type: 3}
     hiddenLogic: 
-    logic: "function start()\n\tGame:SetTexture(\"https://www.tilingtextures.com/wp-content/uploads/2017/03/0015-128x128.jpg\",
+    logic: "function start()\n\tGame:SetTexture(\"https://marketplacecdn.yoyogames.com/images/assets/8600/screenshots/19026_original.png?1568449277\",
       this.transform)\nend"
   - objectName: Setting Cube
     spacing: 1
     model: {fileID: 3154528644967333449, guid: 8f1de80a6c3c50347a4f66f005207024, type: 3}
-    hiddenLogic: "function callback()\n\tif CS.UISwitcher.Instance.currentUIName
-      == \"Testing\" then\n\t\tCS.UISwitcher.Instance:SetUI(\"Editor\")\n\tend\nend"
+    hiddenLogic: "function callback()\n\tif UISwitcher.currentUIName == \"Testing\"
+      then\n\t\tUISwitcher:SetUI(\"Editor\")\n\tend\nend"
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\n\tGame:StartTimer(60, callback)\nend"
   - objectName: Laser Sender
     spacing: 1
     model: {fileID: 8048060174132114619, guid: e9963569b5d21064e8c42f0b849b7600, type: 3}
     hiddenLogic: 
-    logic: 
+    logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
+      this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tlaser = Game:ShotLaser(this.transform,
+      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
+      = laser.transform.position + Vector3.up * 0.4\nend"
   - objectName: Spawn Point
     spacing: 0.5
     model: {fileID: 6349090038555141664, guid: c6852daff4efdf94aad8f4ded41d7f40, type: 3}
@@ -40,16 +43,14 @@ MonoBehaviour:
     spacing: 1
     model: {fileID: 1225572508051941441, guid: 12d616fa8c4696847a8b3d5fca7ca75d, type: 3}
     hiddenLogic: 
-    logic: 'function start()
-
-
-      end'
+    logic: "function onLaserHit(sender)\n\t-- laser spanwer\n\tprint(sender[0].name)\n\t--
+      laser triggerer\n\tprint(sender[1].name)\nend"
   - objectName: Mirror
     spacing: 1
     model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
     hiddenLogic: 
-    logic: "function onTrigger()\n\tthis.transform:Rotate(CS.UnityEngine.Vector3.up 
-      * 15);\nend"
+    logic: "function onTrigger(triggerer)\n\tthis.transform:Rotate(Vector3.up  *
+      15);\nend"
   - objectName: Small Plane
     spacing: 0.5
     model: {fileID: 800621998114977334, guid: 94daae825d012734c835a63243f60f97, type: 3}

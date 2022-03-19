@@ -10,4 +10,6 @@ public class MapObject: MonoBehaviour
     public int rotationalIndex = 0;
     public float x, y, z;
     public string logic = "default";
+
+    [System.NonSerialized] public int uuid;
 }

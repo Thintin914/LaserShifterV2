@@ -11,7 +11,7 @@ public class TestingUI : MonoBehaviour
     public static TestingUI Instance;
     public GameObject playerOuterPrefab;
     public GameObject[] playerPrefabs;
-    [HideInInspector]public List<GameObject> testingPlayers = new List<GameObject>();
+    [HideInInspector]public List<PlayerTriggerer> testingPlayers = new List<PlayerTriggerer>();
     private Button resultButton, tempButton;
     public string result = "Fail";
     private Transform levelBar;
@@ -205,16 +205,22 @@ public class TestingUI : MonoBehaviour
 
             if (m.objectName.Equals("Spawn Point"))
             {
-                int rand = Random.Range(0, playerPrefabs.Length);
-                GameObject temp = Instantiate(playerOuterPrefab, m.transform.position, Quaternion.identity);
-                GameObject player = Instantiate(playerPrefabs[rand], m.transform.position, Quaternion.identity);
-                player.transform.SetParent(temp.transform);
-                player.transform.position += Vector3.down * 0.5f;
-                testingPlayers.Add(temp);
+                Transform t = SpawnTestingPlayer(m.transform.position).transform;
                 m.gameObject.SetActive(false);
                 if (!hasAssignedPlayer)
-                    CommonUI.Instance.EnableDynamicCamera(true, temp.transform);
+                    CommonUI.Instance.EnableDynamicCamera(true, t);
             }
         }
+    }
+
+    public GameObject SpawnTestingPlayer(Vector3 position)
+    {
+        int rand = Random.Range(0, playerPrefabs.Length);
+        GameObject temp = Instantiate(playerOuterPrefab, position, Quaternion.identity);
+        GameObject player = Instantiate(playerPrefabs[rand], position, Quaternion.identity);
+        player.transform.SetParent(temp.transform);
+        player.transform.position += Vector3.down;
+        testingPlayers.Add(temp.GetComponent<PlayerTriggerer>());
+        return temp;
     }
 }
