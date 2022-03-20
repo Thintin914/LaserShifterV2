@@ -20,19 +20,15 @@ public class PlayerTriggerer : MonoBehaviour
     private void Update()
     {
         username.transform.forward = CommonUI.Instance.currentCamera.transform.forward;
-        if (pv.IsMine)
+        if (UISwitcher.Instance.currentUIName.Equals("Testing"))
         {
             if (Input.GetKeyDown(KeyCode.Z))
-            {
-                if (UISwitcher.Instance.currentUIName.Equals("Testing"))
-                {
-                    Trigger(2.5f);
-                }
-                else
-                {
-                    pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
-                }
-            }
+                Trigger(2.5f);
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Z) && pv.IsMine)
+                pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
         }
     }
 
