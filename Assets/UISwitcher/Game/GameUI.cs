@@ -80,8 +80,8 @@ local Quaternion = Unity.Quaternion
                         if (PhotonNetwork.IsMasterClient)
                         {
                             LevelRound.Instance.isHost = true;
-                            LevelRound.Instance.InitalizeLevel();
                         }
+                        LevelRound.Instance.InitalizeLevel();
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
