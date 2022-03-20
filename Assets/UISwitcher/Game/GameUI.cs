@@ -330,7 +330,7 @@ local Quaternion = Unity.Quaternion
         t.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 160, 0, 255);
         OnWinEvent?.Invoke(t);
 
-        if (LevelRound.Instance.isHost && pv.IsMine)
+        if (LevelRound.Instance.isHost)
         {
             string username = t.GetComponent<PlayerTriggerer>().username.text;
             if (!finishedPlayers.Contains(username))
