@@ -138,7 +138,7 @@ local Quaternion = Unity.Quaternion
     public GameObject SpawnServerPlayer(Vector3 position)
     {
         GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
-        pv.RPC("AttacchModelToPlayer", RpcTarget.All, temp.GetComponent<PhotonView>().ViewID);
+        pv.RPC("AttacchModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID);
         return temp;
     }
 
