@@ -86,9 +86,9 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         {
             Debug.Log("Leave Room.");
             await RemoveRoom();
-            currentRoomName = "";
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
+            currentRoomName = "";
         }
     }
 
@@ -168,6 +168,8 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         else
         {
+            if (string.IsNullOrEmpty(currentRoomName)) return false;
+
             Query userQuery = db.Collection("users").WhereEqualTo("id", id);
             QuerySnapshot userQuerySnapshot = await userQuery.GetSnapshotAsync();
             string username = null;
