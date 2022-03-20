@@ -24,7 +24,7 @@ MonoBehaviour:
     model: {fileID: 3154528644967333449, guid: 8f1de80a6c3c50347a4f66f005207024, type: 3}
     hiddenLogic: "function callback()\n\tif UISwitcher.currentUIName == \"Testing\"
       then\n\t\tUISwitcher:SetUI(\"Editor\")\n\tend\nend"
-    logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
+    logic: "function start()\n\tGame:SetTexture(\"https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/21-1024.png\",
       this.transform)\n\tGame:StartTimer(60, callback)\nend"
   - objectName: Laser Sender
     spacing: 1
@@ -44,14 +44,18 @@ MonoBehaviour:
     model: {fileID: 1225572508051941441, guid: 12d616fa8c4696847a8b3d5fca7ca75d, type: 3}
     hiddenLogic: 
     logic: "function onLaserHit(sender)\n\tGame:TriggerWinEvent(sender[1])\nend\n\nfunction
-      start()\n\tGame:OnWinEvent('+', playerWin)\nend\n\nfunction playerWin(winner)\n\tprint(winner.name
+      start()\n\tGame:SetTexture(\"https://cdn.pixabay.com/photo/2020/09/19/05/28/waves-5583483_1280.jpg\",
+      this.transform)\n\tGame:OnWinEvent('+', playerWin)\nend\n\nfunction playerWin(winner)\n\tprint(winner.name
       .. ' ' .. 'Win!')\nend"
   - objectName: Mirror
     spacing: 1
     model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
     hiddenLogic: 
-    logic: "function onTrigger(triggerer)\n\tthis.transform:Rotate(Vector3.up  *
-      15);\nend"
+    logic: "function start()\n\tGame:SetTexture(\"https://stjamestigard.church/wp-content/uploads/2017/05/stock-illustration-53419126-blue-stained-glass-background.jpg\",
+      this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tthis.transform:Rotate(Vector3.up 
+      * 15);\nend\n\nfunction onLaserHit(sender)\n\tlaser = Game:ShotLaser(this.transform,
+      sender[1], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
+      = laser.transform.position + Vector3.up * 0.4\nend"
   - objectName: Small Plane
     spacing: 0.5
     model: {fileID: 800621998114977334, guid: 94daae825d012734c835a63243f60f97, type: 3}
