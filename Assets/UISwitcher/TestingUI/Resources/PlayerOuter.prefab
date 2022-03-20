@@ -63,6 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: {fileID: 4003676452149051075}
   pv: {fileID: 0}
+  controller: {fileID: 0}
 --- !u!143 &8978328294815140695
 CharacterController:
   m_ObjectHideFlags: 0

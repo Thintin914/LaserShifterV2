@@ -62,8 +62,9 @@ public class LoginUI : MonoBehaviour
                 gameObject.SetActive(false);
 
                 CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
-                CommonUI.Instance.popupNotice.Show($"Welcome,\nGuest#{Random.Range(1000, 9999)}", 2);
-                CommonUI.Instance.username = usernameField.text;
+                int rand = Random.Range(1000, 9999);
+                CommonUI.Instance.popupNotice.Show($"Welcome,\nGuest#{rand}", 2);
+                CommonUI.Instance.username = "Guest#" + rand;
 
                 UISwitcher.Instance.SetUI("Studio");
                 StudioUI.Instance.GoToStudio();

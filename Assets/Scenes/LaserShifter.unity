@@ -4016,6 +4016,7 @@ GameObject:
   m_Component:
   - component: {fileID: 760757332}
   - component: {fileID: 760757333}
+  - component: {fileID: 760757334}
   m_Layer: 5
   m_Name: '[ Game ]'
   m_TagString: Untagged
@@ -4063,6 +4064,28 @@ MonoBehaviour:
   colorPresets: {fileID: 11400000, guid: ce5e30cbba39b9f41914d8fe5bca9b54, type: 2}
   levelInfo: {fileID: 0}
   player: {fileID: 0}
+--- !u!114 &760757334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760757331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &773133941
 GameObject:
   m_ObjectHideFlags: 0
@@ -8469,6 +8492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5939975585e553478f9d0f6085dc54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 0}
   isHost: 0
   totalUser: 0
 --- !u!4 &1570975710

@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 using XLua;
 using Photon.Pun;
 using UnityEngine.EventSystems;
+using Photon.Realtime;
 
 public class GameUI : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI levelInfo;
 
     public PlayerTriggerer player;
-
+    private PhotonView pv;
     public static string luaLibrary = @"
 local Unity = CS.UnityEngine
 local Vector3 = Unity.Vector3
@@ -30,6 +31,8 @@ local Quaternion = Unity.Quaternion
     private void Awake()
     {
         Instance = this;
+        pv = GetComponent<PhotonView>();
+
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
@@ -72,6 +75,7 @@ local Quaternion = Unity.Quaternion
                         while (player == null)
                             await Task.Delay(500);
                         CommonUI.Instance.EnableDynamicCamera(true, player.transform);
+                        finishedPlayers.Clear();
                         if (PhotonNetwork.IsMasterClient)
                         {
                             LevelRound.Instance.isHost = true;
@@ -271,9 +275,17 @@ local Quaternion = Unity.Quaternion
     [CSharpCallLua]
     public delegate void OnWinDelegate(Transform winner);
     public event OnWinDelegate OnWinEvent;
+
     public void TriggerWinEvent(Transform winner)
     {
-        OnWinEvent?.Invoke(winner);
+        if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+        {
+            OnWinEvent?.Invoke(winner);
+        }
+        else
+        {
+            pv.RPC("RemotePlayerWin", RpcTarget.All, winner.GetComponent<PhotonView>().ViewID);
+        }
     }
 
     public void RemoveAllListeners()
@@ -298,6 +310,27 @@ local Quaternion = Unity.Quaternion
         else
         {
             levelInfo.gameObject.SetActive(false);
+        }
+    }
+
+    public List<string> finishedPlayers = new List<string>();
+    [PunRPC]
+    public void RemotePlayerWin(int viewId)
+    {
+        Transform t = PhotonView.Find(viewId).transform;
+        t.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 160, 0, 255);
+        OnWinEvent?.Invoke(t);
+
+        if (LevelRound.Instance.isHost)
+        {
+            string username = t.GetComponent<PlayerTriggerer>().username.text;
+            if (!finishedPlayers.Contains(username))
+                finishedPlayers.Add(t.GetComponent<PlayerTriggerer>().username.text);
+            if (PhotonNetwork.PlayerList.Length >= finishedPlayers.Count)
+            {
+                finishedPlayers.Clear();
+                LevelRound.Instance.FindLevelData();
+            }
         }
     }
 }

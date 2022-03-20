@@ -6,6 +6,7 @@ using Firebase.Firestore;
 using System.Threading.Tasks;
 using System.Threading;
 using Photon.Pun;
+using TMPro;
 
 public class LevelRound : MonoBehaviour
 {
@@ -101,6 +102,8 @@ public class LevelRound : MonoBehaviour
     private int previousUserID = -1;
     public async void FindLevelData()
     {
+        if (isCreatingLevel) return;
+
         isCreatingLevel = true;
         GameUI.Instance.StopTimer();
         GameUI.Instance.timerDisplay.gameObject.SetActive(true);
@@ -168,6 +171,7 @@ public class LevelRound : MonoBehaviour
         startTime = Time.timeSinceLevelLoad;
         endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
 
+        GameUI.Instance.player.transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
         isCreatingLevel = false;
     }
 }
