@@ -8,6 +8,7 @@ using System.Threading;
 using UnityEngine.Networking;
 using XLua;
 using Photon.Pun;
+using UnityEngine.EventSystems;
 
 public class GameUI : MonoBehaviour
 {
@@ -51,20 +52,31 @@ local Quaternion = Unity.Quaternion
 
                     if (command[0] == "room" && command.Length > 1)
                     {
-                        if (command[1].Equals(CommonUI.Instance.currentRoomName)) return;
+                        if (command[1].Equals(CommonUI.Instance.currentRoomName))
+                        {
+                            ShowCommentBar();
+                            return;
+                        }
 
                         UISwitcher.Instance.SetUI("Game");
                         if (player != null)
                         {
+                            StopTimer();
                             CommonUI.Instance.EnableDynamicCamera(false, null);
                             PhotonNetwork.Destroy(player.gameObject);
                             player = null;
                         }
                         // Spawn Player
+                        LevelRound.Instance.isHost = false;
                         await CommonUI.Instance.GoToRoom(command[1], true);
                         while (player == null)
                             await Task.Delay(500);
                         CommonUI.Instance.EnableDynamicCamera(true, player.transform);
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            LevelRound.Instance.InitalizeLevel();
+                            LevelRound.Instance.isHost = true;
+                        }
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
@@ -89,7 +101,8 @@ local Quaternion = Unity.Quaternion
                     }
                 }
 
-                commentBar.ActivateInputField();
+                commentBar.DeactivateInputField();
+                EventSystem.current.SetSelectedGameObject(null);
             }
         });
     }
@@ -110,6 +123,7 @@ local Quaternion = Unity.Quaternion
             gameObject.SetActive(false);
             if (player != null)
             {
+                LevelRound.Instance.isHost = false;
                 CommonUI.Instance.EnableDynamicCamera(false, null);
                 PhotonNetwork.Destroy(player.gameObject);
             }
@@ -277,6 +291,7 @@ local Quaternion = Unity.Quaternion
     {
         if (isDisplay)
         {
+            gameObject.SetActive(true);
             levelInfo.gameObject.SetActive(true);
             levelInfo.text = $"Creator - {creator}\nLevel Name - {levelName}";
         }

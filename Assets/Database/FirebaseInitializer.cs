@@ -5,7 +5,14 @@ using UnityEngine.Events;
 
 public class FirebaseInitializer : MonoBehaviour
 {
+    public static FirebaseInitializer Instance;
     public UnityEvent onFirebaseInitialized;
+    public bool isFirebaseReady = false;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -21,6 +28,7 @@ public class FirebaseInitializer : MonoBehaviour
         {
             Debug.Log("Firebase Ready");
             onFirebaseInitialized.Invoke();
+            isFirebaseReady = true;
         }
         else
         {

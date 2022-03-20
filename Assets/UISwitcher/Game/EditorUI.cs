@@ -330,7 +330,7 @@ public class EditorUI : MonoBehaviour
         mapObjects.Clear();
 
         string[] seperatedJson = json.Split('\n', '\r');
-        string levelName = seperatedJson[0];
+        levelName = seperatedJson[0];
         for(int i = 1; i < seperatedJson.Length - 1; i++)
         {
             SerializedMapObject serializedMapObject = JsonUtility.FromJson<SerializedMapObject>(seperatedJson[i]);

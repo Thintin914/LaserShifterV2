@@ -163,7 +163,10 @@ public class StudioUI : MonoBehaviour
         else
         {
             if (playerHolder)
+            {
                 Destroy(playerHolder);
+                TestingUI.Instance.testingPlayers.Clear();
+            }
             if (studioModelHolder)
                 Destroy(studioModelHolder);
             Remove();

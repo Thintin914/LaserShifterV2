@@ -157,6 +157,52 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
     }
 
+    public Dictionary<int, List<object>> userLevels = new Dictionary<int, List<object>>();
+    public Dictionary<int, string> creatorName = new Dictionary<int, string>();
+    public async Task<bool> GetLevelData(int id)
+    {
+        if (userLevels.ContainsKey(id))
+        {
+            return true;
+        }
+        else
+        {
+            Query userQuery = db.Collection("users").WhereEqualTo("id", id);
+            QuerySnapshot userQuerySnapshot = await userQuery.GetSnapshotAsync();
+            string username = null;
+            foreach (DocumentSnapshot documentSnapshot in userQuerySnapshot.Documents)
+            {
+                username = documentSnapshot.Id;
+            }
+            DocumentReference levelDocRef = db.Collection("levels").Document(username);
+            DocumentSnapshot levelSnapshot = await levelDocRef.GetSnapshotAsync();
+            Dictionary<string, object> levelDict = levelSnapshot.ToDictionary();
+            if (levelDict != null)
+            {
+                foreach (KeyValuePair<string, object> pair in levelDict)
+                {
+                    userLevels.Add(id, pair.Value as List<object>);
+                    break;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            creatorName.Add(id, username);
+            return true;
+        }
+    }
+
+    public string GetLevelFromUser(int id , int index)
+    {
+        if (userLevels.ContainsKey(id))
+        {
+            return string.Format("{0}", userLevels[id][index]);
+        }
+        return null;
+    }
+
     public class PopupNotice
     {
         public MPImage background { get; set; }

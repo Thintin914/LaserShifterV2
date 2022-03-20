@@ -108,16 +108,31 @@ public class RegisterUI : MonoBehaviour
 
                     if (!usernameSnapshot.Exists)
                     {
-                        Dictionary<string, object> dict = new Dictionary<string, object>
+                        DocumentReference environmentDocRef = CommonUI.db.Collection("environment").Document("totalUser");
+                        DocumentSnapshot environmentSnapshot = await environmentDocRef.GetSnapshotAsync();
+                        int totalUser = 0;
+                        Dictionary<string, object> totalUserDict = environmentSnapshot.ToDictionary();
+                        foreach (KeyValuePair<string, object> pair in totalUserDict)
+                        {
+                            totalUser = int.Parse(string.Format("{0}", pair.Value));
+                        }
+                        Dictionary<string, object> environmentDict = new Dictionary<string, object>
+                        {
+                            {"total", totalUser + 1 }
+                        };
+                        await environmentDocRef.SetAsync(environmentDict).ContinueWithOnMainThread(task => Debug.Log("Updated Total User"));
+
+                        Dictionary<string, object> userDict = new Dictionary<string, object>
                         {
                             {"name", usernameField.text },
                             {"pw", passwordField.text },
                             {"passedLevel", 0 },
                             {"winAsFirst", 0 },
                             {"badge", new string[0] },
-                            {"createdLevels", 0 }
+                            {"createdLevels", 0 },
+                            {"id", totalUser + 1}
                         };
-                        await usernameDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added User"));
+                        await usernameDocRef.SetAsync(userDict).ContinueWithOnMainThread(task => Debug.Log("Added User"));
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show("Registered", 2);

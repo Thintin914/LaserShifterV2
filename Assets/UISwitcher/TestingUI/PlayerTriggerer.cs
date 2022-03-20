@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System.Threading.Tasks;
 
 public class PlayerTriggerer : MonoBehaviour
 {
@@ -26,16 +27,18 @@ public class PlayerTriggerer : MonoBehaviour
 
     public void Trigger(float range)
     {
-        if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+        foreach (MapObject m in EditorUI.Instance.mapObjects)
         {
-            foreach(MapObject m in EditorUI.Instance.mapObjects)
+            if (Vector3.Distance(m.transform.position, transform.position) <= range)
             {
-                if (Vector3.Distance(m.transform.position, transform.position) <= range)
-                {   
-                    if (m.GetComponent<EntityCustomAction>().cycle != null)
+                if (m.GetComponent<EntityCustomAction>().cycle != null)
                     m.GetComponent<EntityCustomAction>().cycle.Trigger("onTrigger", transform);
-                }
             }
         }
+    }
+
+    public async void SetPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 }

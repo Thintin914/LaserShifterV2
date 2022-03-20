@@ -219,6 +219,13 @@ public class TestingUI : MonoBehaviour
         GameUI.Instance.OnWinEvent += LevelPassed;
         GameUI.Instance.SetLevelInfo(true, CommonUI.Instance.username, EditorUI.Instance.levelName);
 
+        foreach(PlayerTriggerer p in testingPlayers)
+        {
+            if (p != null)
+                Destroy(p.gameObject);
+        }
+        testingPlayers.Clear();
+
         foreach (MapObject m in EditorUI.Instance.mapObjects)
         {
             string logic = null;
