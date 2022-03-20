@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Controller : MonoBehaviour
 {
@@ -10,11 +11,13 @@ public class Controller : MonoBehaviour
     private float playerSpeed = 5f;
     private float jumpHeight = 1.5f;
     private float gravityValue = 9.81f;
+    private PhotonView pv;
 
     private void Start()
     {
         // always add a controller
         controller = GetComponent<CharacterController>();
+        pv = GetComponent<PhotonView>();
     }
 
     void Update()
@@ -25,6 +28,10 @@ public class Controller : MonoBehaviour
             {
                 return;
             }
+        }
+        if (UISwitcher.Instance.currentUIName.Equals("Game"))
+        {
+            if (!pv.IsMine) return;
         }
 
         bool groundedPlayer = controller.isGrounded;
