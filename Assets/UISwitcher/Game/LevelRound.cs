@@ -72,7 +72,6 @@ public class LevelRound : MonoBehaviour
 
     public async void InitalizeLevel()
     {
-        GameUI.Instance.player.pv.RPC("ChangeUsername", RpcTarget.All, CommonUI.Instance.username);
         if (isHost)
         {
             startTime = Time.deltaTime;
