@@ -85,8 +85,8 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         if (PhotonNetwork.InRoom)
         {
             Debug.Log("Leave Room.");
-            currentRoomName = "";
             await RemoveRoom();
+            currentRoomName = "";
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
         }
