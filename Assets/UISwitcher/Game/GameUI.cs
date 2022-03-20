@@ -74,6 +74,8 @@ local Quaternion = Unity.Quaternion
                         await CommonUI.Instance.GoToRoom(command[1], true);
                         while (player == null)
                             await Task.Delay(500);
+                        player.pv.RPC("ChangeUsername", RpcTarget.All, CommonUI.Instance.username);
+
                         CommonUI.Instance.EnableDynamicCamera(true, player.transform);
                         finishedPlayers.Clear();
                         if (PhotonNetwork.IsMasterClient)

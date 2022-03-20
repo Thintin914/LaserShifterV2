@@ -20,15 +20,18 @@ public class PlayerTriggerer : MonoBehaviour
     private void Update()
     {
         username.transform.forward = CommonUI.Instance.currentCamera.transform.forward;
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (pv.IsMine)
         {
-            if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                Trigger(2.5f);
-            }
-            else
-            {
-                pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
+                if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+                {
+                    Trigger(2.5f);
+                }
+                else
+                {
+                    pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
+                }
             }
         }
     }
@@ -56,5 +59,11 @@ public class PlayerTriggerer : MonoBehaviour
     public void RemoteTrigger(int viewId)
     {
         PhotonView.Find(viewId).GetComponent<PlayerTriggerer>().Trigger(2.5f);
+    }
+
+    [PunRPC]
+    public void ChangeUsername(string name)
+    {
+        username.text = name;
     }
 }
