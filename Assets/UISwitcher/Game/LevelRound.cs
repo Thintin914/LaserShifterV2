@@ -102,7 +102,6 @@ public class LevelRound : MonoBehaviour
     public async void FindLevelData()
     {
         if (isCreatingLevel) return;
-        if (string.IsNullOrEmpty(CommonUI.Instance.currentRoomName)) return;
         isCreatingLevel = true;
         GameUI.Instance.StopTimer();
         GameUI.Instance.timerDisplay.gameObject.SetActive(true);

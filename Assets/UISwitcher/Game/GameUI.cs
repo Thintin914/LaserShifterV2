@@ -91,6 +91,7 @@ local Quaternion = Unity.Quaternion
                     else if (command[0] == "editor")
                     {
                         await CommonUI.Instance.LeaveRoom();
+                        CommonUI.Instance.currentRoomName = "";
                         UISwitcher.Instance.SetUI("Editor");
                         EditorUI.Instance.SetUp();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
@@ -99,6 +100,7 @@ local Quaternion = Unity.Quaternion
                     else if (command[0] == "studio")
                     {
                         await CommonUI.Instance.LeaveRoom();
+                        CommonUI.Instance.currentRoomName = "";
                         UISwitcher.Instance.SetUI("Studio");
                         StudioUI.Instance.GoToStudio();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);

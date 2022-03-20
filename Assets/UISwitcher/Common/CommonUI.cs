@@ -88,7 +88,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             await RemoveRoom();
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
-            currentRoomName = "";
         }
     }
 
