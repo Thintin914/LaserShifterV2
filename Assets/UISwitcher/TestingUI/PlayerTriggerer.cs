@@ -60,10 +60,4 @@ public class PlayerTriggerer : MonoBehaviour
     {
         PhotonView.Find(viewId).GetComponent<PlayerTriggerer>().Trigger(2.5f);
     }
-
-    [PunRPC]
-    public void ChangeUsername(string name)
-    {
-        username.text = name;
-    }
 }

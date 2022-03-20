@@ -138,19 +138,20 @@ local Quaternion = Unity.Quaternion
     public GameObject SpawnServerPlayer(Vector3 position)
     {
         GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
-        pv.RPC("AttacchModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID);
+        int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
+        pv.RPC("AttacchModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID, rand, CommonUI.Instance.username);
         return temp;
     }
 
     [PunRPC]
-    public void AttacchModelToPlayer(int viewId)
+    public void AttacchModelToPlayer(int viewId, int modelId, string name)
     {
         Transform t = PhotonView.Find(viewId).transform;
-        int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
-        GameObject player = Instantiate(TestingUI.Instance.playerPrefabs[rand], t.position, Quaternion.identity);
+        GameObject player = Instantiate(TestingUI.Instance.playerPrefabs[modelId], t.position, Quaternion.identity);
         player.transform.SetParent(t);
         player.transform.localPosition = Vector3.zero;
         player.transform.position += Vector3.down;
+        t.GetComponent<PlayerTriggerer>().username.text = name;
     }
 
     public void ShowCommentBar()

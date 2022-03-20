@@ -112,7 +112,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         if (canSpawnPlayer)
         {
             GameUI.Instance.player = GameUI.Instance.SpawnServerPlayer(Vector3.zero).GetComponent<PlayerTriggerer>();
-            GameUI.Instance.player.pv.RPC("ChangeUsername", RpcTarget.All, CommonUI.Instance.username);
         }
     }
 
