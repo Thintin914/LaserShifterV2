@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.Networking;
 using XLua;
+using Photon.Pun;
 
 public class GameUI : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI timerDisplay;
     public ColorPresets colorPresets;
     public TextMeshProUGUI levelInfo;
+
+    public PlayerTriggerer player;
 
     public static string luaLibrary = @"
 local Unity = CS.UnityEngine
@@ -49,7 +52,12 @@ local Quaternion = Unity.Quaternion
                     if (command[0] == "room" && command.Length > 1)
                     {
                         UISwitcher.Instance.SetUI("Game");
-                        await CommonUI.Instance.GoToRoom(command[1]);
+                        // Spawn Player
+                        await CommonUI.Instance.GoToRoom(command[1], true);
+                        while (player == null)
+                            await Task.Delay(500);
+                        CommonUI.Instance.EnableDynamicCamera(true, player.transform);
+
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
                     }
@@ -69,8 +77,6 @@ local Quaternion = Unity.Quaternion
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
                     }
-
-                    commentBar.gameObject.SetActive(true);
                 }
 
                 commentBar.ActivateInputField();
@@ -88,11 +94,25 @@ local Quaternion = Unity.Quaternion
         if (uiName == "Game")
         {
             gameObject.SetActive(true);
+            ShowCommentBar();
         }
         else 
         {
             gameObject.SetActive(false);
+            if (player != null)
+                PhotonNetwork.Destroy(player.gameObject);
         }
+    }
+
+    public GameObject SpawnServerPlayer(Vector3 position)
+    {
+        int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
+        GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
+        GameObject player = Instantiate(TestingUI.Instance.playerPrefabs[rand], position, Quaternion.identity);
+        player.transform.SetParent(temp.transform);
+        player.transform.localPosition = Vector3.zero;
+        player.transform.position += Vector3.down;
+        return temp;
     }
 
     public void ShowCommentBar()

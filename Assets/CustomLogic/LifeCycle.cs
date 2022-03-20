@@ -87,22 +87,29 @@ public class LifeCycle
             }
             cancelSource = new CancellationTokenSource();
 
-            for (int i = 0; i != loopCount; i++)
+            try
             {
-                lifeCycle.functions[functionName]?.Invoke(parameters);
+                for (int i = 0; i != loopCount; i++)
+                {
+                    lifeCycle.functions[functionName]?.Invoke(parameters);
 
-                if (waitTime <= 0.05f)
-                {
-                    await Task.Yield();
+                    if (waitTime <= 0.05f)
+                    {
+                        await Task.Yield();
+                    }
+                    else
+                    {
+                        await Task.Delay((int)(waitTime * 1000), cancelSource.Token);
+                    }
+                    if (cancelSource.IsCancellationRequested)
+                    {
+                        return;
+                    }
                 }
-                else
-                {
-                    await Task.Delay((int)(waitTime * 1000), cancelSource.Token);
-                }
-                if (cancelSource.IsCancellationRequested)
-                {
-                    return;
-                }
+            }
+            catch (System.OperationCanceledException) when (cancelSource.IsCancellationRequested)
+            {
+                return;
             }
         }
     }

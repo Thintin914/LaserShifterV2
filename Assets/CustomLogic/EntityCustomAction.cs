@@ -78,14 +78,16 @@ public class EntityCustomAction : MonoBehaviour
 
     public void CollectGarbage()
     {
-        for(int i = 0; i < allFunctions.Count; i++)
-        {
-            if (cycle.loopingFunction.ContainsKey(allFunctions[i]))
-                cycle.loopingFunction[allFunctions[i]].Cancel();
-        }
         if (cycle != null)
-        cycle.loopingFunction.Clear();
-        allFunctions.Clear();
+        {
+            for (int i = 0; i < allFunctions.Count; i++)
+            {
+                if (cycle.loopingFunction.ContainsKey(allFunctions[i]))
+                    cycle.loopingFunction[allFunctions[i]].Cancel();
+            }
+            cycle.loopingFunction.Clear();
+            allFunctions.Clear();
+        }
 
         if (scriptEnv != null)
         scriptEnv?.Dispose();
@@ -93,10 +95,13 @@ public class EntityCustomAction : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag("Laser"))
-        {
-            Laser laser = collision.transform.GetComponent<Laser>();
-            cycle.Trigger("onLaserHit", laser.spanwer, laser.source);
+        if (UISwitcher.Instance.currentUIName.Equals("Testing") || UISwitcher.Instance.currentUIName.Equals("Game")){
+            if (collision.transform.CompareTag("Laser"))
+            {
+                Laser laser = collision.transform.GetComponent<Laser>();
+                if (!laser.spanwer.Equals(transform))
+                    cycle.Trigger("onLaserHit", laser.spanwer, laser.source);
+            }
         }
     }
 }

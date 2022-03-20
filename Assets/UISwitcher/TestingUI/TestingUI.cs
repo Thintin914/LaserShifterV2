@@ -37,6 +37,7 @@ public class TestingUI : MonoBehaviour
         {
             if (string.IsNullOrEmpty(CommonUI.Instance.username))
             {
+                Remove();
                 UISwitcher.Instance.SetUI("Editor");
                 CommonUI.Instance.popupNotice.Show("Cannot add map in guest mode.", 1);
                 return;
@@ -113,6 +114,7 @@ public class TestingUI : MonoBehaviour
                 };
             await usernameDocRef.UpdateAsync(userCreatedLevelDict);
 
+            Remove();
             UISwitcher.Instance.SetUI("Editor");
             CommonUI.Instance.popupNotice.SetColor(205, 46, 83, 0);
             CommonUI.Instance.popupNotice.Show("Map added to database.", 3);
@@ -145,6 +147,7 @@ public class TestingUI : MonoBehaviour
                 UISwitcher.Instance.SetUI("Editor");
                 CommonUI.Instance.popupNotice.Show("Test Run Success.", 1);
             }
+            Remove();
         });
 
         passedLevelButton = transform.GetChild(1).GetComponent<Button>();
@@ -160,24 +163,28 @@ public class TestingUI : MonoBehaviour
         if (uiName == "Testing")
         {
             levelBar.gameObject.SetActive(false);
+            passedLevelButton.gameObject.SetActive(false);
             gameObject.SetActive(true);
         }
         else
         {
             gameObject.SetActive(false);
-            if (CommonUI.Instance.dynamicCamera.gameObject.activeSelf)
+            if (uiName.Equals("Editor") && CommonUI.Instance.dynamicCamera.gameObject.activeSelf)
                 CommonUI.Instance.EnableDynamicCamera(false, null);
+        }
+    }
 
-            if (testingPlayers.Count > 0)
+    public void Remove()
+    {
+        if (testingPlayers.Count > 0)
+        {
+            foreach (PlayerTriggerer g in testingPlayers)
             {
-                foreach (PlayerTriggerer g in TestingUI.Instance.testingPlayers)
-                {
-                    if (g != null)
-                        Destroy(g.gameObject);
-                }
-                testingPlayers.Clear();
-                GameUI.Instance.SetLevelInfo(false, "", "");
+                if (g != null)
+                    Destroy(g.gameObject);
             }
+            testingPlayers.Clear();
+            GameUI.Instance.SetLevelInfo(false, "", "");
         }
     }
 
@@ -208,6 +215,10 @@ public class TestingUI : MonoBehaviour
         }
 
         bool hasAssignedPlayer = false;
+        result = "Fail";
+        GameUI.Instance.OnWinEvent += LevelPassed;
+        GameUI.Instance.SetLevelInfo(true, CommonUI.Instance.username, EditorUI.Instance.levelName);
+
         foreach (MapObject m in EditorUI.Instance.mapObjects)
         {
             string logic = null;
@@ -229,10 +240,6 @@ public class TestingUI : MonoBehaviour
                 }
             }
         }
-        result = "Fail";
-        passedLevelButton.gameObject.SetActive(false);
-        GameUI.Instance.OnWinEvent += LevelPassed;
-        GameUI.Instance.SetLevelInfo(true, CommonUI.Instance.username, EditorUI.Instance.levelName);
     }
 
     public GameObject SpawnTestingPlayer(Vector3 position)

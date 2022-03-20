@@ -46,7 +46,8 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     private bool isConnectedToMaster = false;
     private bool canChangeRoom = false;
-    public async Task GoToRoom(string roomName)
+    private bool canSpawnPlayer = false;
+    public async Task GoToRoom(string roomName, bool spawnPlayer = true)
     {
         if (isConnectedToMaster == false)
         {
@@ -65,6 +66,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             MaxPlayers = 30
         };
 
+        canSpawnPlayer = spawnPlayer;
         currentRoomName = roomName;
         PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
     }
@@ -91,6 +93,12 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Join Room " + currentRoomName);
+        if (canSpawnPlayer)
+        {
+            PlayerTriggerer player = GameUI.Instance.player;
+            player = GameUI.Instance.SpawnServerPlayer(Vector3.zero).GetComponent<PlayerTriggerer>();
+            player.username.text = username;
+        }
     }
 
 
@@ -102,7 +110,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             currentCamera = dynamicCamera;
             mainCamera.gameObject.SetActive(false);
             lookAt.SetParent(target);
-            lookAt.position = Vector3.zero;
+            lookAt.localPosition = Vector3.zero;
         }
         else
         {
