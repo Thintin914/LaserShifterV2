@@ -69,10 +69,33 @@ public class LevelRound : MonoBehaviour
         }
     }
 
-    public void InitalizeLevel()
+    public async void InitalizeLevel()
     {
-        startTime = Time.deltaTime;
-        endTime = 0;
+        if (isHost)
+        {
+            startTime = Time.deltaTime;
+            endTime = 0;
+        }
+        else
+        {
+            DocumentReference roomDocRef = CommonUI.db.Collection("rooms").Document(CommonUI.Instance.currentRoomName);
+            DocumentSnapshot roomSnapshot = await roomDocRef.GetSnapshotAsync();
+            Dictionary<string, object> roomDict = roomSnapshot.ToDictionary();
+            string creator = null;
+            int levelName = 0;
+            int userId = 0;
+            foreach (KeyValuePair<string, object> pair in roomDict)
+            {
+                if (pair.Key.Equals("creator"))
+                    creator = string.Format("{0}", pair.Value);
+                else if (pair.Key.Equals("levelName"))
+                    levelName = int.Parse(string.Format("{0}", pair.Value));
+                else
+                    userId = int.Parse(string.Format("{0}", pair.Value));
+            }
+
+            await CreateLevel(userId, levelName);
+        }
     }
 
     private int previousUserID = -1;
@@ -97,7 +120,8 @@ public class LevelRound : MonoBehaviour
         Dictionary<string, object> update = new Dictionary<string, object>
         {
             {"creator", CommonUI.Instance.creatorName[id] },
-            {"levelName", levelIndex }
+            {"levelName", levelIndex },
+            {"userId", id }
         };
         await roomDocRef.UpdateAsync(update);
 
@@ -111,8 +135,6 @@ public class LevelRound : MonoBehaviour
         GameUI.Instance.RemoveAllListeners();
         isLevelPreviously = true;
         GameUI.Instance.StopTimer();
-
-        GameUI.Instance.player.GetComponent<Controller>().enabled = false;
 
         if (!CommonUI.Instance.userLevels.ContainsKey(id))
         {
@@ -146,7 +168,6 @@ public class LevelRound : MonoBehaviour
         startTime = Time.timeSinceLevelLoad;
         endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
 
-        GameUI.Instance.player.GetComponent<Controller>().enabled = true;
         isCreatingLevel = false;
     }
 }

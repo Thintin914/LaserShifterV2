@@ -8,12 +8,13 @@ public class PlayerTriggerer : MonoBehaviour
 {
     public TMPro.TextMeshPro username;
     public PhotonView pv;
-
+    public Controller controller;
 
     private void Awake()
     {
         username.text = CommonUI.Instance.username;
         pv = GetComponent<PhotonView>();
+        controller = GetComponent<Controller>();
     }
 
     private void Update()
@@ -39,6 +40,8 @@ public class PlayerTriggerer : MonoBehaviour
 
     public async void SetPosition(Vector3 position)
     {
+        controller.enabled = false;
         transform.position = position;
+        controller.enabled = true;
     }
 }

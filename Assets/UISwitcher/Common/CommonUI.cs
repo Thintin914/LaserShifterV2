@@ -103,7 +103,8 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             Dictionary<string, object> dict = new Dictionary<string, object>
             {
                 {"creator", "NA" },
-                {"levelName", "NA" }
+                {"levelName", -1 },
+                {"userId", 0 }
             };
             await roomDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Room"));
         }

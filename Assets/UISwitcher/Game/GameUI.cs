@@ -74,8 +74,8 @@ local Quaternion = Unity.Quaternion
                         CommonUI.Instance.EnableDynamicCamera(true, player.transform);
                         if (PhotonNetwork.IsMasterClient)
                         {
-                            LevelRound.Instance.InitalizeLevel();
                             LevelRound.Instance.isHost = true;
+                            LevelRound.Instance.InitalizeLevel();
                         }
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
