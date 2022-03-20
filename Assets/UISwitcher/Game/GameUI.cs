@@ -15,6 +15,7 @@ public class GameUI : MonoBehaviour
     public float timer;
     public TextMeshProUGUI timerDisplay;
     public ColorPresets colorPresets;
+    public TextMeshProUGUI levelInfo;
 
     public static string luaLibrary = @"
 local Unity = CS.UnityEngine
@@ -30,6 +31,7 @@ local Quaternion = Unity.Quaternion
 
         commentBar = transform.GetChild(0).GetComponent<TMP_InputField>();
         timerDisplay = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        levelInfo = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
 
         commentBar.onEndEdit.RemoveAllListeners();
         commentBar.onEndEdit.AddListener(async (value) =>
@@ -230,9 +232,25 @@ local Quaternion = Unity.Quaternion
 
     public void RemoveAllListeners()
     {
-        foreach (Delegate d in OnWinEvent.GetInvocationList())
+        if (OnWinEvent != null)
         {
-            OnWinEvent -= (OnWinDelegate)d;
+            foreach (Delegate d in OnWinEvent.GetInvocationList())
+            {
+                OnWinEvent -= (OnWinDelegate)d;
+            }
+        }
+    }
+
+    public void SetLevelInfo(bool isDisplay, string creator, string levelName)
+    {
+        if (isDisplay)
+        {
+            levelInfo.gameObject.SetActive(true);
+            levelInfo.text = $"Creator - {creator}\nLevel Name - {levelName}";
+        }
+        else
+        {
+            levelInfo.gameObject.SetActive(false);
         }
     }
 }

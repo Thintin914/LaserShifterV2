@@ -19,6 +19,7 @@ public class EditorUI : MonoBehaviour
     private Button selectObjectButton, toTestingButton;
     public Transform LeftVerticalLayout;
     public GameObject selectObjectBoxPrefab, objectParameterBoxPrefab, largeObjectParameterBoxPrefab;
+    public string levelName = "undefined";
 
     public int currentUuid = 0;
 
@@ -217,6 +218,7 @@ public class EditorUI : MonoBehaviour
             mapObjects.Clear();
 
             currentUuid = 0;
+            levelName = "undefined";
         }
 
         isSelectBoxOpened = false;

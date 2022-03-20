@@ -41,6 +41,7 @@ public class TestingUI : MonoBehaviour
                 CommonUI.Instance.popupNotice.Show("Cannot add map in guest mode.", 1);
                 return;
             }
+            EditorUI.Instance.levelName = levelInputField.text;
             string jsonMapObjects = levelInputField.text + "\n";
             for (int i = 0; i < EditorUI.Instance.mapObjects.Count; i++)
             {
@@ -114,7 +115,7 @@ public class TestingUI : MonoBehaviour
 
             UISwitcher.Instance.SetUI("Editor");
             CommonUI.Instance.popupNotice.SetColor(205, 46, 83, 0);
-            CommonUI.Instance.popupNotice.Show("Map added to database. Don't press again.", 3);
+            CommonUI.Instance.popupNotice.Show("Map added to database.", 3);
         });
 
         levelCancelButton.onClick.RemoveAllListeners();
@@ -175,6 +176,7 @@ public class TestingUI : MonoBehaviour
                         Destroy(g.gameObject);
                 }
                 testingPlayers.Clear();
+                GameUI.Instance.SetLevelInfo(false, "", "");
             }
         }
     }
@@ -230,6 +232,7 @@ public class TestingUI : MonoBehaviour
         result = "Fail";
         passedLevelButton.gameObject.SetActive(false);
         GameUI.Instance.OnWinEvent += LevelPassed;
+        GameUI.Instance.SetLevelInfo(true, CommonUI.Instance.username, EditorUI.Instance.levelName);
     }
 
     public GameObject SpawnTestingPlayer(Vector3 position)
@@ -250,6 +253,8 @@ public class TestingUI : MonoBehaviour
             result = "Passed";
             passedLevelButton.gameObject.SetActive(true);
             GameUI.Instance.PauseTimer(true);
+            string[] randomQoute = new string[] { ":D", ":O", ":P", "*_*", "^_^", "o_0", ">_>"};
+            GameUI.Instance.timerDisplay.text = randomQoute[Random.Range(0, randomQoute.Length)];
         }
         if (winner.CompareTag("Player"))
         {

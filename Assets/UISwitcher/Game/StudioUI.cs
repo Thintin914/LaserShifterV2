@@ -75,6 +75,7 @@ public class StudioUI : MonoBehaviour
                                 UISwitcher.Instance.SetUI("Editor");
                                 EditorUI.Instance.SetUp(false);
                                 EditorUI.Instance.ConstructLevel(castedLevel);
+                                EditorUI.Instance.levelName = levelName;
                             });
 
                             Button removeButton = Instantiate(removeButtonPrefab).GetComponent<Button>();
