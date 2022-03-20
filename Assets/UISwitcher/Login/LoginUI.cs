@@ -57,7 +57,7 @@ public class LoginUI : MonoBehaviour
             });
 
             guestButton.onClick.RemoveAllListeners();
-            guestButton.onClick.AddListener(() =>
+            guestButton.onClick.AddListener(async () =>
             {
                 gameObject.SetActive(false);
 
@@ -68,6 +68,14 @@ public class LoginUI : MonoBehaviour
 
                 UISwitcher.Instance.SetUI("Studio");
                 StudioUI.Instance.GoToStudio();
+
+                DocumentReference totalUserDocRef = CommonUI.db.Collection("environment").Document("totalUser");
+                DocumentSnapshot totalUserSnapshot = await totalUserDocRef.GetSnapshotAsync();
+                Dictionary<string, object> totalUserDict = totalUserSnapshot.ToDictionary();
+                foreach (KeyValuePair<string, object> pair in totalUserDict)
+                {
+                    LevelRound.Instance.totalUser = int.Parse(string.Format("{0}", pair.Value));
+                }
             });
 
             comfirmButton.onClick.RemoveAllListeners();
@@ -83,7 +91,7 @@ public class LoginUI : MonoBehaviour
                 comfirmButton.gameObject.SetActive(false);
 
                 DocumentReference usernameDocRef = CommonUI.db.Collection("users").Document(usernameField.text);
-                await usernameDocRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+                await usernameDocRef.GetSnapshotAsync().ContinueWithOnMainThread(async task =>
                 {
                     if (task.Result.Exists)
                     {
@@ -102,6 +110,14 @@ public class LoginUI : MonoBehaviour
                                 UISwitcher.Instance.SetUI("Studio");
                                 StudioUI.Instance.GoToStudio();
                                 comfirmButton.gameObject.SetActive(true);
+
+                                DocumentReference totalUserDocRef = CommonUI.db.Collection("environment").Document("totalUser");
+                                DocumentSnapshot totalUserSnapshot = await totalUserDocRef.GetSnapshotAsync();
+                                Dictionary<string, object> totalUserDict = totalUserSnapshot.ToDictionary();
+                                foreach (KeyValuePair<string, object> pair2 in totalUserDict)
+                                {
+                                    LevelRound.Instance.totalUser = int.Parse(string.Format("{0}", pair2.Value));
+                                }
                                 return;
                             }
                         }

@@ -176,6 +176,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             {
                 username = documentSnapshot.Id;
             }
+
             DocumentReference levelDocRef = db.Collection("levels").Document(username);
             DocumentSnapshot levelSnapshot = await levelDocRef.GetSnapshotAsync();
             Dictionary<string, object> levelDict = levelSnapshot.ToDictionary();

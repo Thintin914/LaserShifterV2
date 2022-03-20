@@ -23,13 +23,6 @@ public class LevelRound : MonoBehaviour
 
         while (FirebaseInitializer.Instance.isFirebaseReady == false)
             await Task.Delay(1000);
-        DocumentReference totalUserDocRef = CommonUI.db.Collection("environment").Document("totalUser");
-        DocumentSnapshot totalUserSnapshot = await totalUserDocRef.GetSnapshotAsync();
-        Dictionary<string, object> totalUserDict = totalUserSnapshot.ToDictionary();
-        foreach (KeyValuePair<string, object> pair in totalUserDict)
-        {
-            totalUser = int.Parse(string.Format("{0}", pair.Value));
-        }
     }
 
     private bool isLevelPreviously = false;
@@ -141,7 +134,6 @@ public class LevelRound : MonoBehaviour
         {
             await CommonUI.Instance.GetLevelData(id);
         }
-
         EditorUI.Instance.ConstructLevel(CommonUI.Instance.GetLevelFromUser(id, levelIndex));
         GameUI.Instance.SetLevelInfo(true, CommonUI.Instance.creatorName[id], EditorUI.Instance.levelName);
 
