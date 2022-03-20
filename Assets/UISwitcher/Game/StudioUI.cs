@@ -82,7 +82,7 @@ public class StudioUI : MonoBehaviour
                             removeButton.transform.SetParent(verticalLayout);
                             removeButton.transform.localScale = Vector3.one;
                             removeButtons.Add(removeButton);
-                            removeButton.onClick.AddListener(() =>
+                            removeButton.onClick.AddListener(async () =>
                             {
                                 allLevels.Remove(o);
                                 selectBoxs.Remove(temp);
@@ -91,9 +91,28 @@ public class StudioUI : MonoBehaviour
                                 {
                                     {"createdLevels", allLevels }
                                 };
-                                levelDocRef.UpdateAsync(update);
                                 Destroy(temp.gameObject);
                                 Destroy(removeButton.gameObject);
+                                await levelDocRef.UpdateAsync(update);
+
+                                DocumentReference usernameDocRef = CommonUI.db.Collection("users").Document(CommonUI.Instance.username);
+                                DocumentSnapshot usernameSnapshot = await usernameDocRef.GetSnapshotAsync();
+                                int createdLevelNumber = 0;
+                                Dictionary<string, object> userDict = usernameSnapshot.ToDictionary();
+                                foreach (KeyValuePair<string, object> pair in userDict)
+                                {
+                                    if (pair.Key.Equals("createdLevels"))
+                                    {
+                                        createdLevelNumber = int.Parse(string.Format("{0}", pair.Value));
+                                        break;
+                                    }
+                                }
+
+                                Dictionary<string, object> userCreatedLevelDict = new Dictionary<string, object>
+                                {
+                                    {"createdLevels", createdLevelNumber - 1 }
+                                };
+                                await usernameDocRef.UpdateAsync(userCreatedLevelDict);
                             });
                             temp.transform.SetParent(verticalLayout);
                             temp.transform.localScale = Vector3.one;

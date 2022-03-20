@@ -154,7 +154,7 @@ namespace Photon.Pun.Demo.Procedural
         /// Since only the MasterClient can control the WorldGenerator,
         /// we are checking if we have to make the UI controls available for the local client.
         /// </summary>
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
             seedInputField.interactable = PhotonNetwork.IsMasterClient;
             worldSizeDropdown.interactable = PhotonNetwork.IsMasterClient;

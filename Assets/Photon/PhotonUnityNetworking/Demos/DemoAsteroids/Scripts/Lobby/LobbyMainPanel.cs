@@ -103,7 +103,7 @@ namespace Photon.Pun.Demo.Asteroids
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
 
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
             // joining (or entering) a room invalidates any cached lobby room list (even if LeaveLobby was not called due to just joining a room)
             cachedRoomList.Clear();

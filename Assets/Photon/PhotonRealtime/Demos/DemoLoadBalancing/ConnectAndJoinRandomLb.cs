@@ -113,7 +113,7 @@ namespace Photon.Realtime.Demo
         {
         }
 
-        public void OnJoinedRoom()
+        public void OnJoinedRoomAsync()
         {
             Debug.Log("OnJoinedRoom");
         }

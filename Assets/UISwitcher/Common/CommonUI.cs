@@ -7,6 +7,7 @@ using TMPro;
 using System.Threading.Tasks;
 using System.Threading;
 using Firebase.Firestore;
+using Firebase.Extensions;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -20,7 +21,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     public string username;
     public string currentRoomName;
     public Camera dynamicCamera, mainCamera;
-    public Camera currentCamera;
+    [HideInInspector]public Camera currentCamera;
     public Transform lookAt;
 
     private void Awake()
@@ -56,8 +57,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         }
         if (PhotonNetwork.InRoom)
         {
-            canChangeRoom = false;
-            PhotonNetwork.LeaveRoom();
+            await LeaveRoom();
             while (canChangeRoom == false) { await Task.Delay(50); };
         }
 
@@ -80,31 +80,67 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
             canChangeRoom = true;
     }
 
-    public void LeaveRoom()
+    public async Task LeaveRoom()
     {
         if (PhotonNetwork.InRoom)
         {
             Debug.Log("Leave Room.");
+            await RemoveRoom();
             canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
         }
     }
 
-    public override void OnJoinedRoom()
+    public override async void OnJoinedRoomAsync()
     {
         Debug.Log("Join Room " + currentRoomName);
+
+        //Add room to firebase
+        DocumentReference roomDocRef = db.Collection("rooms").Document(currentRoomName);
+        DocumentSnapshot roomSnapshot = await roomDocRef.GetSnapshotAsync();
+        if (!roomSnapshot.Exists)
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>
+            {
+                {"creator", "NA" },
+                {"levelName", "NA" }
+            };
+            await roomDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Room"));
+        }
+
         if (canSpawnPlayer)
         {
-            PlayerTriggerer player = GameUI.Instance.player;
-            player = GameUI.Instance.SpawnServerPlayer(Vector3.zero).GetComponent<PlayerTriggerer>();
-            player.username.text = username;
+            GameUI.Instance.player = GameUI.Instance.SpawnServerPlayer(Vector3.zero).GetComponent<PlayerTriggerer>();
+            GameUI.Instance.player.username.text = username;
         }
     }
 
+    private async void OnApplicationQuit()
+    {
+        await RemoveRoom();
+    }
+
+    public async Task RemoveRoom()
+    {
+        if (UISwitcher.Instance.currentUIName.Equals("Game"))
+        {
+            if (PhotonNetwork.PlayerList.Length == 1)
+            {
+                DocumentReference roomDocRef = db.Collection("rooms").Document(currentRoomName);
+                DocumentSnapshot roomSnapshot = await roomDocRef.GetSnapshotAsync();
+                if (roomSnapshot.Exists)
+                {
+                    await roomDocRef.DeleteAsync();
+                    Debug.Log("Deleted Room: " + currentRoomName);
+                }
+            }
+        }
+    }
 
     public void EnableDynamicCamera(bool isEnable, Transform target)
     {
         dynamicCamera.gameObject.SetActive(isEnable);
+
         if (isEnable)
         {
             currentCamera = dynamicCamera;

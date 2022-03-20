@@ -168,7 +168,7 @@ namespace Photon.Pun.UtilityScripts
         }
 
 
-        public virtual void OnJoinedRoom()
+        public virtual void OnJoinedRoomAsync()
         {
             // Only AutoSpawn if we are a new ActorId. Rejoining should reproduce the objects by server instantiation.
             if (AutoSpawnObjects && !PhotonNetwork.LocalPlayer.HasRejoined)

@@ -4061,6 +4061,8 @@ MonoBehaviour:
   timer: 0
   timerDisplay: {fileID: 0}
   colorPresets: {fileID: 11400000, guid: ce5e30cbba39b9f41914d8fe5bca9b54, type: 2}
+  levelInfo: {fileID: 0}
+  player: {fileID: 0}
 --- !u!1 &773133941
 GameObject:
   m_ObjectHideFlags: 0
@@ -7364,6 +7366,7 @@ MonoBehaviour:
   selectObjectBoxPrefab: {fileID: 7611081085781968859, guid: 4438fccf787b7ca419b9d8ee1844fc92, type: 3}
   objectParameterBoxPrefab: {fileID: 1277318339661018463, guid: 143bcdc50f3ebba44a82e504dc0744bd, type: 3}
   largeObjectParameterBoxPrefab: {fileID: 8621851070061113061, guid: 12e694a448fe2ad4e93c740bac2144b3, type: 3}
+  levelName: 
   currentUuid: 0
   allRotations:
   - {x: 0, y: 0, z: 0, w: 1}

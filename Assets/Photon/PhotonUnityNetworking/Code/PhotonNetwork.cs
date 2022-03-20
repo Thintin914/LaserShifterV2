@@ -2066,7 +2066,7 @@ namespace Photon.Pun
                 NetworkingClient.MatchMakingCallbackTargets.OnCreatedRoom();
             }
 
-            NetworkingClient.MatchMakingCallbackTargets.OnJoinedRoom();
+            NetworkingClient.MatchMakingCallbackTargets.OnJoinedRoomAsync();
         }
 
         /// <summary>On MasterServer this joins the default lobby which list rooms currently in use.</summary>

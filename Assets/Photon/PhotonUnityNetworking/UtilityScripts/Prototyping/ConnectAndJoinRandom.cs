@@ -91,7 +91,7 @@ namespace Photon.Pun.UtilityScripts
             Debug.Log("OnDisconnected(" + cause + ")");
         }
 
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
             Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room in region [" + PhotonNetwork.CloudRegion + "]. Game is now running.");
         }

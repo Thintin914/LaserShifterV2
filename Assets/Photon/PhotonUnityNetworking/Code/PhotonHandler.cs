@@ -276,7 +276,7 @@ namespace Photon.Pun
 
         protected List<int> reusableIntList = new List<int>();
 
-        public void OnJoinedRoom()
+        public void OnJoinedRoomAsync()
         {
 
             if (PhotonNetwork.ViewCount == 0)

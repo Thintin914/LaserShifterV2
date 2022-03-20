@@ -175,7 +175,7 @@ namespace Photon.Pun.Demo.Cockpit
 			{
 				if (PhotonNetwork.Server == ServerConnection.GameServer)
 				{
-					this.OnJoinedRoom ();
+					this.OnJoinedRoomAsync ();
 
 				}
 				else if (PhotonNetwork.Server == ServerConnection.MasterServer || PhotonNetwork.Server == ServerConnection.NameServer)
@@ -731,7 +731,7 @@ namespace Photon.Pun.Demo.Cockpit
 			if (debug)  Debug.Log("PunCockpit:OnJoinRandomFailed(" + returnCode + "," + message + ")");
         }
 
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
 
             this.StateText.text = "Connected to GameServer " + (PhotonNetwork.OfflineMode ? " <Color=Red><b>Offline</b></color>" : "");

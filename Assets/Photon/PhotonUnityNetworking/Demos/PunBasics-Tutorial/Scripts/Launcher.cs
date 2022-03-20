@@ -203,7 +203,7 @@ namespace Photon.Pun.Demo.PunBasics
 		/// Also, all custom properties should be already available as Room.customProperties. Check Room..PlayerCount to find out if
 		/// enough players are in the room to start playing.
 		/// </remarks>
-		public override void OnJoinedRoom()
+		public override void OnJoinedRoomAsync()
 		{
 			LogFeedback("<Color=Green>OnJoinedRoom</Color> with "+PhotonNetwork.CurrentRoom.PlayerCount+" Player(s)");
 			Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.\nFrom here on, your game would be running.");

@@ -260,7 +260,7 @@ namespace Photon.Pun
         ///
         /// If you want a match to be started "actively", enable the user to signal "ready" (using OpRaiseEvent or a Custom Property).
         /// </remarks>
-        public virtual void OnJoinedRoom()
+        public virtual void OnJoinedRoomAsync()
         {
         }
 

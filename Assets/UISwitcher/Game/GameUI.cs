@@ -51,7 +51,15 @@ local Quaternion = Unity.Quaternion
 
                     if (command[0] == "room" && command.Length > 1)
                     {
+                        if (command[1].Equals(CommonUI.Instance.currentRoomName)) return;
+
                         UISwitcher.Instance.SetUI("Game");
+                        if (player != null)
+                        {
+                            CommonUI.Instance.EnableDynamicCamera(false, null);
+                            PhotonNetwork.Destroy(player.gameObject);
+                            player = null;
+                        }
                         // Spawn Player
                         await CommonUI.Instance.GoToRoom(command[1], true);
                         while (player == null)
@@ -60,10 +68,12 @@ local Quaternion = Unity.Quaternion
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
+                        Debug.Log("Go Room Success");
+                        ShowCommentBar();
                     }
                     else if (command[0] == "editor")
                     {
-                        CommonUI.Instance.LeaveRoom();
+                        await CommonUI.Instance.LeaveRoom();
                         UISwitcher.Instance.SetUI("Editor");
                         EditorUI.Instance.SetUp();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
@@ -71,7 +81,7 @@ local Quaternion = Unity.Quaternion
                     }
                     else if (command[0] == "studio")
                     {
-                        CommonUI.Instance.LeaveRoom();
+                        await CommonUI.Instance.LeaveRoom();
                         UISwitcher.Instance.SetUI("Studio");
                         StudioUI.Instance.GoToStudio();
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
@@ -94,13 +104,15 @@ local Quaternion = Unity.Quaternion
         if (uiName == "Game")
         {
             gameObject.SetActive(true);
-            ShowCommentBar();
         }
         else 
         {
             gameObject.SetActive(false);
             if (player != null)
+            {
+                CommonUI.Instance.EnableDynamicCamera(false, null);
                 PhotonNetwork.Destroy(player.gameObject);
+            }
         }
     }
 

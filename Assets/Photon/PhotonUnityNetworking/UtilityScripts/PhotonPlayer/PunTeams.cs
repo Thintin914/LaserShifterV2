@@ -68,7 +68,7 @@ namespace Photon.Pun.UtilityScripts
 
         /// <summary>Needed to update the team lists when joining a room.</summary>
         /// <remarks>Called by PUN. See enum MonoBehaviourPunCallbacks for an explanation.</remarks>
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
 
             this.UpdateTeams();

@@ -74,7 +74,7 @@ namespace Photon.Pun.Demo.Cockpit
 
         #region MonoBehaviourPunCallbacks implementation
 
-        public override void OnJoinedRoom()
+        public override void OnJoinedRoomAsync()
         {
             //Debug.Log("OnJoinedRoom", this);
 
