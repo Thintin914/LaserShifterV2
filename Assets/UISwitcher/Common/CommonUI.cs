@@ -122,6 +122,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
 
     public async Task RemoveRoom()
     {
+        return;
         if (UISwitcher.Instance.currentUIName.Equals("Game"))
         {
             if (PhotonNetwork.PlayerList.Length == 1)
