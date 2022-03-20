@@ -335,7 +335,7 @@ local Quaternion = Unity.Quaternion
             string username = t.GetComponent<PlayerTriggerer>().username.text;
             if (!finishedPlayers.Contains(username))
                 finishedPlayers.Add(t.GetComponent<PlayerTriggerer>().username.text);
-            if (PhotonNetwork.PlayerList.Length >= finishedPlayers.Count)
+            if (finishedPlayers.Count >= PhotonNetwork.PlayerList.Length)
             {
                 finishedPlayers.Clear();
                 LevelRound.Instance.FindLevelData();
