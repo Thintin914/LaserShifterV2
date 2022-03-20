@@ -5,19 +5,22 @@ using UnityEngine.UI;
 using TMPro;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using UnityEngine.EventSystems;
 
 public class TestingUI : MonoBehaviour
 {
     public static TestingUI Instance;
     public GameObject playerOuterPrefab;
     public GameObject[] playerPrefabs;
-    [HideInInspector]public List<PlayerTriggerer> testingPlayers = new List<PlayerTriggerer>();
-    private Button resultButton, tempButton;
+    public List<PlayerTriggerer> testingPlayers = new List<PlayerTriggerer>();
+    private Button resultButton, passedLevelButton;
     public string result = "Fail";
     private Transform levelBar;
     private TMP_InputField levelInputField;
 
     private Button levelComfireButton, levelCancelButton;
+    public Transform controllingPlayer;
+
     private void Awake()
     {
         Instance = this;
@@ -121,6 +124,7 @@ public class TestingUI : MonoBehaviour
         });
 
         resultButton = transform.GetChild(0).GetComponent<Button>();
+        resultButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Back";
         resultButton.onClick.RemoveAllListeners();
         resultButton.onClick.AddListener(() =>
         {
@@ -142,9 +146,9 @@ public class TestingUI : MonoBehaviour
             }
         });
 
-        tempButton = transform.GetChild(1).GetComponent<Button>();
-        tempButton.onClick.RemoveAllListeners();
-        tempButton.onClick.AddListener(() =>
+        passedLevelButton = transform.GetChild(1).GetComponent<Button>();
+        passedLevelButton.onClick.RemoveAllListeners();
+        passedLevelButton.onClick.AddListener(() =>
         {
             levelBar.gameObject.SetActive(true);
         });
@@ -156,13 +160,22 @@ public class TestingUI : MonoBehaviour
         {
             levelBar.gameObject.SetActive(false);
             gameObject.SetActive(true);
-            resultButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Back";
         }
         else
         {
             gameObject.SetActive(false);
             if (CommonUI.Instance.dynamicCamera.gameObject.activeSelf)
                 CommonUI.Instance.EnableDynamicCamera(false, null);
+
+            if (testingPlayers.Count > 0)
+            {
+                foreach (PlayerTriggerer g in TestingUI.Instance.testingPlayers)
+                {
+                    if (g != null)
+                        Destroy(g.gameObject);
+                }
+                testingPlayers.Clear();
+            }
         }
     }
 
@@ -208,9 +221,15 @@ public class TestingUI : MonoBehaviour
                 Transform t = SpawnTestingPlayer(m.transform.position).transform;
                 m.gameObject.SetActive(false);
                 if (!hasAssignedPlayer)
-                    CommonUI.Instance.EnableDynamicCamera(true, t);
+                {
+                    controllingPlayer = t;
+                    CommonUI.Instance.EnableDynamicCamera(true, t.GetChild(1));
+                }
             }
         }
+        result = "Fail";
+        passedLevelButton.gameObject.SetActive(false);
+        GameUI.Instance.OnWinEvent += LevelPassed;
     }
 
     public GameObject SpawnTestingPlayer(Vector3 position)
@@ -222,5 +241,30 @@ public class TestingUI : MonoBehaviour
         player.transform.position += Vector3.down;
         testingPlayers.Add(temp.GetComponent<PlayerTriggerer>());
         return temp;
+    }
+
+    public void LevelPassed(Transform winner)
+    {
+        if (result.Equals("Fail"))
+        {
+            result = "Passed";
+            passedLevelButton.gameObject.SetActive(true);
+            GameUI.Instance.PauseTimer(true);
+        }
+        if (winner.CompareTag("Player"))
+        {
+            winner.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 160, 0, 255);
+        }
+    }
+
+    private int shiftingIndex = 0;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            shiftingIndex = (shiftingIndex + 1) % testingPlayers.Count;
+            controllingPlayer = testingPlayers[shiftingIndex].transform;
+            CommonUI.Instance.EnableDynamicCamera(true, controllingPlayer.GetChild(1));
+        }
     }
 }

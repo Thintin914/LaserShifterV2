@@ -144,14 +144,7 @@ public class EditorUI : MonoBehaviour
                     m.transform.position = new Vector3(m.x, m.y, m.z);
                     m.transform.rotation = allRotations[m.rotationalIndex];
                 }
-            }
-            if (TestingUI.Instance.testingPlayers.Count > 0)
-            {
-                foreach(PlayerTriggerer g in TestingUI.Instance.testingPlayers)
-                {
-                    if (g != null)
-                    Destroy(g.gameObject);
-                }
+                GameUI.Instance.RemoveAllListeners();
             }
         }
         else

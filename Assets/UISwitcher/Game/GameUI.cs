@@ -99,6 +99,7 @@ local Quaternion = Unity.Quaternion
         commentBar.gameObject.SetActive(true);
     }
 
+    private bool pauseTimer = false;
     private CancellationTokenSource timerCancelSource = null;
     public void StopTimer()
     {
@@ -108,8 +109,22 @@ local Quaternion = Unity.Quaternion
             timerCancelSource.Dispose();
         }
     }
+
+    public void PauseTimer(bool isPause)
+    {
+        if (isPause)
+        {
+            pauseTimer = true;
+        }
+        else
+        {
+            pauseTimer = false;
+        }
+    }
+
     public async void StartTimer(float countdownTimer, Action callback = null)
     {
+        pauseTimer = false;
         timer = countdownTimer;
         Debug.Log("Start Counting");
         StopTimer();
@@ -124,10 +139,13 @@ local Quaternion = Unity.Quaternion
             double leftTime = 0;
             while (endTime > startTime)
             {
-                startTime += Time.deltaTime;
-                leftTime = endTime - startTime;
-                TimeSpan t = TimeSpan.FromSeconds(leftTime);
-                timerDisplay.text = $"{t.Minutes}:{t.Seconds}";
+                if (!pauseTimer)
+                {
+                    startTime += Time.deltaTime;
+                    leftTime = endTime - startTime;
+                    TimeSpan t = TimeSpan.FromSeconds(leftTime);
+                    timerDisplay.text = $"{t.Minutes}:{t.Seconds}";
+                }
                 await Task.Yield();
                 if (timerCancelSource == null || timerCancelSource.IsCancellationRequested)
                     return;
@@ -208,5 +226,13 @@ local Quaternion = Unity.Quaternion
     public void TriggerWinEvent(Transform winner)
     {
         OnWinEvent?.Invoke(winner);
+    }
+
+    public void RemoveAllListeners()
+    {
+        foreach (Delegate d in OnWinEvent.GetInvocationList())
+        {
+            OnWinEvent -= (OnWinDelegate)d;
+        }
     }
 }

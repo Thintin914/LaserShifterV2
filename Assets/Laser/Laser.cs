@@ -17,7 +17,6 @@ public class Laser : MonoBehaviour
         if (boxPt.x > longest) longest = boxPt.x;
         if (boxPt.y > longest) longest = boxPt.y;
         if (boxPt.z > longest) longest = boxPt.z;
-        longest += longest * 0.25f;
         transform.position += longest * transform.forward;
 
         startTime = Time.timeSinceLevelLoad;

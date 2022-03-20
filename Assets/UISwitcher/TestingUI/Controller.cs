@@ -19,6 +19,12 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
+        if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+        {
+            if (!TestingUI.Instance.controllingPlayer.Equals(transform))
+                return;
+        }
+
         bool groundedPlayer = controller.isGrounded;
         if (groundedPlayer)
         {

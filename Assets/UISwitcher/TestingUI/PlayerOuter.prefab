@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -3102644243936149077}
   m_Layer: 0
   m_Name: PlayerOuter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   username: {fileID: 4003676452149051075}
+  pv: {fileID: 0}
 --- !u!143 &8978328294815140695
 CharacterController:
   m_ObjectHideFlags: 0
@@ -114,7 +115,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -3102644243936149077}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

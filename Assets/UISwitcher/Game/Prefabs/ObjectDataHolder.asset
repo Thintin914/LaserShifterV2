@@ -43,8 +43,9 @@ MonoBehaviour:
     spacing: 1
     model: {fileID: 1225572508051941441, guid: 12d616fa8c4696847a8b3d5fca7ca75d, type: 3}
     hiddenLogic: 
-    logic: "function onLaserHit(sender)\n\t-- laser spanwer\n\tprint(sender[0].name)\n\t--
-      laser triggerer\n\tprint(sender[1].name)\nend"
+    logic: "function onLaserHit(sender)\n\tGame:TriggerWinEvent(sender[1])\nend\n\nfunction
+      start()\n\tGame:OnWinEvent('+', playerWin)\nend\n\nfunction playerWin(winner)\n\tprint(winner.name
+      .. ' ' .. 'Win!')\nend"
   - objectName: Mirror
     spacing: 1
     model: {fileID: 1727761945240766723, guid: d30dcae2921f7f84bbd90f2c18b19b16, type: 3}
