@@ -20,6 +20,7 @@ public class LaserManager : MonoBehaviour
         laser.source = triggerer;
         laser.speed = speed;
         laser.property = property;
+        laser.levelInfo = GameUI.Instance.levelInfo.text;
         return laser;
     }
 }

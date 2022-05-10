@@ -194,6 +194,8 @@ public class LevelRound : MonoBehaviour
                 GameUI.Instance.players[i].transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
             }
         }
+        if (GameUI.Instance.player)
+            GameUI.Instance.player.transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
         isCreatingLevel = false;
     }
 }

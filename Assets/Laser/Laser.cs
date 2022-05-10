@@ -8,6 +8,7 @@ public class Laser : MonoBehaviour
     public Transform spanwer;
     public Transform source;
     public string property;
+    public string levelInfo = null;
 
     private float startTime, endTime;
     private void Start()
@@ -27,7 +28,7 @@ public class Laser : MonoBehaviour
     {
         transform.position += transform.forward * speed * Time.deltaTime;
         startTime += Time.deltaTime;
-        if (startTime > endTime)
+        if (startTime > endTime || levelInfo != GameUI.Instance.levelInfo.text)
             Destroy(gameObject);
     }
 

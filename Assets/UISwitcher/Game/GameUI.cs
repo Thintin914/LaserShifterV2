@@ -266,6 +266,7 @@ local Quaternion = Unity.Quaternion
 
         Material defaultMaterial = colorPresets.GetColorSet("White").material;
 
+        if (!trans) return;
         MeshRenderer rend = trans.GetComponent<MeshRenderer>();
         MaterialPropertyBlock block = new MaterialPropertyBlock();
         if (rend.material != null)
