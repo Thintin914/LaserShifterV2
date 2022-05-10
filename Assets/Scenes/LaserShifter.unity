@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1974,7 +1974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectBoxPrefab: {fileID: 7611081085781968859, guid: 4438fccf787b7ca419b9d8ee1844fc92, type: 3}
-  studioModel: {fileID: 8543854935405312037, guid: 428ca0c69570fd448bfb98001157e81b, type: 3}
+  studioModel: {fileID: 6145768721094258698, guid: c9925cbad890a7745a07965aed8477ec, type: 3}
   removeButtonPrefab: {fileID: 5228703837336489867, guid: e0827f4da03f8cb40b4d50a5316ea0e4, type: 3}
   selectBoxs: []
   verticalLayout: {fileID: 272627454}

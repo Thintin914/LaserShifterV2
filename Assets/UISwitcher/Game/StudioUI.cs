@@ -155,7 +155,7 @@ public class StudioUI : MonoBehaviour
     {
         if (uiName == "Studio")
         {
-            studioModelHolder = Instantiate(studioModel, new Vector3(-1.32f,0,-4.34f), Quaternion.Euler(0,53.2f,0));
+            studioModelHolder = Instantiate(studioModel, new Vector3(-38.6f,-1.16f,7.28f), Quaternion.Euler(0,53.2f,0));
             studioModelHolder.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
             playerHolder = TestingUI.Instance.SpawnTestingPlayer(new Vector3(1,2.5f,1));
             gameObject.SetActive(true);
