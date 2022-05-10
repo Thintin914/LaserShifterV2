@@ -32,6 +32,7 @@ public class Controller : MonoBehaviour
         if (UISwitcher.Instance.currentUIName.Equals("Game"))
         {
             if (!pv.IsMine) return;
+            if (LevelRound.Instance.isCreatingLevel) return;
         }
 
         bool groundedPlayer = controller.isGrounded;

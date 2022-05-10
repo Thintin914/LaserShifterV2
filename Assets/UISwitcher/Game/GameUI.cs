@@ -36,10 +36,6 @@ local Quaternion = Unity.Quaternion
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
-        commentBar = transform.GetChild(0).GetComponent<TMP_InputField>();
-        timerDisplay = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        levelInfo = transform.GetChild(2).GetComponent<TextMeshProUGUI>();
-
         commentBar.onEndEdit.RemoveAllListeners();
         commentBar.onEndEdit.AddListener(async (value) =>
         {
@@ -86,7 +82,6 @@ local Quaternion = Unity.Quaternion
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
                         Debug.Log("Go Room Success");
-                        ShowCommentBar();
                     }
                     else if (command[0] == "editor")
                     {
@@ -106,6 +101,12 @@ local Quaternion = Unity.Quaternion
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
                     }
+
+                    ShowCommentBar();
+                }
+                else
+                {
+                    Talk(value);
                 }
 
                 commentBar.DeactivateInputField();
@@ -134,11 +135,24 @@ local Quaternion = Unity.Quaternion
                 CommonUI.Instance.EnableDynamicCamera(false, null);
                 PhotonNetwork.Destroy(player.gameObject);
             }
+            players.Clear();
         }
     }
 
+    public async void Talk(string content)
+    {
+        if (!player) return;
+
+        player.talk.text = content;
+        await Task.Delay((int)((content.Length * 0.5f) * 1000));
+        player.talk.text = null;
+    }
+
+    public List<GameObject> players = new List<GameObject>();
     public GameObject SpawnServerPlayer(Vector3 position)
     {
+        if (players.Count > 0)
+        players.Clear();
         GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
         int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
         pv.RPC("AttacchModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID, rand, CommonUI.Instance.username);
@@ -154,6 +168,8 @@ local Quaternion = Unity.Quaternion
         player.transform.localPosition = Vector3.zero;
         player.transform.position += Vector3.down;
         t.GetComponent<PlayerTriggerer>().username.text = name;
+
+        players.Add(player);
     }
 
     public void ShowCommentBar()
@@ -221,6 +237,7 @@ local Quaternion = Unity.Quaternion
         finally
         {
             Debug.Log("Timer Complete");
+            if (timerDisplay)
             timerDisplay.gameObject.SetActive(false);
             callback?.Invoke();
         }

@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 public class PlayerTriggerer : MonoBehaviour
 {
     public TMPro.TextMeshPro username;
+    public TMPro.TextMeshPro talk;
     public PhotonView pv;
     public Controller controller;
 
     private void Awake()
     {
         username.text = CommonUI.Instance.username;
+        talk.text = null;
         pv = GetComponent<PhotonView>();
         controller = GetComponent<Controller>();
     }
@@ -20,6 +22,7 @@ public class PlayerTriggerer : MonoBehaviour
     private void Update()
     {
         username.transform.forward = CommonUI.Instance.currentCamera.transform.forward;
+        talk.transform.forward = CommonUI.Instance.currentCamera.transform.forward;
         if (UISwitcher.Instance.currentUIName.Equals("Testing"))
         {
             if (Input.GetKeyDown(KeyCode.Z))

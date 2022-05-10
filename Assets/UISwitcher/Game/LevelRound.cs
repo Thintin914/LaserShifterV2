@@ -28,7 +28,7 @@ public class LevelRound : MonoBehaviour
     private bool isLevelPreviously = false;
     private float startTime = 0;
     private float endTime = 0;
-    private bool isCreatingLevel = false;
+    public bool isCreatingLevel = false;
     private void Update()
     {
         if (!UISwitcher.Instance.currentUIName.Equals("Game"))
@@ -135,11 +135,12 @@ public class LevelRound : MonoBehaviour
         };
         await roomDocRef.UpdateAsync(update);
 
-        pv.RPC("CreateLevel", RpcTarget.All, id, levelIndex);
+        await CreateLevel(id, levelIndex, 0, 0);
+        pv.RPC("CreateLevel", RpcTarget.Others, id, levelIndex, startTime, endTime);
     }
 
     [PunRPC]
-    public async Task CreateLevel(int id, int levelIndex)
+    public async Task CreateLevel(int id, int levelIndex, float startTime = 0, float endTime = 0)
     {
         isCreatingLevel = true;
         GameUI.Instance.RemoveAllListeners();
@@ -174,10 +175,25 @@ public class LevelRound : MonoBehaviour
         int rand = Random.Range(0, possibleSpawnPoint.Count);
         GameUI.Instance.player.SetPosition(possibleSpawnPoint[rand]);
 
-        startTime = Time.timeSinceLevelLoad;
-        endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
+        if (startTime == 0)
+        {
+            this.startTime = Time.timeSinceLevelLoad;
+            this.endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
+        }
+        else
+        {
+            this.startTime = startTime;
+            this.endTime = endTime;
+        }
 
-        GameUI.Instance.player.transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
+        for(int i = 0; i < GameUI.Instance.players.Count; i++)
+        {
+            if (GameUI.Instance.players[i] != null)
+            {
+                if (GameUI.Instance.players[i].transform.GetChild(0).GetComponent<TextMeshPro>())
+                GameUI.Instance.players[i].transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
+            }
+        }
         isCreatingLevel = false;
     }
 }
