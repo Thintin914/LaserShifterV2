@@ -19,6 +19,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     private Button closeButton;
     public PopupNotice popupNotice;
     public string username;
+    public bool isGuest = false;
     public string currentRoomName;
     public Camera dynamicCamera, mainCamera;
     [HideInInspector]public Camera currentCamera;

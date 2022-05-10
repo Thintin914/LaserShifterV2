@@ -35,7 +35,7 @@ public class TestingUI : MonoBehaviour
         levelComfireButton.onClick.RemoveAllListeners();
         levelComfireButton.onClick.AddListener(async() =>
         {
-            if (string.IsNullOrEmpty(CommonUI.Instance.username))
+            if (CommonUI.Instance.isGuest)
             {
                 Remove();
                 UISwitcher.Instance.SetUI("Editor");

@@ -65,6 +65,7 @@ public class LoginUI : MonoBehaviour
                 int rand = Random.Range(1000, 9999);
                 CommonUI.Instance.popupNotice.Show($"Welcome,\nGuest#{rand}", 2);
                 CommonUI.Instance.username = "Guest#" + rand;
+                CommonUI.Instance.isGuest = true;    
 
                 UISwitcher.Instance.SetUI("Studio");
                 StudioUI.Instance.GoToStudio();
