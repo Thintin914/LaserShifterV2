@@ -65,6 +65,7 @@ public class LevelRound : MonoBehaviour
 
     public async void InitalizeLevel()
     {
+        isCreatingLevel = false;
         if (isHost)
         {
             startTime = Time.deltaTime;
@@ -91,24 +92,39 @@ public class LevelRound : MonoBehaviour
         }
     }
 
-    private int previousUserID = -1;
     public async void FindLevelData()
     {
+        Debug.Log("isCreatingLevel: " + isCreatingLevel);
         if (isCreatingLevel) return;
         isCreatingLevel = true;
         GameUI.Instance.StopTimer();
         GameUI.Instance.timerDisplay.gameObject.SetActive(true);
 
-        bool complete = false;
+        bool needRefetch = false;
+        int levelIndex = 0;
         int id = 0;
         do
         {
-            id = Random.Range(1, totalUser + 1);
-            complete = await CommonUI.Instance.GetLevelData(id);
-        } while (!complete || previousUserID.Equals(id));
-        previousUserID = id;
-
-        int levelIndex = Random.Range(0, CommonUI.Instance.userLevels[id].Count);
+            bool complete = false;
+            id = 0;
+            do
+            {
+                id = Random.Range(1, totalUser + 1);
+                complete = await CommonUI.Instance.GetLevelData(id);
+            } while (!complete);
+            Debug.Log("isCreatingLevel: Got Level Data of: " + id);
+            levelIndex = Random.Range(0, CommonUI.Instance.userLevels[id].Count);
+            string levelData = CommonUI.Instance.GetLevelFromUser(id, levelIndex);
+            if (levelData == null)
+            {
+                Debug.Log("isCreatingLevel: Refetching");
+                needRefetch = true;
+            }
+            else
+            {
+                needRefetch = false;
+            }
+        } while (needRefetch);
 
         DocumentReference roomDocRef = CommonUI.db.Collection("rooms").Document(CommonUI.Instance.currentRoomName);
         Dictionary<string, object> update = new Dictionary<string, object>

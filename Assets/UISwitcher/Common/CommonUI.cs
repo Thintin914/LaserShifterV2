@@ -202,6 +202,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
     {
         if (userLevels.ContainsKey(id))
         {
+            if (id >= userLevels[id].Count) return null;
             return string.Format("{0}", userLevels[id][index]);
         }
         return null;
