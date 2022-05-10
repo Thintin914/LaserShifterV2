@@ -7350,6 +7350,7 @@ MonoBehaviour:
   objectParameterBoxPrefab: {fileID: 1277318339661018463, guid: 143bcdc50f3ebba44a82e504dc0744bd, type: 3}
   largeObjectParameterBoxPrefab: {fileID: 8621851070061113061, guid: 12e694a448fe2ad4e93c740bac2144b3, type: 3}
   levelName: 
+  background: {fileID: 643381195}
   currentUuid: 0
   allRotations:
   - {x: 0, y: 0, z: 0, w: 1}
@@ -8498,6 +8499,7 @@ MonoBehaviour:
   pv: {fileID: 0}
   isHost: 0
   totalUser: 0
+  isCreatingLevel: 0
 --- !u!4 &1570975710
 Transform:
   m_ObjectHideFlags: 0

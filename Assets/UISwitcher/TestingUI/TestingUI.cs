@@ -239,6 +239,7 @@ public class TestingUI : MonoBehaviour
             if (m.objectName.Equals("Spawn Point"))
             {
                 Transform t = SpawnTestingPlayer(m.transform.position).transform;
+                t.GetComponent<PlayerTriggerer>().SetPosition(m.transform.position);
                 m.gameObject.SetActive(false);
                 if (!hasAssignedPlayer)
                 {

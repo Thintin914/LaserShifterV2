@@ -20,6 +20,7 @@ public class EditorUI : MonoBehaviour
     public Transform LeftVerticalLayout;
     public GameObject selectObjectBoxPrefab, objectParameterBoxPrefab, largeObjectParameterBoxPrefab;
     public string levelName = "undefined";
+    public GameObject background;
 
     public int currentUuid = 0;
 
@@ -133,6 +134,7 @@ public class EditorUI : MonoBehaviour
         if (uiName == "Editor")
         {
             gameObject.SetActive(true);
+            background.SetActive(true);
             GameUI.Instance.ShowCommentBar();
             GameUI.Instance.StopTimer();
             if (mapObjects.Count > 0)
@@ -155,7 +157,14 @@ public class EditorUI : MonoBehaviour
             {
                 Remove();
             }
-           
+           if (uiName == "Studio")
+            {
+                background.SetActive(true);
+            }
+            else
+            {
+                background.SetActive(false);
+            }
         }
     }
 

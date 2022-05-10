@@ -237,6 +237,7 @@ MonoBehaviour:
   talk: {fileID: 8745265011701731041}
   pv: {fileID: 0}
   controller: {fileID: 0}
+  spawnPoint: {x: 0, y: 0, z: 0}
 --- !u!143 &8978328294815140695
 CharacterController:
   m_ObjectHideFlags: 0
