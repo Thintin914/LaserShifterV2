@@ -33,6 +33,10 @@ public class PlayerTriggerer : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Z) && pv.IsMine)
                 pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
         }
+        if (transform.position.y <= -5)
+        {
+            SetPosition(spawnPoint);
+        }
     }
 
     public void Trigger(float range)
@@ -47,11 +51,13 @@ public class PlayerTriggerer : MonoBehaviour
         }
     }
 
+    public Vector3 spawnPoint = Vector3.zero;
     public void SetPosition(Vector3 position)
     {
         controller.enabled = false;
         transform.position = position;
         controller.enabled = true;
+        spawnPoint = position;
     }
 
     [PunRPC]

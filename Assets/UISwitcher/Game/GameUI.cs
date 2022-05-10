@@ -19,6 +19,7 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI timerDisplay;
     public ColorPresets colorPresets;
     public TextMeshProUGUI levelInfo;
+    public GameObject background;
 
     public PlayerTriggerer player;
     private PhotonView pv;
@@ -125,10 +126,12 @@ local Quaternion = Unity.Quaternion
         if (uiName == "Game")
         {
             gameObject.SetActive(true);
+            background.SetActive(false);
         }
         else 
         {
             gameObject.SetActive(false);
+            background.SetActive(true);
             if (player != null)
             {
                 LevelRound.Instance.isHost = false;
