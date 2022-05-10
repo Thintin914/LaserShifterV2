@@ -62,3 +62,13 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\nend"
+  - objectName: Rotating Laser Sender
+    spacing: 0.5
+    model: {fileID: 8048060174132114619, guid: e9963569b5d21064e8c42f0b849b7600, type: 3}
+    hiddenLogic: 
+    logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
+      this.transform)\n\tthis.cycle:Loop(\"rotate\", -1,  0.25)\nend\n\nfunction
+      onTrigger(triggerer)\n\tlaser = Game:ShotLaser(this.transform, triggerer[0],
+      this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position =
+      laser.transform.position + Vector3.up * 0.4\nend\n\nfunction rotate()\n\tthis.transform:Rotate(Vector3.up 
+      * 10);\nend"
