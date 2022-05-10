@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   username: 
+  isGuest: 0
   currentRoomName: 
   dynamicCamera: {fileID: 1800518287}
   mainCamera: {fileID: 963194227}
