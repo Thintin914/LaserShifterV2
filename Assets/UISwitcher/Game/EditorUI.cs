@@ -126,7 +126,6 @@ public class EditorUI : MonoBehaviour
 
         Instance = this;
         cam = Camera.main;
-        speed = 10 * Time.deltaTime;
         groundMask = (1 << LayerMask.NameToLayer("Base")) | (1 << LayerMask.NameToLayer("Built"));
         objectMask = 1 << LayerMask.NameToLayer("Base");
         ignoreBaseMask = ~(1 << LayerMask.NameToLayer("Base"));
@@ -251,27 +250,27 @@ public class EditorUI : MonoBehaviour
         objectParameterBoxs.Clear();
     }
 
-    private float speed = 0;
+    private float speed = 100;
     public void ControlCamera()
     {
         if (GameUI.Instance.commentBar.isFocused) return;
 
         if (Input.GetKey(KeyCode.W))
         {
-            cam.transform.position += Vector3.forward * speed;
+            cam.transform.position += Vector3.forward * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            cam.transform.position += Vector3.back * speed;
+            cam.transform.position += Vector3.back * speed * Time.deltaTime;
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            cam.transform.position += Vector3.left * speed;
+            cam.transform.position += Vector3.left * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            cam.transform.position += Vector3.right * speed;
+            cam.transform.position += Vector3.right * speed * Time.deltaTime;
         }
     }
 

@@ -19,10 +19,33 @@ public class LaserManager : MonoBehaviour
         SoundManagerScript.PlaySound("laser");
         Laser laser = Instantiate(laserPrefab, spawner.position, Quaternion.Euler(spawner.forward)).GetComponent<Laser>();
         laser.transform.rotation = Quaternion.Euler(rotation);
+
+        BoxCollider box = spawner.GetComponent<BoxCollider>();
+        Vector3 boxPt = box.bounds.size;
+        float longest = 0;
+        float centerOffset = 0;
+        if (boxPt.x > longest)
+        {
+            longest = boxPt.x;
+            centerOffset = box.center.x;
+        }
+        if (boxPt.y > longest)
+        {
+            longest = boxPt.y;
+            centerOffset = box.center.y;
+        }
+        if (boxPt.z > longest)
+        {
+            longest = boxPt.z;
+            centerOffset = box.center.z;
+        }
+        laser.transform.position = box.bounds.center + (longest + centerOffset) * laser.transform.forward * 0.5f;
+
         laser.spanwer = spawner;
         laser.source = triggerer;
         laser.speed = speed;
         laser.property = property;
+
         laser.levelInfo = GameUI.Instance.levelInfo.text;
         return laser;
     }
