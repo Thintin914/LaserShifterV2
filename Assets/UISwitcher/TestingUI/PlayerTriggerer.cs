@@ -33,7 +33,7 @@ public class PlayerTriggerer : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Z) && pv.IsMine)
                 pv.RPC("RemoteTrigger", RpcTarget.All, pv.ViewID);
         }
-        if (transform.position.y <= -5)
+        if (transform.position.y <= -30)
         {
             SetPosition(spawnPoint);
             DeathEffect();
