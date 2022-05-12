@@ -63,7 +63,8 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Small Plane", description = "A small plane" });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Rotating Laser Sender", description = "Laser Send, but constantly rotating." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Lever", description = "Can remotely trigger other objects." });
-        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Elevator", description = "Move between multiple positions." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Auto Elevator", description = "Move between multiple positions automatically." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Elevator", description = "Move between multiple positions when triggered." });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();

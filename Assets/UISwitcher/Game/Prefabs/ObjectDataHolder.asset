@@ -81,22 +81,45 @@ MonoBehaviour:
       nil then\n\t\tanimator = this:GetComponent(typeof(Unity.Animator))\n\tend\n\n\tif
       isTurn == true then\n\t\tisTurn = false\n\telse\n\t\tisTurn =true\n\tend\n\tanimator:SetBool(\"isTurn\",
       isTurn)\nend\n"
+  - objectName: Auto Elevator
+    spacing: 0.5
+    model: {fileID: 814617808490190089, guid: 6df23a46b89ac8541a03261a9d25e9d8, type: 3}
+    hiddenLogic: 
+    logic: "local points = { }\r\nlocal pointCount\n\r\nfunction start()\n\tpoints[0]
+      = Vector3(-6.5, 0, 3)\n\tpoints[1] = Vector3(-6.5, 0, -7)\n\tpoints[2] = Vector3(7,
+      0, -7)\n\tpoints[3] = Vector3(7.5, 0, 3)\n\n\tgetPointCount()\n\tthis.cycle:Loop(\"fixedRoute\",
+      -1,  0.05)\nend\n\nlocal isForward = true\r\nlocal currentPoint = 0\nlocal
+      speed = 0.01\n    \r\nfunction fixedRoute()\r\n\tif isForward == true then\n\tthis.transform.position
+      = this.transform.position + (points[currentPoint + 1] - this.transform.position).normalized
+      * speed\n\telse\n\tthis.transform.position = this.transform.position + (points[currentPoint
+      - 1] - this.transform.position).normalized * speed\n\tend\n\t\n\tif isForward
+      == true then\n\t\tif Vector3.Distance(this.transform.position, points[currentPoint
+      + 1]) < 1 then\n\t\t\tcurrentPoint = currentPoint + 1\n\t\t\tif currentPoint
+      + 1 >= pointCount then\n\t\t\t\tisForward = false\n\t\t\t\tcurrentPoint = pointCount
+      - 1\n\t\t\tend\n\t\tend\n\telse\n\t\tif Vector3.Distance(this.transform.position,
+      points[currentPoint - 1]) < 1 then\n\t\t\tcurrentPoint = currentPoint - 1\n\t\t\tif
+      currentPoint <= 0 then\n\t\t\t\tisForward = true\n\t\t\t\tcurrentPoint = 0\n\t\t\tend\n\t\tend\n\tend\nend\n\nfunction
+      getPointCount()\n\tthis.transform.position = points[0]\n\tpointCount = 0\n\tfor
+      key, value in pairs (points) do\n\t\tpointCount = pointCount + 1\n\tend\nend"
   - objectName: Elevator
     spacing: 0.5
     model: {fileID: 814617808490190089, guid: 6df23a46b89ac8541a03261a9d25e9d8, type: 3}
     hiddenLogic: 
-    logic: "local points = { }\r\nlocal pointCount\n\r\nfunction start()\n\tpoint[0]
-      = Vector3(0,0,0)\n\tpoint[1] = Vector3(10,0,0)\n\n\tgetPointCount()\n\tthis.cycle:Loop(\"fixedRoute\",
-      -1,  0)\nend\n\nlocal isForward = true\r\nlocal currentPoint = 0\r\nlocal speed
-      = 10\r\n    \r\nfunction fixedRoute()\r\n    if isForward == true then\r\n       
-      this.transform.position = this.transform.position + (points[currentPoint +
-      1] - this.transform.position).normalized * speed\r\n    else\r\n        this.transform.position
-      = (points[currentPoint - 1] - this.transform.position).normalized * speed\r\n   
-      end\r\n    if isForward == true then\r\n        if Vector3.Distance(this.transform.position,
-      points[currentPoint + 1]) < 6 then\r\n            currentPoint = currentPoint
-      + 1\r\n        end\r\n        if currentPoint + 1 >= pointCount then\r\n           
-      isForward = false\r\n        end\r\n    else\r\n        if Vector3.Distance(this.transform.position,
-      points[currentPoint - 1]) < 6 then\r\n            currentPoint = currentPoint
-      - 1\r\n        end\r\n        if currentPoint - 1 < 0 then\r\n            isForward
-      = true\r\n        end\r\n    end\r\nend\n\nfunction getPointCount()\n\tpointCount
-      = 0\n\tfor key, value in pairs (points) do\n\t\tpointCount = pointCount + 1\n\tend\nend"
+    logic: "local points = { }\r\nlocal pointCount\n\r\nfunction start()\n\tpoints[0]
+      = Vector3(-6.5, 0, 3)\n\tpoints[1] = Vector3(-6.5, 0, -7)\n\tpoints[2] = Vector3(7,
+      0, -7)\n\tpoints[3] = Vector3(7.5, 0, 3)\n\n\tgetPointCount()\n\tthis.cycle:Loop(\"fixedRoute\",
+      -1,  0.05)\nend\n\nlocal isTriggered = false\nfunction onTrigger(triggerer)\n\tisTriggered
+      = true\nend\n\nlocal isForward = true\r\nlocal currentPoint = 0\nlocal speed
+      = 0.01\n\nfunction fixedRoute()\r\n\tif isTriggered == true then\n\t\tif isForward
+      == true then\n\t\tthis.transform.position = this.transform.position + (points[currentPoint
+      + 1] - this.transform.position).normalized * speed\n\t\telse\n\t\tthis.transform.position
+      = this.transform.position + (points[currentPoint - 1] - this.transform.position).normalized
+      * speed\n\t\tend\n\t\n\t\tif isForward == true then\n\t\t\tif Vector3.Distance(this.transform.position,
+      points[currentPoint + 1]) < 1 then\n\t\t\t\tisTriggered = false\n\t\t\t\tcurrentPoint
+      = currentPoint + 1\n\t\t\t\tif currentPoint + 1 >= pointCount then\n\t\t\t\t\tisForward
+      = false\n\t\t\t\t\tcurrentPoint = pointCount - 1\n\t\t\t\tend\n\t\t\tend\n\t\telse\n\t\t\tif
+      Vector3.Distance(this.transform.position, points[currentPoint - 1]) < 1 then\n\t\t\t\tisTriggered
+      = false\n\t\t\t\tcurrentPoint = currentPoint - 1\n\t\t\t\tif currentPoint <=
+      0 then\n\t\t\t\t\tisForward = true\n\t\t\t\t\tcurrentPoint = 0\n\t\t\t\tend\n\t\t\tend\n\t\tend\n\tend\nend\n\nfunction
+      getPointCount()\n\tthis.transform.position = points[0]\n\tpointCount = 0\n\tfor
+      key, value in pairs (points) do\n\t\tpointCount = pointCount + 1\n\tend\nend"
