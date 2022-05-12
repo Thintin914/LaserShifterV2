@@ -306,26 +306,26 @@ local Quaternion = Unity.Quaternion
         return null;
     }
 
-    public void RemoteTrigger(MapObject m)
+    public void RemoteTrigger(MapObject m, string methodName = "onTrigger")
     {
         if (m.GetComponent<EntityCustomAction>().cycle == null) return;
 
         if (UISwitcher.Instance.currentUIName.Equals("Testing"))
         {
-            m.GetComponent<EntityCustomAction>().cycle.Trigger("onTrigger", TestingUI.Instance.controllingPlayer);
+            m.GetComponent<EntityCustomAction>().cycle.Trigger(methodName, TestingUI.Instance.controllingPlayer);
         }
         else
         {
-            pv.RPC("PunRemoteTrigger", RpcTarget.All, player.pv.ViewID, m.objectTag);
+            pv.RPC("PunRemoteTrigger", RpcTarget.All, player.pv.ViewID, m.objectTag, methodName);
         }
     }
 
     [PunRPC]
-    public void PunRemoteTrigger(int triggererViewId, string tag)
+    public void PunRemoteTrigger(int triggererViewId, string tag, string methodName)
     {
         MapObject m = FindObjectWithTag(tag);
         if (!m) return;
-        m.GetComponent<EntityCustomAction>().cycle.Trigger("onTrigger", PhotonView.Find(triggererViewId).transform);
+        m.GetComponent<EntityCustomAction>().cycle.Trigger(methodName, PhotonView.Find(triggererViewId).transform);
     }
 
     public Laser ShotLaser(Transform t, Transform source, Vector3 rotation, float speed, string property)
