@@ -250,7 +250,7 @@ public class EditorUI : MonoBehaviour
         objectParameterBoxs.Clear();
     }
 
-    private float speed = 100;
+    private float speed = 50;
     public void ControlCamera()
     {
         if (GameUI.Instance.commentBar.isFocused) return;
