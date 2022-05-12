@@ -16,6 +16,7 @@ public class LaserManager : MonoBehaviour
 
     public Laser ShotLaser(Transform spawner, Transform triggerer, Vector3 rotation, float speed, string property)
     {
+        SoundManagerScript.PlaySound("laser");
         Laser laser = Instantiate(laserPrefab, spawner.position, Quaternion.Euler(spawner.forward)).GetComponent<Laser>();
         laser.transform.rotation = Quaternion.Euler(rotation);
         laser.spanwer = spawner;

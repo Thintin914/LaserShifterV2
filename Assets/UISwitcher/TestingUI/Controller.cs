@@ -77,6 +77,9 @@ public class Controller : MonoBehaviour
                 // no more until we recontact ground
                 groundedTimer = 0;
 
+                // play jump sound
+                SoundManagerScript.PlaySound("jump");
+
                 // Physics dynamics formula for calculating jump up velocity based on height and gravity
                 verticalVelocity += Mathf.Sqrt(jumpHeight * 2 * gravityValue);
             }
