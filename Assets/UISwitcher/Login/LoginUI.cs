@@ -19,11 +19,11 @@ public class LoginUI : MonoBehaviour
         UISwitcher.Instance.SwitchUIEvent += SwitchUI;
         gameObject.SetActive(false);
 
-        usernameField = transform.GetChild(2).GetComponent<TMP_InputField>();
-        passwordField = transform.GetChild(4).GetComponent<TMP_InputField>();
-        comfirmButton = transform.GetChild(5).GetComponent<Button>();
-        closeButton = transform.GetChild(6).GetComponent<Button>();
-        guestButton = transform.GetChild(7).GetComponent<Button>();
+        usernameField = transform.GetChild(3).GetComponent<TMP_InputField>();
+        passwordField = transform.GetChild(5).GetComponent<TMP_InputField>();
+        comfirmButton = transform.GetChild(6).GetComponent<Button>();
+        closeButton = transform.GetChild(7).GetComponent<Button>();
+        guestButton = transform.GetChild(8).GetComponent<Button>();
     }
 
     public void SwitchUI(string uiName)
