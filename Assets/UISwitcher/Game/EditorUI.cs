@@ -61,6 +61,8 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Laser Sender", description = "Fire a laser in a direction." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Mirror", description = "Reflect the laser in its facing direction." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Small Plane", description = "A small plane" });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Rotating Laser Sender", description = "Laser Send, but constantly rotating." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Lever", description = "Can remotely trigger other objects." });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
@@ -439,6 +441,8 @@ public class EditorUI : MonoBehaviour
                             tempObj.transform.SetParent(LeftVerticalLayout);
                             tempObj.transform.localScale = Vector3.one;
                             tempObj.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = s.title;
+                            if (s.title.Equals("Tag"))
+                                tempTxt.text = currentMapObject.mapObject.objectTag.Equals("") ? s.description : currentMapObject.mapObject.objectTag;
                             if (s.title.Equals("Logic"))
                                 tempTxt.text = currentMapObject.mapObject.logic.Equals("default") ? s.description : currentMapObject.mapObject.logic;
                             if (s.description.Equals("non-editable"))

@@ -142,6 +142,7 @@ public class LevelRound : MonoBehaviour
     [PunRPC]
     public async Task CreateLevel(int id, int levelIndex, float startTime = 0, float endTime = 0)
     {
+        await CommonUI.Instance.PixelateCamera();
         isCreatingLevel = true;
         GameUI.Instance.RemoveAllListeners();
         isLevelPreviously = true;
@@ -197,5 +198,6 @@ public class LevelRound : MonoBehaviour
         if (GameUI.Instance.player)
             GameUI.Instance.player.transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
         isCreatingLevel = false;
+        await CommonUI.Instance.UnpixelateCamera();
     }
 }

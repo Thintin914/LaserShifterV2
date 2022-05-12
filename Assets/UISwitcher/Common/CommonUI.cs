@@ -314,5 +314,83 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
                 return;
             }
         }
+
+    }
+
+    private CancellationTokenSource cameraPixelateCancelSource = null;
+    private Codexus.PixelEffect pixelEffect = null;
+    public async Task PixelateCamera()
+    {
+        if (pixelEffect == null)
+        {
+            pixelEffect = dynamicCamera.GetComponent<Codexus.PixelEffect>();
+        }
+
+        if (cameraPixelateCancelSource != null)
+        {
+            cameraPixelateCancelSource.Cancel();
+            cameraPixelateCancelSource.Dispose();
+            cameraPixelateCancelSource = null;
+        }
+        pixelEffect.pixelHeight = 1;
+        pixelEffect.pixelWidth = 1;
+        cameraPixelateCancelSource = new CancellationTokenSource();
+
+        try
+        {
+            for (int i = 0; i < 40; i++)
+            {
+                pixelEffect.pixelHeight += 0.25f;
+                pixelEffect.pixelWidth += 0.25f;
+                await Task.Yield();
+                if (cameraPixelateCancelSource.IsCancellationRequested)
+                {
+                    return;
+                }
+            }
+            pixelEffect.pixelHeight = 20;
+            pixelEffect.pixelWidth = 20;
+        }
+        catch (System.Exception) when (cameraPixelateCancelSource.IsCancellationRequested)
+        {
+            return;
+        }
+    }
+    public async Task UnpixelateCamera()
+    {
+        if (pixelEffect == null)
+        {
+            pixelEffect = dynamicCamera.GetComponent<Codexus.PixelEffect>();
+        }
+
+        if (cameraPixelateCancelSource != null)
+        {
+            cameraPixelateCancelSource.Cancel();
+            cameraPixelateCancelSource.Dispose();
+            cameraPixelateCancelSource = null;
+        }
+        pixelEffect.pixelHeight = 20;
+        pixelEffect.pixelWidth = 20;
+        cameraPixelateCancelSource = new CancellationTokenSource();
+
+        try
+        {
+            for (int i = 0; i < 35; i++)
+            {
+                pixelEffect.pixelHeight -= 0.25f;
+                pixelEffect.pixelWidth -= 0.25f;
+                await Task.Yield();
+                if (cameraPixelateCancelSource.IsCancellationRequested)
+                {
+                    return;
+                }
+            }
+            pixelEffect.pixelHeight = 1;
+            pixelEffect.pixelWidth = 1;
+        }
+        catch (System.Exception) when (cameraPixelateCancelSource.IsCancellationRequested)
+        {
+            return;
+        }
     }
 }

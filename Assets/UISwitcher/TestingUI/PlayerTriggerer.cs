@@ -36,7 +36,14 @@ public class PlayerTriggerer : MonoBehaviour
         if (transform.position.y <= -5)
         {
             SetPosition(spawnPoint);
+            DeathEffect();
         }
+    }
+
+    private async void DeathEffect()
+    {
+        await CommonUI.Instance.PixelateCamera();
+        await CommonUI.Instance.UnpixelateCamera();
     }
 
     public void Trigger(float range)

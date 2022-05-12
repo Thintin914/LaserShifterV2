@@ -296,6 +296,38 @@ local Quaternion = Unity.Quaternion
         }
     }
 
+    public MapObject FindObjectWithTag(string tag)
+    {
+        foreach(MapObject m in EditorUI.Instance.mapObjects)
+        {
+            if (m.objectTag == tag)
+                return m;
+        }
+        return null;
+    }
+
+    public void RemoteTrigger(MapObject m)
+    {
+        if (m.GetComponent<EntityCustomAction>().cycle == null) return;
+
+        if (UISwitcher.Instance.currentUIName.Equals("Testing"))
+        {
+            m.GetComponent<EntityCustomAction>().cycle.Trigger("onTrigger", TestingUI.Instance.controllingPlayer);
+        }
+        else
+        {
+            pv.RPC("PunRemoteTrigger", RpcTarget.All, player.pv.ViewID, m.objectTag);
+        }
+    }
+
+    [PunRPC]
+    public void PunRemoteTrigger(int triggererViewId, string tag)
+    {
+        MapObject m = FindObjectWithTag(tag);
+        if (!m) return;
+        m.GetComponent<EntityCustomAction>().cycle.Trigger("onTrigger", PhotonView.Find(triggererViewId).transform);
+    }
+
     public Laser ShotLaser(Transform t, Transform source, Vector3 rotation, float speed, string property)
     {
         return LaserManager.Instance.ShotLaser(t, source, rotation, speed, property);
@@ -361,6 +393,5 @@ local Quaternion = Unity.Quaternion
                 LevelRound.Instance.FindLevelData();
             }
         }
-
     }
 }
