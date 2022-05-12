@@ -63,6 +63,7 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Small Plane", description = "A small plane" });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Rotating Laser Sender", description = "Laser Send, but constantly rotating." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Lever", description = "Can remotely trigger other objects." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Elevator", description = "Move between multiple positions." });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
@@ -421,7 +422,7 @@ public class EditorUI : MonoBehaviour
                         spawnIndex = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
                         LeftVerticalLayout.gameObject.SetActive(true);
                         objectParameterDescriptions.Clear();
-                        objectParameterDescriptions.Add(new SelectObjectDescription() { title = "Tag", description = "", referenceKey = "small" });
+                        objectParameterDescriptions.Add(new SelectObjectDescription() { title = $"Tag\nx: {currentMapObject.mapObject.x.ToString("F1")}, y: {currentMapObject.mapObject.y.ToString("F1")}, z: {currentMapObject.mapObject.z.ToString("F1")}", description = "", referenceKey = "small" });
                         objectParameterDescriptions.Add(new SelectObjectDescription() { title = "Logic", description = objectData.details[spawnIndex].logic, referenceKey = "large" });
 
                         foreach (SelectObjectDescription s in objectParameterDescriptions)

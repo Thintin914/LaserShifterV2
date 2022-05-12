@@ -32,7 +32,8 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tlaser = Game:ShotLaser(this.transform,
-      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\nend"
+      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
+      = laser.transform.position + Vector3.up * 0.5\nend"
   - objectName: Spawn Point
     spacing: 0.1
     model: {fileID: 6349090038555141664, guid: c6852daff4efdf94aad8f4ded41d7f40, type: 3}
@@ -79,3 +80,11 @@ MonoBehaviour:
       isTurn)\nend"
     logic: "function start()\n\nend\n\nfunction onTrigger(triggerer)\n\tplayAnimation()\n\n\tmirror
       = Game:FindObjectWithTag('mirror')\n\t\nend\n\n"
+  - objectName: Elevator
+    spacing: 0.5
+    model: {fileID: 814617808490190089, guid: 6df23a46b89ac8541a03261a9d25e9d8, type: 3}
+    hiddenLogic: 
+    logic: '
+
+
+'
