@@ -74,17 +74,16 @@ MonoBehaviour:
   - objectName: Lever
     spacing: 0.5
     model: {fileID: 2418359807142892527, guid: 9b3935006ce3c964b9beabe3daf138a1, type: 3}
-    hiddenLogic: "local animator\nlocal isTurn = false\nfunction playAnimation()\n\tif
-      animation == nil then\n\t\tanimator = this:GetComponent(typeof(Unity.Animator))\n\tend\n\n\tif
+    hiddenLogic: 
+    logic: "function start()\n\nend\n\nfunction onTrigger(triggerer)\n\tplayAnimation()\n\n\t--
+      This is commented logics\n\t-- Define remote object tag first!\n\t-- mirror
+      = Game:FindObjectWithTag('mirror')\n\t-- Game:RemoteTrigger(mirror)\nend\n\nlocal
+      animator\nlocal isTurn = false\nfunction playAnimation()\n\tif animation ==
+      nil then\n\t\tanimator = this:GetComponent(typeof(Unity.Animator))\n\tend\n\n\tif
       isTurn == true then\n\t\tisTurn = false\n\telse\n\t\tisTurn =true\n\tend\n\tanimator:SetBool(\"isTurn\",
-      isTurn)\nend"
-    logic: "function start()\n\nend\n\nfunction onTrigger(triggerer)\n\tplayAnimation()\n\n\tmirror
-      = Game:FindObjectWithTag('mirror')\n\t\nend\n\n"
+      isTurn)\nend\n"
   - objectName: Elevator
     spacing: 0.5
     model: {fileID: 814617808490190089, guid: 6df23a46b89ac8541a03261a9d25e9d8, type: 3}
     hiddenLogic: 
-    logic: '
-
-
-'
+    logic: 
