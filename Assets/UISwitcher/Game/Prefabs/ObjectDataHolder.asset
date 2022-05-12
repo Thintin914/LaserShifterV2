@@ -32,8 +32,7 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tlaser = Game:ShotLaser(this.transform,
-      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
-      = laser.transform.position + Vector3.up * 0.4\nend"
+      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\nend"
   - objectName: Spawn Point
     spacing: 0.1
     model: {fileID: 6349090038555141664, guid: c6852daff4efdf94aad8f4ded41d7f40, type: 3}
@@ -54,8 +53,7 @@ MonoBehaviour:
     logic: "function start()\n\tGame:SetTexture(\"https://stjamestigard.church/wp-content/uploads/2017/05/stock-illustration-53419126-blue-stained-glass-background.jpg\",
       this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tthis.transform:Rotate(Vector3.up 
       * 15);\nend\n\nfunction onLaserHit(sender)\n\tlaser = Game:ShotLaser(this.transform,
-      sender[1], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
-      = laser.transform.position + Vector3.up * 0.4\nend"
+      sender[1], this.transform.rotation.eulerAngles, 5, \"\")\nend"
   - objectName: Small Plane
     spacing: 0.5
     model: {fileID: 800621998114977334, guid: 94daae825d012734c835a63243f60f97, type: 3}
@@ -80,4 +78,4 @@ MonoBehaviour:
       isTurn == true then\n\t\tisTurn = false\n\telse\n\t\tisTurn =true\n\tend\n\tanimator:SetBool(\"isTurn\",
       isTurn)\nend"
     logic: "function start()\n\nend\n\nfunction onTrigger(triggerer)\n\tplayAnimation()\n\n\tmirror
-      = Game:FindObjectWithTag('mirror')\n\tGame:RemoteTrigger(mirror)\nend\n\n"
+      = Game:FindObjectWithTag('mirror')\n\t\nend\n\n"

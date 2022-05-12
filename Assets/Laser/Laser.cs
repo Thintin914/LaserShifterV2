@@ -11,17 +11,31 @@ public class Laser : MonoBehaviour
     public string levelInfo = null;
 
     private float startTime, endTime;
+    private bool isReady = false;
     private void Start()
     {
-        Vector3 boxPt = spanwer.GetComponent<BoxCollider>().bounds.max;
+        BoxCollider box = spanwer.GetComponent<BoxCollider>();
+        Vector3 boxPt = box.bounds.size;
         float longest = 0;
-        if (boxPt.x > longest) longest = boxPt.x;
-        if (boxPt.y > longest) longest = boxPt.y;
-        if (boxPt.z > longest) longest = boxPt.z;
-        transform.position += longest * transform.forward * 0.5f;
-
+        float centerOffset = 0;
+        if (boxPt.x > longest)
+        {
+            longest = boxPt.x;
+            centerOffset = box.center.x;
+        }
+        if (boxPt.y > longest)
+        {
+            longest = boxPt.y;
+            centerOffset = box.center.y;
+        }
+        if (boxPt.z > longest){ 
+            longest = boxPt.z;
+            centerOffset = box.center.z;
+        }
+        transform.position += (longest + centerOffset) * transform.forward;
         startTime = Time.timeSinceLevelLoad;
         endTime = Time.timeSinceLevelLoad + 8;
+        isReady = true;
     }
 
     private void FixedUpdate()
@@ -34,6 +48,7 @@ public class Laser : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!isReady) return;
         if (!collision.transform.Equals(spanwer) && !collision.transform.tag.Equals("Laser"))
         {
             Destroy(gameObject);
