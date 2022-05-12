@@ -158,13 +158,14 @@ public class TestingUI : MonoBehaviour
         });
     }
 
-    public void SwitchUI(string uiName)
+    public async void SwitchUI(string uiName)
     {
         if (uiName == "Testing")
         {
             levelBar.gameObject.SetActive(false);
             passedLevelButton.gameObject.SetActive(false);
             gameObject.SetActive(true);
+            await CommonUI.Instance.UnpixelateCamera();
         }
         else
         {
@@ -187,6 +188,7 @@ public class TestingUI : MonoBehaviour
             GameUI.Instance.SetLevelInfo(false, "", "");
         }
     }
+
 
     public void SetUp()
     {

@@ -11,7 +11,7 @@ using Firebase.Extensions;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
+public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallbacks
 {
     public static CommonUI Instance;
     public static FirebaseFirestore db;
@@ -87,9 +87,9 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         {
             Debug.Log("Leave Room.");
             await RemoveRoom();
-            canChangeRoom = false;
             PhotonNetwork.LeaveRoom();
         }
+        canChangeRoom = false;
     }
 
     public override async void OnJoinedRoomAsync()
@@ -103,9 +103,9 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
         {
             Dictionary<string, object> dict = new Dictionary<string, object>
             {
-                {"creator", "NA" },
-                {"levelName", -1 },
-                {"userId", 0 }
+                {"creator", "Thintin" },
+                {"levelName", "the start of everything" },
+                {"userId", 1 }
             };
             await roomDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Room"));
         }
@@ -137,6 +137,11 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks
                 }
             }
         }
+    }
+
+    void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log("Host switched: " + newMasterClient);
     }
 
     public void EnableDynamicCamera(bool isEnable, Transform target)

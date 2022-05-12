@@ -187,6 +187,8 @@ local Quaternion = Unity.Quaternion
             timerCancelSource.Cancel();
             timerCancelSource.Dispose();
         }
+        if (timerDisplay)
+            timerDisplay.gameObject.SetActive(false);
     }
 
     public void PauseTimer(bool isPause)
@@ -237,8 +239,6 @@ local Quaternion = Unity.Quaternion
         finally
         {
             Debug.Log("Timer Complete");
-            if (timerDisplay)
-            timerDisplay.gameObject.SetActive(false);
             callback?.Invoke();
         }
     }

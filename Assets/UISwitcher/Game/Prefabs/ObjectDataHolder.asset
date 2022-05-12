@@ -32,8 +32,7 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function start()\n\tGame:SetTexture(\"https://www.iconpacks.net/icons/1/free-icon-heart-431.png\",
       this.transform)\nend\n\nfunction onTrigger(triggerer)\n\tlaser = Game:ShotLaser(this.transform,
-      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\n\tlaser.transform.position
-      = laser.transform.position + Vector3.up * 0.5\nend"
+      triggerer[0], this.transform.rotation.eulerAngles, 5, \"\")\nend"
   - objectName: Spawn Point
     spacing: 0.1
     model: {fileID: 6349090038555141664, guid: c6852daff4efdf94aad8f4ded41d7f40, type: 3}
@@ -77,7 +76,7 @@ MonoBehaviour:
     hiddenLogic: 
     logic: "function start()\n\nend\n\nfunction onTrigger(triggerer)\n\tplayAnimation()\n\n\t--
       This is commented logics\n\t-- Define remote object tag first!\n\t-- mirror
-      = Game:FindObjectWithTag('mirror')\n\t-- Game:RemoteTrigger(mirror)\nend\n\nlocal
+      = Game:FindObjectWithTag('mirror')\n\t-- Game:RemoteTrigger(mirror, 'onTrigger')\nend\n\nlocal
       animator\nlocal isTurn = false\nfunction playAnimation()\n\tif animation ==
       nil then\n\t\tanimator = this:GetComponent(typeof(Unity.Animator))\n\tend\n\n\tif
       isTurn == true then\n\t\tisTurn = false\n\telse\n\t\tisTurn =true\n\tend\n\tanimator:SetBool(\"isTurn\",
@@ -86,4 +85,18 @@ MonoBehaviour:
     spacing: 0.5
     model: {fileID: 814617808490190089, guid: 6df23a46b89ac8541a03261a9d25e9d8, type: 3}
     hiddenLogic: 
-    logic: 
+    logic: "local points = { }\r\nlocal pointCount\n\r\nfunction start()\n\tpoint[0]
+      = Vector3(0,0,0)\n\tpoint[1] = Vector3(10,0,0)\n\n\tgetPointCount()\n\tthis.cycle:Loop(\"fixedRoute\",
+      -1,  0)\nend\n\nlocal isForward = true\r\nlocal currentPoint = 0\r\nlocal speed
+      = 10\r\n    \r\nfunction fixedRoute()\r\n    if isForward == true then\r\n       
+      this.transform.position = this.transform.position + (points[currentPoint +
+      1] - this.transform.position).normalized * speed\r\n    else\r\n        this.transform.position
+      = (points[currentPoint - 1] - this.transform.position).normalized * speed\r\n   
+      end\r\n    if isForward == true then\r\n        if Vector3.Distance(this.transform.position,
+      points[currentPoint + 1]) < 6 then\r\n            currentPoint = currentPoint
+      + 1\r\n        end\r\n        if currentPoint + 1 >= pointCount then\r\n           
+      isForward = false\r\n        end\r\n    else\r\n        if Vector3.Distance(this.transform.position,
+      points[currentPoint - 1]) < 6 then\r\n            currentPoint = currentPoint
+      - 1\r\n        end\r\n        if currentPoint - 1 < 0 then\r\n            isForward
+      = true\r\n        end\r\n    end\r\nend\n\nfunction getPointCount()\n\tpointCount
+      = 0\n\tfor key, value in pairs (points) do\n\t\tpointCount = pointCount + 1\n\tend\nend"
