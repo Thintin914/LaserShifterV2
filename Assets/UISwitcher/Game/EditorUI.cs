@@ -422,7 +422,7 @@ public class EditorUI : MonoBehaviour
                         spawnIndex = objectData.GetSpawnIndex(currentMapObject.mapObject.objectName);
                         LeftVerticalLayout.gameObject.SetActive(true);
                         objectParameterDescriptions.Clear();
-                        objectParameterDescriptions.Add(new SelectObjectDescription() { title = $"Tag\nx: {currentMapObject.mapObject.x.ToString("F1")}, y: {currentMapObject.mapObject.y.ToString("F1")}, z: {currentMapObject.mapObject.z.ToString("F1")}", description = "", referenceKey = "small" });
+                        objectParameterDescriptions.Add(new SelectObjectDescription() { title = $"Tag", description = "", referenceKey = "small" });
                         objectParameterDescriptions.Add(new SelectObjectDescription() { title = "Logic", description = objectData.details[spawnIndex].logic, referenceKey = "large" });
 
                         foreach (SelectObjectDescription s in objectParameterDescriptions)
@@ -441,9 +441,13 @@ public class EditorUI : MonoBehaviour
                             }
                             tempObj.transform.SetParent(LeftVerticalLayout);
                             tempObj.transform.localScale = Vector3.one;
-                            tempObj.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = s.title;
+                            TMPro.TextMeshProUGUI title = tempObj.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>();
+                            title.text = s.title;
                             if (s.title.Equals("Tag"))
+                            {
+                                title.text += $"\nx: { currentMapObject.mapObject.x.ToString("F1")}, y: { currentMapObject.mapObject.y.ToString("F1")}, z: { currentMapObject.mapObject.z.ToString("F1")}";
                                 tempTxt.text = currentMapObject.mapObject.objectTag.Equals("") ? s.description : currentMapObject.mapObject.objectTag;
+                            }
                             if (s.title.Equals("Logic"))
                                 tempTxt.text = currentMapObject.mapObject.logic.Equals("default") ? s.description : currentMapObject.mapObject.logic;
                             if (s.description.Equals("non-editable"))
