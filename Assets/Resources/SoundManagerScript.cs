@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoundManagerScript : MonoBehaviour
 {
 
-    public static AudioClip jumpSound, laserSound, winSound;
+    public static AudioClip jumpSound, laserSound, winSound,clickButtonSound;
     static AudioSource audioSrc;
 
     // Start is called before the first frame update
@@ -14,6 +14,7 @@ public class SoundManagerScript : MonoBehaviour
         jumpSound = Resources.Load<AudioClip>("jump");
         laserSound = Resources.Load<AudioClip>("laser");
         winSound = Resources.Load<AudioClip>("win");
+        clickButtonSound = Resources.Load<AudioClip>("buttonClick1");
 
         audioSrc = GetComponent<AudioSource>();
     }
@@ -37,7 +38,9 @@ public class SoundManagerScript : MonoBehaviour
             case "win":
                 audioSrc.PlayOneShot(winSound);
                 break;
-       
+            case "buttonClick1":
+                audioSrc.PlayOneShot(clickButtonSound);
+                break;
         }
     }
 
