@@ -31,7 +31,7 @@ public class StudioUI : MonoBehaviour
         reeditButton.onClick.RemoveAllListeners();
         reeditButton.onClick.AddListener(async() =>
         {
-            if (string.IsNullOrEmpty(CommonUI.Instance.username))
+            if (CommonUI.Instance.isGuest)
             {
                 CommonUI.Instance.popupNotice.SetColor(205, 46, 83, 0);
                 CommonUI.Instance.popupNotice.Show("You have to login to re-edit levels.", 2);

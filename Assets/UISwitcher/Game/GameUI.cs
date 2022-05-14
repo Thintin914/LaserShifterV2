@@ -80,6 +80,12 @@ local Quaternion = Unity.Quaternion
 
                         if (LevelRound.Instance.isHost)
                             LevelRound.Instance.InitalizeLevel();
+                        else
+                        {
+                            timerDisplay.text = "Waiting For Round's End.";
+                            CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
+                            CommonUI.Instance.popupNotice.Show($"Game will start until this round's end.", 2);
+                        }
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
@@ -96,12 +102,15 @@ local Quaternion = Unity.Quaternion
                     }
                     else if (command[0] == "studio")
                     {
-                        await CommonUI.Instance.LeaveRoom();
-                        CommonUI.Instance.currentRoomName = "";
-                        UISwitcher.Instance.SetUI("Studio");
-                        StudioUI.Instance.GoToStudio();
-                        CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
-                        CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
+                        if (!UISwitcher.Instance.currentUIName.Equals("Studio"))
+                        {
+                            await CommonUI.Instance.LeaveRoom();
+                            CommonUI.Instance.currentRoomName = "";
+                            UISwitcher.Instance.SetUI("Studio");
+                            StudioUI.Instance.GoToStudio();
+                            CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
+                            CommonUI.Instance.popupNotice.Show($"Change To\nStudio", 2);
+                        }
                     }
 
                     ShowCommentBar();
@@ -154,6 +163,7 @@ local Quaternion = Unity.Quaternion
         GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
         int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
         pv.RPC("AttachModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID, rand, CommonUI.Instance.username);
+        temp.GetComponent<PlayerTriggerer>().controller.enabled = false;
         return temp;
     }
 
