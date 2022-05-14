@@ -199,6 +199,8 @@ local Quaternion = Unity.Quaternion
         }
     }
 
+    public float startTime = 0;
+    public float endTime = 0;
     public async void StartTimer(float countdownTimer, Action callback = null)
     {
         pauseTimer = false;
@@ -209,8 +211,10 @@ local Quaternion = Unity.Quaternion
 
         gameObject.SetActive(true);
         timerDisplay.gameObject.SetActive(true);
-        float startTime = Time.timeSinceLevelLoad;
-        float endTime = Time.timeSinceLevelLoad + countdownTimer;
+
+        startTime = Time.timeSinceLevelLoad;
+        endTime = Time.timeSinceLevelLoad + countdownTimer;
+
         try
         {
             double leftTime = 0;

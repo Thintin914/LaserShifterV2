@@ -26,8 +26,6 @@ public class LevelRound : MonoBehaviour
     }
 
     private bool isLevelPreviously = false;
-    private float startTime = 0;
-    private float endTime = 0;
     public bool isCreatingLevel = false;
     private void Update()
     {
@@ -54,8 +52,7 @@ public class LevelRound : MonoBehaviour
         {
             if (!isCreatingLevel)
             {
-                startTime += Time.deltaTime;
-                if (startTime > endTime)
+                if (GameUI.Instance.startTime > GameUI.Instance.endTime)
                 {
                     FindLevelData();
                 }
@@ -68,8 +65,8 @@ public class LevelRound : MonoBehaviour
         isCreatingLevel = false;
         if (isHost)
         {
-            startTime = Time.deltaTime;
-            endTime = 0;
+            GameUI.Instance.startTime = Time.deltaTime;
+            GameUI.Instance.endTime = 0;
         }
         else
         {
@@ -136,7 +133,7 @@ public class LevelRound : MonoBehaviour
         await roomDocRef.UpdateAsync(update);
 
         await CreateLevel(id, levelIndex, 0, 0);
-        pv.RPC("CreateLevel", RpcTarget.Others, id, levelIndex, startTime, endTime);
+        pv.RPC("CreateLevel", RpcTarget.Others, id, levelIndex, GameUI.Instance.startTime, GameUI.Instance.endTime);
     }
 
     [PunRPC]
@@ -178,13 +175,13 @@ public class LevelRound : MonoBehaviour
 
         if (startTime == 0)
         {
-            this.startTime = Time.timeSinceLevelLoad;
-            this.endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
+            GameUI.Instance.startTime = Time.timeSinceLevelLoad;
+            GameUI.Instance.endTime = GameUI.Instance.timer + Time.timeSinceLevelLoad;
         }
         else
         {
-            this.startTime = startTime;
-            this.endTime = endTime;
+            GameUI.Instance.startTime = startTime;
+            GameUI.Instance.endTime = endTime;
         }
 
         if (GameUI.Instance.isWin)
