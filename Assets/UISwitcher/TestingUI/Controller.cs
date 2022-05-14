@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class Controller : MonoBehaviour
 {
-    private CharacterController controller;
+    public CharacterController controller;
     private float verticalVelocity;
     private float groundedTimer;        // to allow jumping when going down ramps
     private float playerSpeed = 5f;

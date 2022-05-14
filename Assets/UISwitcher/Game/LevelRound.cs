@@ -184,6 +184,7 @@ public class LevelRound : MonoBehaviour
             GameUI.Instance.endTime = endTime;
         }
 
+        GameUI.Instance.player.controller.controller.enabled = true;
         if (GameUI.Instance.isWin)
             pv.RPC("UpdateNameColor", RpcTarget.All, GameUI.Instance.player.pv.ViewID, "w");
 
