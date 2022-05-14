@@ -82,6 +82,7 @@ local Quaternion = Unity.Quaternion
                             LevelRound.Instance.InitalizeLevel();
                         else
                         {
+                            timerDisplay.gameObject.SetActive(true);
                             timerDisplay.text = "Waiting For Round's End.";
                             CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                             CommonUI.Instance.popupNotice.Show($"Game will start until this round's end.", 2);
