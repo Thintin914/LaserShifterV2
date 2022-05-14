@@ -89,6 +89,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
             await RemoveRoom();
             PhotonNetwork.LeaveRoom();
         }
+        GameUI.Instance.totalPlayers = 0;
         canChangeRoom = false;
     }
 
@@ -108,6 +109,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
                 {"userId", 1 }
             };
             await roomDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Room"));
+            GameUI.Instance.totalPlayers = 1;
         }
 
         if (canSpawnPlayer)
@@ -123,7 +125,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
 
     public async Task RemoveRoom()
     {
-        return;
         if (UISwitcher.Instance.currentUIName.Equals("Game"))
         {
             if (PhotonNetwork.PlayerList.Length == 1)

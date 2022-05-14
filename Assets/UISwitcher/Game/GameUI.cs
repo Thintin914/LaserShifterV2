@@ -77,7 +77,9 @@ local Quaternion = Unity.Quaternion
                         {
                             LevelRound.Instance.isHost = true;
                         }
-                        LevelRound.Instance.InitalizeLevel();
+
+                        if (LevelRound.Instance.isHost)
+                            LevelRound.Instance.InitalizeLevel();
 
                         CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                         CommonUI.Instance.popupNotice.Show($"Change To\nRoom {command[1]}", 2);
@@ -389,10 +391,17 @@ local Quaternion = Unity.Quaternion
 
         if (LevelRound.Instance.isHost)
         {
-            if (finishedPlayers.Count >= PhotonNetwork.PlayerList.Length)
+            if (finishedPlayers.Count >= totalPlayers)
             {
                 LevelRound.Instance.FindLevelData();
             }
         }
     }
+
+    [PunRPC]
+    public void voteLevel()
+    {
+
+    }
+
 }
