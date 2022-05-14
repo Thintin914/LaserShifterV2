@@ -40,7 +40,7 @@ public class LaserManager : MonoBehaviour
             centerOffset = box.center.z;
         }
         laser.transform.position = box.bounds.center + longest * laser.transform.forward * 0.5f;
-        laser.transform.position += (centerOffset + 0.2f) * laser.transform.forward;
+        laser.transform.position += (centerOffset + longest * 0.5f) * laser.transform.forward;
 
         laser.spanwer = spawner;
         laser.source = triggerer;
