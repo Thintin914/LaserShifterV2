@@ -79,6 +79,7 @@ public class LifeCycle
             }
         }
 
+        private float eclipsedTime = 0;
         public async void Loop()
         {
             if (cancelSource != null && !cancelSource.IsCancellationRequested)
@@ -99,7 +100,12 @@ public class LifeCycle
                     }
                     else
                     {
-                        await Task.Delay((int)(waitTime * 1000), cancelSource.Token);
+                        do
+                        {
+                            eclipsedTime += Time.deltaTime;
+                            await Task.Yield();
+                        } while (eclipsedTime < waitTime);
+                        eclipsedTime = 0;
                     }
                     if (cancelSource.IsCancellationRequested)
                     {

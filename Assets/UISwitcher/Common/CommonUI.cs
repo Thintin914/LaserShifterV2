@@ -413,4 +413,9 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
             return;
         }
     }
+
+    public void addVoting()
+    {
+
+    }
 }

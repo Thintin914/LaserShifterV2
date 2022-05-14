@@ -10,6 +10,7 @@ using XLua;
 using Photon.Pun;
 using UnityEngine.EventSystems;
 using Photon.Realtime;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI timerDisplay;
     public ColorPresets colorPresets;
     public TextMeshProUGUI levelInfo;
+    public Transform votingBoard;
 
     public PlayerTriggerer player;
     private PhotonView pv;
@@ -415,15 +417,62 @@ local Quaternion = Unity.Quaternion
         {
             if (finishedPlayers.Count >= totalPlayers)
             {
-                LevelRound.Instance.FindLevelData();
+                //LevelRound.Instance.FindLevelData();
+                pv.RPC("voteLevel", RpcTarget.All);
             }
         }
     }
-/*
+
     [PunRPC]
     public void voteLevel()
     {
+        StopTimer();
+        votingBoard.gameObject.SetActive(true);
+        CountDownVoteBoard(10);
+    }
 
-    }*/
+    private CancellationTokenSource voteBoardCancelSource = null;
+    public async void CountDownVoteBoard(int time)
+    {
+        if (voteBoardCancelSource != null && !voteBoardCancelSource.IsCancellationRequested)
+        {
+            voteBoardCancelSource.Cancel();
+            voteBoardCancelSource.Dispose();
+        }
+        voteBoardCancelSource = new CancellationTokenSource();
 
+        TextMeshProUGUI message = votingBoard.GetChild(0).GetComponent<TextMeshProUGUI>();
+        Button yesButton = votingBoard.GetChild(1).GetComponent<Button>();
+        Button noButton = votingBoard.GetChild(2).GetComponent<Button>();
+
+
+
+        float startTime = Time.timeSinceLevelLoad;
+        float endTime = Time.timeSinceLevelLoad + time;
+
+        try
+        {
+            double leftTime = 0;
+            while (endTime > startTime)
+            {
+                startTime += Time.deltaTime;
+                leftTime = endTime - startTime;
+                TimeSpan t = TimeSpan.FromSeconds(leftTime);
+                message.text = $"Do you like this map? ({t.Seconds})";
+                await Task.Yield();
+                if (voteBoardCancelSource == null || voteBoardCancelSource.IsCancellationRequested)
+                    return;
+            }
+        }
+        catch (OperationCanceledException) when (voteBoardCancelSource.IsCancellationRequested)
+        {
+            return;
+        }
+        finally
+        {
+            if (!voteBoardCancelSource.IsCancellationRequested)
+                voteBoardCancelSource.Dispose();
+            votingBoard.gameObject.SetActive(false);
+        }
+    }
 }

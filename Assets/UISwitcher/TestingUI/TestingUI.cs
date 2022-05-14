@@ -49,9 +49,10 @@ public class TestingUI : MonoBehaviour
                 jsonMapObjects += JsonUtility.ToJson(EditorUI.Instance.mapObjects[i]) + "\n";
             }
 
-
+            // User Level Update
             DocumentReference levelDocRef = CommonUI.db.Collection("levels").Document(CommonUI.Instance.username);
             DocumentSnapshot levelSnapShot = await levelDocRef.GetSnapshotAsync();
+            int replacedIndex = -1;
 
             if (!levelSnapShot.Exists)
             {
@@ -77,6 +78,7 @@ public class TestingUI : MonoBehaviour
                 {
                     if (s.Split('\n','\r')[0].Equals(levelInputField.text))
                     {
+                        replacedIndex = count;
                         allLevels[count] = jsonMapObjects;
                         isReplaced = true;
                         break;
@@ -94,7 +96,46 @@ public class TestingUI : MonoBehaviour
                 await levelDocRef.UpdateAsync(leveldict);
             }
 
-            // User Created Levels
+            // User Level Vote Update
+            DocumentReference voteDocRef = CommonUI.db.Collection("votes").Document(CommonUI.Instance.username);
+            DocumentSnapshot voteSnapshot = await voteDocRef.GetSnapshotAsync();
+
+            if (!voteSnapshot.Exists)
+            {
+                Dictionary<string, object> dict = new Dictionary<string, object>
+                {
+                    {"scores", new int[]{0} }
+                };
+                await voteDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Vote"));
+            }
+            else
+            {
+                List<object> allVotes = new List<object>();
+                Dictionary<string, object> allVotesDict = voteSnapshot.ToDictionary();
+                foreach (KeyValuePair<string, object> pair in allVotesDict)
+                {
+                    allVotes = pair.Value as List<object>;
+                }
+
+                // reset vote score that is replaced
+                if (replacedIndex != -1)
+                {
+                    allVotes[replacedIndex] = 0;
+                }
+                else
+                {
+                    allVotes.Add(0);
+                }
+
+
+                Dictionary<string, object> voteDict = new Dictionary<string, object>
+                {
+                    {"scores", allVotes}
+                };
+                await voteDocRef.UpdateAsync(voteDict);
+            }
+
+            // User Created Level Number Update
             DocumentReference usernameDocRef = CommonUI.db.Collection("users").Document(CommonUI.Instance.username);
             DocumentSnapshot usernameSnapshot = await usernameDocRef.GetSnapshotAsync();
             int createdLevelNumber = 0;

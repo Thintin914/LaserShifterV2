@@ -17,8 +17,14 @@ public class StudioUI : MonoBehaviour
 
     public List<Button> removeButtons = new List<Button>();
     public List<object> allLevels = new List<object>();
+    public List<object> allVotes = new List<object>();
 
     private bool isReeditOpeded = false;
+    private DocumentReference previousLevelDocRef = null;
+    private DocumentSnapshot previousLevelSnapshot = null;
+    private DocumentReference previousVoteDocRef = null;
+    private DocumentSnapshot previousVoteSnapshot = null;
+
     private void Awake()
     {
         Instance = this;
@@ -37,10 +43,22 @@ public class StudioUI : MonoBehaviour
                 CommonUI.Instance.popupNotice.Show("You have to login to re-edit levels.", 2);
                 return;
             }
-            DocumentReference levelDocRef = CommonUI.db.Collection("levels").Document(CommonUI.Instance.username);
-            DocumentSnapshot levelSnapShot = await levelDocRef.GetSnapshotAsync();
+            Remove();
+            if (previousLevelDocRef == null)
+            {
+                DocumentReference levelDocRef = CommonUI.db.Collection("levels").Document(CommonUI.Instance.username);
+                DocumentSnapshot levelSnapShot = await levelDocRef.GetSnapshotAsync();
+                previousLevelDocRef = levelDocRef;
+                previousLevelSnapshot = levelSnapShot;
+
+                DocumentReference voteDocRef = CommonUI.db.Collection("votes").Document(CommonUI.Instance.username);
+                DocumentSnapshot voteSnapshot = await voteDocRef.GetSnapshotAsync();
+                previousVoteDocRef = voteDocRef;
+                previousVoteSnapshot = voteSnapshot;
+            }
+
             selectBoxOffset = 0;
-            if (levelSnapShot.Exists)
+            if (previousLevelSnapshot.Exists)
             {
                 if (!isReeditOpeded)
                 {
@@ -54,8 +72,21 @@ public class StudioUI : MonoBehaviour
                         }
                         selectBoxs.Clear();
 
+                        // Handle Votes
+                        List<object> votes = new List<object>();
+                        Dictionary<string, object> voteDict = previousVoteSnapshot.ToDictionary();
+                        foreach (KeyValuePair<string, object> pair in voteDict)
+                        {
+                            votes = pair.Value as List<object>;
+                        }
+                        foreach ( object o in votes)
+                        {
+                            allVotes.Add(o);
+                        }
+
+                        // Handle Level
                         List<object> levelNames = new List<object>();
-                        Dictionary<string, object> levelDict = levelSnapShot.ToDictionary();
+                        Dictionary<string, object> levelDict = previousLevelSnapshot.ToDictionary();
                         foreach (KeyValuePair<string, object> pair in levelDict)
                         {
                             levelNames = pair.Value as List<object>;
@@ -84,7 +115,9 @@ public class StudioUI : MonoBehaviour
                             removeButtons.Add(removeButton);
                             removeButton.onClick.AddListener(async () =>
                             {
-                                allLevels.Remove(o);
+                                int removeIndex = allLevels.IndexOf(o);
+                                allLevels.RemoveAt(removeIndex);
+                                allVotes.RemoveAt(removeIndex);
                                 selectBoxs.Remove(temp);
                                 removeButtons.Remove(removeButton);
                                 Dictionary<string, object> update = new Dictionary<string, object>
@@ -93,8 +126,15 @@ public class StudioUI : MonoBehaviour
                                 };
                                 Destroy(temp.gameObject);
                                 Destroy(removeButton.gameObject);
-                                await levelDocRef.UpdateAsync(update);
+                                await previousLevelDocRef.UpdateAsync(update);
 
+                                Dictionary<string, object> voteUpdate = new Dictionary<string, object>
+                                {
+                                    {"scores", allVotes }
+                                };
+                                await previousVoteDocRef.UpdateAsync(voteUpdate);
+
+                                // Update Created Level Number
                                 DocumentReference usernameDocRef = CommonUI.db.Collection("users").Document(CommonUI.Instance.username);
                                 DocumentSnapshot usernameSnapshot = await usernameDocRef.GetSnapshotAsync();
                                 int createdLevelNumber = 0;
@@ -162,6 +202,8 @@ public class StudioUI : MonoBehaviour
         }
         else
         {
+            previousLevelDocRef = null;
+            previousLevelSnapshot = null;
             if (playerHolder)
             {
                 Destroy(playerHolder);
@@ -194,6 +236,7 @@ public class StudioUI : MonoBehaviour
         }
         removeButtons.Clear();
         allLevels.Clear();
+        allVotes.Clear();
     }
 
     private float selectBoxOffset = 0;
