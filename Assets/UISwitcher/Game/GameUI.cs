@@ -23,7 +23,7 @@ public class GameUI : MonoBehaviour
     public Transform votingBoard;
 
     public PlayerTriggerer player;
-    private PhotonView pv;
+    public PhotonView pv;
     public static string luaLibrary = @"
 local Unity = CS.UnityEngine
 local Vector3 = Unity.Vector3
@@ -417,7 +417,8 @@ local Quaternion = Unity.Quaternion
         {
             if (finishedPlayers.Count >= totalPlayers)
             {
-                //LevelRound.Instance.FindLevelData();
+                votedScore = 0;
+                isVoting = true;
                 pv.RPC("voteLevel", RpcTarget.All);
             }
         }
@@ -431,10 +432,25 @@ local Quaternion = Unity.Quaternion
         CountDownVoteBoard(10);
     }
 
-    private CancellationTokenSource voteBoardCancelSource = null;
+    private int votedScore = 0;
+    [PunRPC]
+    private void voteYes()
+    {
+        votedScore += 1;
+    }
+    [PunRPC]
+    private void voteNo()
+    {
+        votedScore -= 1;
+    }
+
+    public CancellationTokenSource voteBoardCancelSource = null;
+    public bool isVoting = false;
+    private string votingMessage = null;
     public async void CountDownVoteBoard(int time)
     {
-        if (voteBoardCancelSource != null && !voteBoardCancelSource.IsCancellationRequested)
+        isVoting = true;
+        if (voteBoardCancelSource != null)
         {
             voteBoardCancelSource.Cancel();
             voteBoardCancelSource.Dispose();
@@ -444,12 +460,55 @@ local Quaternion = Unity.Quaternion
         TextMeshProUGUI message = votingBoard.GetChild(0).GetComponent<TextMeshProUGUI>();
         Button yesButton = votingBoard.GetChild(1).GetComponent<Button>();
         Button noButton = votingBoard.GetChild(2).GetComponent<Button>();
+        yesButton.gameObject.SetActive(true);
+        noButton.gameObject.SetActive(true);
 
 
+        bool hasVoted = false;
+        yesButton.onClick.RemoveAllListeners();
+        yesButton.onClick.AddListener(() =>
+        {
+            if (!hasVoted)
+            {
+                hasVoted = true;
+                yesButton.gameObject.SetActive(false);
+                noButton.gameObject.SetActive(false);
+                if (LevelRound.Instance.isHost)
+                {
+                    votingMessage = "Your opinion is valued!\nWaiting others...";
+                }
+                else
+                {
+                    voteBoardCancelSource.Cancel();
+                    message.text = "Your opinion is valued!";
+                }
+                pv.RPC("voteYes", PhotonNetwork.MasterClient);
+            }
+        });
+        noButton.onClick.RemoveAllListeners();
+        noButton.onClick.AddListener(() =>
+        {
+            if (!hasVoted)
+            {
+                hasVoted = true;
+                yesButton.gameObject.SetActive(false);
+                noButton.gameObject.SetActive(false);
+                if (LevelRound.Instance.isHost)
+                {
+                    votingMessage = "Your opinion is valued!\nWaiting others...";
+                }
+                else
+                {
+                    voteBoardCancelSource.Cancel();
+                    message.text = "Your opinion is valued!";
+                }
+                pv.RPC("voteNo", PhotonNetwork.MasterClient);
+            }
+        });
 
         float startTime = Time.timeSinceLevelLoad;
         float endTime = Time.timeSinceLevelLoad + time;
-
+        votingMessage = "Do you like this level?";
         try
         {
             double leftTime = 0;
@@ -458,7 +517,7 @@ local Quaternion = Unity.Quaternion
                 startTime += Time.deltaTime;
                 leftTime = endTime - startTime;
                 TimeSpan t = TimeSpan.FromSeconds(leftTime);
-                message.text = $"Do you like this map? ({t.Seconds})";
+                message.text = $"{votingMessage} ({t.Seconds})";
                 await Task.Yield();
                 if (voteBoardCancelSource == null || voteBoardCancelSource.IsCancellationRequested)
                     return;
@@ -470,9 +529,21 @@ local Quaternion = Unity.Quaternion
         }
         finally
         {
-            if (!voteBoardCancelSource.IsCancellationRequested)
+            if (voteBoardCancelSource != null)
+            {
+                voteBoardCancelSource.Cancel();
                 voteBoardCancelSource.Dispose();
-            votingBoard.gameObject.SetActive(false);
+                voteBoardCancelSource = null;
+            }
+
+            yesButton.onClick.RemoveAllListeners();
+            noButton.onClick.RemoveAllListeners();
+
+            if (LevelRound.Instance.isHost)
+            {
+                CommonUI.Instance.updateVote(LevelRound.Instance.levelCreator, LevelRound.Instance.levelIndex, votedScore);
+                LevelRound.Instance.FindLevelData();
+            }
         }
     }
 }

@@ -146,6 +146,10 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
         if (PhotonNetwork.MasterClient == newMasterClient)
         {
             LevelRound.Instance.isHost = true;
+            if (GameUI.Instance.isVoting)
+            {
+                LevelRound.Instance.FindLevelData();
+            }
         }
     }
 
@@ -414,8 +418,65 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
         }
     }
 
-    public void addVoting()
+    public async void updateVote(string username, int index, int score)
     {
+        DocumentReference voteDocRef = db.Collection("votes").Document(username);
+        DocumentSnapshot voteSnapshot = await voteDocRef.GetSnapshotAsync();
 
+        List<object> votes = new List<object>();
+        Dictionary<string, object> voteDict = voteSnapshot.ToDictionary();
+        foreach (KeyValuePair<string, object> pair in voteDict)
+        {
+            votes = pair.Value as List<object>;
+        }
+
+        int finalScore = int.Parse(string.Format("{0}", votes[index])) + score;
+        votes[index] = finalScore;
+
+        if (finalScore < -100)
+        {
+            votes.RemoveAt(index);
+            DocumentReference levelDocRef = CommonUI.db.Collection("levels").Document(username);
+            DocumentSnapshot levelSnapShot = await levelDocRef.GetSnapshotAsync();
+
+            List<object> levelNames = new List<object>();
+            Dictionary<string, object> levelDict = levelSnapShot.ToDictionary();
+            foreach (KeyValuePair<string, object> pair in levelDict)
+            {
+                levelNames = pair.Value as List<object>;
+            }
+            levelNames.RemoveAt(index);
+            Dictionary<string, object> levelUpdate = new Dictionary<string, object>
+            {
+            {"creadtedLevels", levelNames }
+            };
+            await voteDocRef.UpdateAsync(levelUpdate);
+
+            // Update Created Level Number
+            DocumentReference usernameDocRef = db.Collection("users").Document(username);
+            DocumentSnapshot usernameSnapshot = await usernameDocRef.GetSnapshotAsync();
+            int createdLevelNumber = 0;
+            Dictionary<string, object> userDict = usernameSnapshot.ToDictionary();
+            foreach (KeyValuePair<string, object> pair in userDict)
+            {
+                if (pair.Key.Equals("createdLevels"))
+                {
+                    createdLevelNumber = int.Parse(string.Format("{0}", pair.Value));
+                    break;
+                }
+            }
+
+            Dictionary<string, object> userCreatedLevelDict = new Dictionary<string, object>
+            {
+                {"createdLevels", createdLevelNumber - 1 }
+            };
+            await usernameDocRef.UpdateAsync(userCreatedLevelDict);
+        }
+
+        Dictionary<string, object> voteUpdate = new Dictionary<string, object>
+        {
+            {"scores", votes }
+        };
+        await voteDocRef.UpdateAsync(voteUpdate);
     }
 }

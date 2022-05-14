@@ -2573,7 +2573,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -17.8, y: 36.1}
+  m_AnchoredPosition: {x: -17.8, y: 33.6}
   m_SizeDelta: {x: 100, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505713478
@@ -4471,11 +4471,13 @@ MonoBehaviour:
   levelInfo: {fileID: 1013398765}
   votingBoard: {fileID: 1907732190}
   player: {fileID: 0}
+  pv: {fileID: 0}
   startTime: 0
   endTime: 0
   isWin: 0
   totalPlayers: 0
   finishedPlayers: []
+  isVoting: 0
 --- !u!114 &760757334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9551,6 +9553,8 @@ MonoBehaviour:
   isHost: 0
   totalUser: 0
   isCreatingLevel: 0
+  levelIndex: 0
+  levelCreator: 
 --- !u!4 &1570975710
 Transform:
   m_ObjectHideFlags: 0

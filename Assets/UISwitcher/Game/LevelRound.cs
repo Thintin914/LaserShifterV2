@@ -50,23 +50,28 @@ public class LevelRound : MonoBehaviour
 
         if (isHost.Equals(true))
         {
-            if (!isCreatingLevel)
+            if (!isCreatingLevel && hasInitialized && !GameUI.Instance.isVoting)
             {
                 if (GameUI.Instance.startTime > GameUI.Instance.endTime)
                 {
-                    FindLevelData();
+                    isCreatingLevel = true;
+                    GameUI.Instance.pv.RPC("voteLevel", RpcTarget.All);
                 }
             }
         }
     }
 
+    private bool hasInitialized = false;
     public async void InitalizeLevel()
     {
         isCreatingLevel = false;
         if (isHost)
         {
             GameUI.Instance.startTime = Time.deltaTime;
-            GameUI.Instance.endTime = 0;
+            GameUI.Instance.endTime = Time.deltaTime + 10000;
+            hasInitialized = false;
+            await FindLevelData();
+            hasInitialized = true;
         }
         else
         {
@@ -89,21 +94,32 @@ public class LevelRound : MonoBehaviour
         }
     }
 
-    public async void FindLevelData()
+    public int levelIndex = 0;
+    public string levelCreator = null;
+    public async Task FindLevelData()
     {
         Debug.Log("isCreatingLevel: " + isCreatingLevel);
         if (isCreatingLevel) return;
         isCreatingLevel = true;
         GameUI.Instance.StopTimer();
         GameUI.Instance.timerDisplay.gameObject.SetActive(true);
+        GameUI.Instance.votingBoard.gameObject.SetActive(false);
+        GameUI.Instance.isVoting = false;
+        if (GameUI.Instance.voteBoardCancelSource != null)
+        {
+            GameUI.Instance.voteBoardCancelSource.Cancel();
+            GameUI.Instance.voteBoardCancelSource.Dispose();
+            GameUI.Instance.voteBoardCancelSource = null;
+        }
+
 
         bool needRefetch = false;
-        int levelIndex = 0;
-        int id = 0;
+        levelIndex = 0;
+        int id = 1;
         do
         {
             bool complete = false;
-            id = 0;
+            id = 1;
             do
             {
                 id = Random.Range(1, totalUser + 1);
@@ -122,6 +138,7 @@ public class LevelRound : MonoBehaviour
                 needRefetch = false;
             }
         } while (needRefetch);
+        levelCreator = CommonUI.Instance.creatorName[id];
 
         DocumentReference roomDocRef = CommonUI.db.Collection("rooms").Document(CommonUI.Instance.currentRoomName);
         Dictionary<string, object> update = new Dictionary<string, object>
