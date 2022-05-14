@@ -178,7 +178,7 @@ local Quaternion = Unity.Quaternion
         player.transform.position += Vector3.down;
         PlayerTriggerer triggerer = t.GetComponent<PlayerTriggerer>();
         triggerer.username.text = name;
-        t.gameObject.SetActive(false);
+        player.SetActive(false);
         finishedPlayers.Add(name);
     }
 
