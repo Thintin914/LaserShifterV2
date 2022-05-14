@@ -274,9 +274,13 @@ local Quaternion = Unity.Quaternion
         }
     }
 
+    private bool isSetTextureLocked = false;
     public async void SetTexture(string url, Transform trans)
     {
-        Texture2D tex = await GetRemoteTexture(url);
+        while (isSetTextureLocked == true) { await Task.Delay(50); };
+        isSetTextureLocked = true;
+        Texture2D tex = await TextureStorer.Instance.GetTexture(url);
+        isSetTextureLocked = false;
 
         Material defaultMaterial = colorPresets.GetColorSet("White").material;
 
