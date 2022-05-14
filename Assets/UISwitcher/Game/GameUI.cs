@@ -418,6 +418,7 @@ local Quaternion = Unity.Quaternion
             if (finishedPlayers.Count >= totalPlayers)
             {
                 votedScore = 0;
+                totalVoter = 0;
                 isVoting = true;
                 pv.RPC("voteLevel", RpcTarget.All);
             }
@@ -433,6 +434,7 @@ local Quaternion = Unity.Quaternion
     }
 
     private int votedScore = 0;
+    private int totalVoter = 0;
     [PunRPC]
     private void voteYes()
     {
@@ -473,15 +475,8 @@ local Quaternion = Unity.Quaternion
                 hasVoted = true;
                 yesButton.gameObject.SetActive(false);
                 noButton.gameObject.SetActive(false);
-                if (LevelRound.Instance.isHost)
-                {
-                    votingMessage = "Your opinion is valued!\nWaiting others...";
-                }
-                else
-                {
-                    voteBoardCancelSource.Cancel();
-                    message.text = "Your opinion is valued!";
-                }
+                voteBoardCancelSource.Cancel();
+                message.text = "Your opinion is valued!";
                 pv.RPC("voteYes", PhotonNetwork.MasterClient);
             }
         });
@@ -493,15 +488,8 @@ local Quaternion = Unity.Quaternion
                 hasVoted = true;
                 yesButton.gameObject.SetActive(false);
                 noButton.gameObject.SetActive(false);
-                if (LevelRound.Instance.isHost)
-                {
-                    votingMessage = "Your opinion is valued!\nWaiting others...";
-                }
-                else
-                {
-                    voteBoardCancelSource.Cancel();
-                    message.text = "Your opinion is valued!";
-                }
+                voteBoardCancelSource.Cancel();
+                message.text = "Your opinion is valued!";
                 pv.RPC("voteNo", PhotonNetwork.MasterClient);
             }
         });
@@ -519,6 +507,11 @@ local Quaternion = Unity.Quaternion
                 TimeSpan t = TimeSpan.FromSeconds(leftTime);
                 message.text = $"{votingMessage} ({t.Seconds})";
                 await Task.Yield();
+                if (totalVoter >= totalPlayers)
+                {
+                    if (voteBoardCancelSource != null)
+                        voteBoardCancelSource.Cancel();
+                }
                 if (voteBoardCancelSource == null || voteBoardCancelSource.IsCancellationRequested)
                     return;
             }
