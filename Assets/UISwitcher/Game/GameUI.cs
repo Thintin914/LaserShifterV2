@@ -135,7 +135,6 @@ local Quaternion = Unity.Quaternion
                 CommonUI.Instance.EnableDynamicCamera(false, null);
                 PhotonNetwork.Destroy(player.gameObject);
             }
-            players.Clear();
         }
     }
 
@@ -148,19 +147,16 @@ local Quaternion = Unity.Quaternion
         player.talk.text = null;
     }
 
-    public List<GameObject> players = new List<GameObject>();
     public GameObject SpawnServerPlayer(Vector3 position)
     {
-        if (players.Count > 0)
-        players.Clear();
         GameObject temp = PhotonNetwork.Instantiate("PlayerOuter", position, Quaternion.identity);
         int rand = UnityEngine.Random.Range(0, TestingUI.Instance.playerPrefabs.Length);
-        pv.RPC("AttacchModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID, rand, CommonUI.Instance.username);
+        pv.RPC("AttachModelToPlayer", RpcTarget.AllBufferedViaServer, temp.GetComponent<PhotonView>().ViewID, rand, CommonUI.Instance.username);
         return temp;
     }
 
     [PunRPC]
-    public void AttacchModelToPlayer(int viewId, int modelId, string name)
+    public void AttachModelToPlayer(int viewId, int modelId, string name)
     {
         Transform t = PhotonView.Find(viewId).transform;
         GameObject player = Instantiate(TestingUI.Instance.playerPrefabs[modelId], t.position, Quaternion.identity);
@@ -168,8 +164,6 @@ local Quaternion = Unity.Quaternion
         player.transform.localPosition = Vector3.zero;
         player.transform.position += Vector3.down;
         t.GetComponent<PlayerTriggerer>().username.text = name;
-
-        players.Add(player);
     }
 
     public void ShowCommentBar()
@@ -337,8 +331,10 @@ local Quaternion = Unity.Quaternion
     public delegate void OnWinDelegate(Transform winner);
     public event OnWinDelegate OnWinEvent;
 
+    public bool isWin = false;
     public void TriggerWinEvent(Transform winner)
     {
+        isWin = true;
         if (UISwitcher.Instance.currentUIName.Equals("Testing"))
         {
             OnWinEvent?.Invoke(winner);
@@ -374,22 +370,27 @@ local Quaternion = Unity.Quaternion
         }
     }
 
+    public int totalPlayers = 0;
     public List<string> finishedPlayers = new List<string>();
     [PunRPC]
     public void RemotePlayerWin(int viewId)
     {
         Transform t = PhotonView.Find(viewId).transform;
-        t.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 160, 0, 255);
+        TextMeshPro username = t.GetChild(0).GetComponent<TextMeshPro>();
+        username.color = new Color32(255, 160, 0, 255);
         OnWinEvent?.Invoke(t);
+
+        if (!finishedPlayers.Contains(username.text))
+        {
+            finishedPlayers.Add(username.text);
+            CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
+            CommonUI.Instance.popupNotice.Show($"{username.text} completed the level!", 1);
+        }
 
         if (LevelRound.Instance.isHost)
         {
-            string username = t.GetComponent<PlayerTriggerer>().username.text;
-            if (!finishedPlayers.Contains(username))
-                finishedPlayers.Add(t.GetComponent<PlayerTriggerer>().username.text);
             if (finishedPlayers.Count >= PhotonNetwork.PlayerList.Length)
             {
-                finishedPlayers.Clear();
                 LevelRound.Instance.FindLevelData();
             }
         }

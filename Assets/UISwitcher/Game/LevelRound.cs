@@ -187,17 +187,27 @@ public class LevelRound : MonoBehaviour
             this.endTime = endTime;
         }
 
-        for(int i = 0; i < GameUI.Instance.players.Count; i++)
-        {
-            if (GameUI.Instance.players[i] != null)
-            {
-                if (GameUI.Instance.players[i].transform.GetChild(0).GetComponent<TextMeshPro>())
-                GameUI.Instance.players[i].transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
-            }
-        }
-        if (GameUI.Instance.player)
-            GameUI.Instance.player.transform.GetChild(0).GetComponent<TextMeshPro>().color = new Color32(255, 255, 255, 255);
+        if (GameUI.Instance.isWin)
+            pv.RPC("UpdateNameColor", RpcTarget.All, GameUI.Instance.player.pv.ViewID, "w");
+
         isCreatingLevel = false;
+        GameUI.Instance.isWin = false;
+        GameUI.Instance.finishedPlayers.Clear();
         await CommonUI.Instance.UnpixelateCamera();
+    }
+
+    [PunRPC]
+    public void UpdateNameColor(int viewId, string color)
+    {
+        Transform t = PhotonView.Find(viewId).transform;
+        TextMeshPro username = t.GetChild(0).GetComponent<TextMeshPro>();
+        if (color.Equals("w"))
+        {
+            username.color = new Color32(255, 255, 255, 255);
+        }
+        else if (color.Equals("y"))
+        {
+            username.color = new Color32(255, 160, 0, 255);
+        }
     }
 }

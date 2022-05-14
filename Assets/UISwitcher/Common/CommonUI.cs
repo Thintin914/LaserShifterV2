@@ -144,6 +144,16 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
         Debug.Log("Host switched: " + newMasterClient);
     }
 
+    void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)
+    {
+        GameUI.Instance.totalPlayers++;
+    }
+
+    void IInRoomCallbacks.OnPlayerLeftRoom(Player otherPlayer)
+    {
+        GameUI.Instance.totalPlayers--;
+    }
+
     public void EnableDynamicCamera(bool isEnable, Transform target)
     {
         dynamicCamera.gameObject.SetActive(isEnable);
