@@ -143,6 +143,10 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
     void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
     {
         Debug.Log("Host switched: " + newMasterClient);
+        if (PhotonNetwork.MasterClient == newMasterClient)
+        {
+            LevelRound.Instance.isHost = true;
+        }
     }
 
     void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)

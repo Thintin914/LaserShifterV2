@@ -83,7 +83,7 @@ local Quaternion = Unity.Quaternion
                         else
                         {
                             timerDisplay.gameObject.SetActive(true);
-                            timerDisplay.text = "Waiting For Round's End.";
+                            timerDisplay.text = "<size='12'>Waiting For Round's End.</size>";
                             CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
                             CommonUI.Instance.popupNotice.Show($"Game will start until this round's end.", 2);
                         }
@@ -177,6 +177,7 @@ local Quaternion = Unity.Quaternion
         player.transform.localPosition = Vector3.zero;
         player.transform.position += Vector3.down;
         t.GetComponent<PlayerTriggerer>().username.text = name;
+        finishedPlayers.Add(name);
     }
 
     public void ShowCommentBar()
@@ -412,11 +413,11 @@ local Quaternion = Unity.Quaternion
             }
         }
     }
-
+/*
     [PunRPC]
     public void voteLevel()
     {
 
-    }
+    }*/
 
 }
