@@ -105,28 +105,40 @@ public class LevelRound : MonoBehaviour
         bool needRefetch = false;
         levelIndex = 0;
         int id = 1;
-        do
+
+        if (CommonUI.Instance.username.Equals("Thintin"))
         {
-            bool complete = false;
-            id = 1;
+            id = targetedLevelData[currentTargetedIndex].userId;
+            levelIndex = targetedLevelData[currentTargetedIndex].index;
+            await CommonUI.Instance.GetLevelData(id);
+            CommonUI.Instance.GetLevelFromUser(id, levelIndex);
+            currentTargetedIndex = (currentTargetedIndex + 1) % targetedLevelData.Count;
+        }
+        else
+        {
             do
             {
-                id = Random.Range(1, totalUser + 1);
-                complete = await CommonUI.Instance.GetLevelData(id);
-            } while (!complete);
-            Debug.Log("isCreatingLevel: Got Level Data of: " + id);
-            levelIndex = Random.Range(0, CommonUI.Instance.userLevels[id].Count);
-            string levelData = CommonUI.Instance.GetLevelFromUser(id, levelIndex);
-            if (levelData == null)
-            {
-                Debug.Log("isCreatingLevel: Refetching");
-                needRefetch = true;
-            }
-            else
-            {
-                needRefetch = false;
-            }
-        } while (needRefetch);
+                bool complete = false;
+                id = 1;
+                do
+                {
+                    id = Random.Range(1, totalUser + 1);
+                    complete = await CommonUI.Instance.GetLevelData(id);
+                } while (!complete);
+                Debug.Log("isCreatingLevel: Got Level Data of: " + id);
+                levelIndex = Random.Range(0, CommonUI.Instance.userLevels[id].Count);
+                string levelData = CommonUI.Instance.GetLevelFromUser(id, levelIndex);
+                if (levelData == null)
+                {
+                    Debug.Log("isCreatingLevel: Refetching");
+                    needRefetch = true;
+                }
+                else
+                {
+                    needRefetch = false;
+                }
+            } while (needRefetch);
+        }
         levelCreator = CommonUI.Instance.creatorName[id];
 
         DocumentReference roomDocRef = CommonUI.db.Collection("rooms").Document(CommonUI.Instance.currentRoomName);
@@ -228,5 +240,14 @@ public class LevelRound : MonoBehaviour
         {
             username.color = new Color32(255, 160, 0, 255);
         }
+    }
+
+    public List<TargetedLevelData> targetedLevelData;
+    private int currentTargetedIndex = 0;
+    [System.Serializable]
+    public class TargetedLevelData
+    {
+        public int userId;
+        public int index;
     }
 }

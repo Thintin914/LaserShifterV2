@@ -156,6 +156,8 @@ public class StudioUI : MonoBehaviour
                                     {"createdLevels", createdLevelNumber - 1 }
                                 };
                                 await usernameDocRef.UpdateAsync(userCreatedLevelDict);
+
+                                previousLevelDocRef = null;
                             });
                             temp.transform.SetParent(verticalLayout);
                             temp.transform.localScale = Vector3.one;

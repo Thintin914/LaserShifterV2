@@ -142,4 +142,5 @@ MonoBehaviour:
     spacing: 0.2
     model: {fileID: 2966073756694511296, guid: af620c61312746c4894555ebdced1bd4, type: 3}
     hiddenLogic: 
-    logic: "local textmesh\nfunction start()\n\ttextmesh = Game:GetText(this.transform)\nend"
+    logic: "local textmesh\nfunction start()\n\ttextmesh = Game:GetText(this.transform)\n\ttextmesh.text
+      = 'Hello'\n\ttextmesh.fontSize = 12\nend"

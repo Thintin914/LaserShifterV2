@@ -146,6 +146,7 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
             LevelRound.Instance.isHost = true;
             if (GameUI.Instance.isVoting)
             {
+                LevelRound.Instance.isCreatingLevel = false;
                 LevelRound.Instance.FindLevelData();
             }
         }

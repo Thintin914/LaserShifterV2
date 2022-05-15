@@ -2247,9 +2247,12 @@ MonoBehaviour:
   selectBoxPrefab: {fileID: 7611081085781968859, guid: 4438fccf787b7ca419b9d8ee1844fc92, type: 3}
   studioModel: {fileID: 6145768721094258698, guid: c9925cbad890a7745a07965aed8477ec, type: 3}
   removeButtonPrefab: {fileID: 5228703837336489867, guid: e0827f4da03f8cb40b4d50a5316ea0e4, type: 3}
+  studioModelHolder: {fileID: 0}
+  playerHolder: {fileID: 0}
   selectBoxs: []
   verticalLayout: {fileID: 272627454}
   removeButtons: []
+  tutorialData: 
   vecticalLayoutOriginalPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &467736594
 GameObject:
@@ -4477,7 +4480,6 @@ MonoBehaviour:
   startTime: 0
   endTime: 0
   isWin: 0
-  totalPlayers: 0
   finishedPlayers: []
   isVoting: 0
 --- !u!114 &760757334
@@ -9557,6 +9559,31 @@ MonoBehaviour:
   isCreatingLevel: 0
   levelIndex: 0
   levelCreator: 
+  targetedLevelData:
+  - userId: 2
+    index: 32
+  - userId: 2
+    index: 31
+  - userId: 2
+    index: 28
+  - userId: 2
+    index: 18
+  - userId: 2
+    index: 29
+  - userId: 2
+    index: 30
+  - userId: 2
+    index: 21
+  - userId: 2
+    index: 9
+  - userId: 2
+    index: 8
+  - userId: 2
+    index: 24
+  - userId: 2
+    index: 25
+  - userId: 2
+    index: 3
 --- !u!4 &1570975710
 Transform:
   m_ObjectHideFlags: 0

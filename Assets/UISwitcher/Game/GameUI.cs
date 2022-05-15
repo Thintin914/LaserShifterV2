@@ -281,7 +281,7 @@ local Quaternion = Unity.Quaternion
     private bool isSetTextureLocked = false;
     public async void SetTexture(string url, Transform trans)
     {
-        while (isSetTextureLocked == true) { await Task.Delay(50); };
+        while (isSetTextureLocked == true) { await Task.Delay(500); };
         isSetTextureLocked = true;
         Texture2D tex = await TextureStorer.Instance.GetTexture(url);
         isSetTextureLocked = false;
