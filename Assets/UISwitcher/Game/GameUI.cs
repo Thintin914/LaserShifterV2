@@ -420,7 +420,6 @@ local Quaternion = Unity.Quaternion
             if (finishedPlayers.Count >= totalPlayers)
             {
                 votedScore = 0;
-                isVoting = true;
                 pv.RPC("voteLevel", RpcTarget.All);
             }
         }
@@ -433,6 +432,7 @@ local Quaternion = Unity.Quaternion
         StopTimer();
         votingBoard.gameObject.SetActive(true);
         totalVoter = 0;
+        isVoting = true;
         CountDownVoteBoard(10);
     }
 
@@ -533,12 +533,14 @@ local Quaternion = Unity.Quaternion
             }
 
             message.text = "-";
-            yesButton.onClick.RemoveAllListeners();
-            noButton.onClick.RemoveAllListeners();
+            yesButton.gameObject.SetActive(false);
+            noButton.gameObject.SetActive(false);
 
             if (LevelRound.Instance.isHost)
             {
                 CommonUI.Instance.updateVote(LevelRound.Instance.levelCreator, LevelRound.Instance.levelIndex, votedScore);
+                startTime = Time.timeSinceLevelLoad;
+                endTime = Time.timeSinceLevelLoad + 10000;
                 LevelRound.Instance.isCreatingLevel = false;
                 LevelRound.Instance.FindLevelData();
             }

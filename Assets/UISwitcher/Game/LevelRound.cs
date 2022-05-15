@@ -145,18 +145,7 @@ public class LevelRound : MonoBehaviour
     [PunRPC]
     public async Task CreateLevel(int id, int levelIndex, float startTime = 0, float endTime = 0)
     {
-        GameUI.Instance.isWaiting = false;
         GameUI.Instance.StopTimer();
-        GameUI.Instance.timerDisplay.gameObject.SetActive(true);
-        GameUI.Instance.votingBoard.gameObject.SetActive(false);
-        GameUI.Instance.isVoting = false;
-        if (GameUI.Instance.voteBoardCancelSource != null)
-        {
-            GameUI.Instance.voteBoardCancelSource.Cancel();
-            GameUI.Instance.voteBoardCancelSource.Dispose();
-            GameUI.Instance.voteBoardCancelSource = null;
-        }
-
         await CommonUI.Instance.PixelateCamera();
         isCreatingLevel = true;
         GameUI.Instance.RemoveAllListeners();
@@ -214,7 +203,16 @@ public class LevelRound : MonoBehaviour
         GameUI.Instance.finishedPlayers.Clear();
         await CommonUI.Instance.UnpixelateCamera();
 
-
+        GameUI.Instance.isWaiting = false;
+        GameUI.Instance.timerDisplay.gameObject.SetActive(true);
+        GameUI.Instance.votingBoard.gameObject.SetActive(false);
+        GameUI.Instance.isVoting = false;
+        if (GameUI.Instance.voteBoardCancelSource != null)
+        {
+            GameUI.Instance.voteBoardCancelSource.Cancel();
+            GameUI.Instance.voteBoardCancelSource.Dispose();
+            GameUI.Instance.voteBoardCancelSource = null;
+        }
     }
 
     [PunRPC]
