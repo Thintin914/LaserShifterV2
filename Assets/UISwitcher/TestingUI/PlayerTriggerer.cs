@@ -35,6 +35,7 @@ public class PlayerTriggerer : MonoBehaviour
         }
         if (transform.position.y <= -30)
         {
+            SoundManagerScript.PlaySound("death");
             SetPosition(spawnPoint);
             DeathEffect();
         }

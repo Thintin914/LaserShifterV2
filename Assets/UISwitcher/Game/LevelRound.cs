@@ -203,6 +203,7 @@ public class LevelRound : MonoBehaviour
 
         if (GameUI.Instance.isWin)
         {
+            SoundManagerScript.PlaySound("win");
             GameUI.Instance.player.username.color = new Color32(255, 255, 255, 255);
             pv.RPC("UpdateNameColor", RpcTarget.Others, GameUI.Instance.player.pv.ViewID, "w");
         }
@@ -211,6 +212,8 @@ public class LevelRound : MonoBehaviour
         GameUI.Instance.isWin = false;
         GameUI.Instance.finishedPlayers.Clear();
         await CommonUI.Instance.UnpixelateCamera();
+
+
     }
 
     [PunRPC]
