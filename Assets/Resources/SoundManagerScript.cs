@@ -43,6 +43,7 @@ public class SoundManagerScript : MonoBehaviour
                 audioSrc.PlayOneShot(clickButtonSound);
                 break;
             case "death":
+                if (audioSrc.isPlaying) return;
                 audioSrc.PlayOneShot(deathSound);
                 break;
         }
