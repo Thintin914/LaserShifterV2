@@ -89,7 +89,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
             await RemoveRoom();
             PhotonNetwork.LeaveRoom();
         }
-        GameUI.Instance.totalPlayers = 0;
         canChangeRoom = false;
     }
 
@@ -109,7 +108,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
                 {"userId", 1 }
             };
             await roomDocRef.SetAsync(dict).ContinueWithOnMainThread(task => Debug.Log("Added Room"));
-            GameUI.Instance.totalPlayers = 1;
         }
 
         if (canSpawnPlayer)
@@ -152,17 +150,6 @@ public class CommonUI : MonoBehaviourPunCallbacks, ILobbyCallbacks, IInRoomCallb
             }
         }
     }
-
-    void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)
-    {
-        GameUI.Instance.totalPlayers++;
-    }
-
-    void IInRoomCallbacks.OnPlayerLeftRoom(Player otherPlayer)
-    {
-        GameUI.Instance.totalPlayers--;
-    }
-
     public void EnableDynamicCamera(bool isEnable, Transform target)
     {
         dynamicCamera.gameObject.SetActive(isEnable);

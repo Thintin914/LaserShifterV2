@@ -407,7 +407,6 @@ local Quaternion = Unity.Quaternion
         }
     }
 
-    public int totalPlayers = 0;
     public List<string> finishedPlayers = new List<string>();
     [PunRPC]
     public void RemotePlayerWin(int viewId)
@@ -426,7 +425,7 @@ local Quaternion = Unity.Quaternion
 
         if (LevelRound.Instance.isHost)
         {
-            if (finishedPlayers.Count >= totalPlayers)
+            if (finishedPlayers.Count >= PhotonNetwork.PlayerList.Length)
             {
                 if (!isVoting)
                 {
@@ -523,7 +522,7 @@ local Quaternion = Unity.Quaternion
                 TimeSpan t = TimeSpan.FromSeconds(leftTime);
                 message.text = $"{votingMessage} ({t.Seconds})";
                 await Task.Yield();
-                if (LevelRound.Instance.isHost && totalVoter >= totalPlayers)
+                if (LevelRound.Instance.isHost && totalVoter >= PhotonNetwork.PlayerList.Length)
                 {
                     if (voteBoardCancelSource != null)
                         voteBoardCancelSource.Cancel();
