@@ -420,7 +420,6 @@ local Quaternion = Unity.Quaternion
             if (finishedPlayers.Count >= totalPlayers)
             {
                 votedScore = 0;
-                totalVoter = 0;
                 isVoting = true;
                 pv.RPC("voteLevel", RpcTarget.All);
             }
@@ -433,6 +432,7 @@ local Quaternion = Unity.Quaternion
         if (isWaiting) return;
         StopTimer();
         votingBoard.gameObject.SetActive(true);
+        totalVoter = 0;
         CountDownVoteBoard(10);
     }
 
