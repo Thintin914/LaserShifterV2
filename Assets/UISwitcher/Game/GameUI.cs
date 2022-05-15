@@ -475,7 +475,6 @@ local Quaternion = Unity.Quaternion
                 hasVoted = true;
                 yesButton.gameObject.SetActive(false);
                 noButton.gameObject.SetActive(false);
-                voteBoardCancelSource.Cancel();
                 message.text = "Your opinion is valued!";
                 pv.RPC("voteYes", PhotonNetwork.MasterClient);
             }
@@ -488,7 +487,6 @@ local Quaternion = Unity.Quaternion
                 hasVoted = true;
                 yesButton.gameObject.SetActive(false);
                 noButton.gameObject.SetActive(false);
-                voteBoardCancelSource.Cancel();
                 message.text = "Your opinion is valued!";
                 pv.RPC("voteNo", PhotonNetwork.MasterClient);
             }
