@@ -65,6 +65,7 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Lever", description = "Can remotely trigger other objects." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Auto Elevator", description = "Move between multiple positions automatically." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Elevator", description = "Move between multiple positions when triggered." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Door", description = "Can open and close." });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
@@ -149,6 +150,8 @@ public class EditorUI : MonoBehaviour
                         m.gameObject.SetActive(true);
                     m.transform.position = new Vector3(m.x, m.y, m.z);
                     m.transform.rotation = allRotations[m.rotationalIndex];
+                    if (m.GetComponent<BoxCollider>())
+                        m.GetComponent<BoxCollider>().enabled = true;
                 }
                 GameUI.Instance.RemoveAllListeners();
             }
@@ -352,6 +355,22 @@ public class EditorUI : MonoBehaviour
             mapObject.rotationalIndex = serializedMapObject.rotationalIndex;
             mapObject.transform.rotation = allRotations[serializedMapObject.rotationalIndex];
             mapObject.gameObject.layer = LayerMask.NameToLayer("Built");
+
+            if (mapObject.transform.childCount > 0)
+            {
+                bool shouldDisableParentBox = false;
+                for (int k = 0; k < mapObject.transform.childCount; k++)
+                {
+                    if (!shouldDisableParentBox && mapObject.transform.GetChild(k).GetComponent<BoxCollider>())
+                    {
+                        shouldDisableParentBox = true;
+                    }
+                }
+                if (shouldDisableParentBox)
+                {
+                    mapObject.GetComponent<BoxCollider>().enabled = false;
+                }
+            }
         }
     }
 

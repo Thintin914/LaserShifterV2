@@ -290,6 +290,21 @@ public class TestingUI : MonoBehaviour
                     CommonUI.Instance.EnableDynamicCamera(true, t.GetChild(1));
                 }
             }
+            if (m.transform.childCount > 0)
+            {
+                bool shouldDisableParentBox = false;
+                for (int k = 0; k < m.transform.childCount; k++)
+                {
+                    if (!shouldDisableParentBox && m.transform.GetChild(k).GetComponent<BoxCollider>())
+                    {
+                        shouldDisableParentBox = true;
+                    }
+                }
+                if (shouldDisableParentBox)
+                {
+                    m.GetComponent<BoxCollider>().enabled = false;
+                }
+            }
         }
     }
 

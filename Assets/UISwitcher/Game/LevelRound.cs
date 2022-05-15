@@ -145,6 +145,7 @@ public class LevelRound : MonoBehaviour
     [PunRPC]
     public async Task CreateLevel(int id, int levelIndex, float startTime = 0, float endTime = 0)
     {
+        GameUI.Instance.isWaiting = false;
         GameUI.Instance.StopTimer();
         GameUI.Instance.timerDisplay.gameObject.SetActive(true);
         GameUI.Instance.votingBoard.gameObject.SetActive(false);

@@ -30,6 +30,7 @@ local Vector3 = Unity.Vector3
 local Quaternion = Unity.Quaternion
 ";
 
+    public bool isWaiting = false;
     private void Awake()
     {
         Instance = this;
@@ -84,6 +85,7 @@ local Quaternion = Unity.Quaternion
                             LevelRound.Instance.InitalizeLevel();
                         else
                         {
+                            isWaiting = true;
                             timerDisplay.gameObject.SetActive(true);
                             timerDisplay.text = "<size='12'>Waiting For Round's End.</size>";
                             CommonUI.Instance.popupNotice.SetColor(16, 23, 34, 0);
@@ -428,6 +430,7 @@ local Quaternion = Unity.Quaternion
     [PunRPC]
     public void voteLevel()
     {
+        if (isWaiting) return;
         StopTimer();
         votingBoard.gameObject.SetActive(true);
         CountDownVoteBoard(10);
@@ -438,11 +441,13 @@ local Quaternion = Unity.Quaternion
     [PunRPC]
     private void voteYes()
     {
+        totalVoter += 1;
         votedScore += 1;
     }
     [PunRPC]
     private void voteNo()
     {
+        totalVoter += 1;
         votedScore -= 1;
     }
 

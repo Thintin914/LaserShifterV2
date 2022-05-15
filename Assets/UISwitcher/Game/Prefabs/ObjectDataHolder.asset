@@ -123,3 +123,15 @@ MonoBehaviour:
       0 then\n\t\t\t\t\tisForward = true\n\t\t\t\t\tcurrentPoint = 0\n\t\t\t\tend\n\t\t\tend\n\t\tend\n\tend\nend\n\nfunction
       getPointCount()\n\tthis.transform.position = points[0]\n\tpointCount = 0\n\tfor
       key, value in pairs (points) do\n\t\tpointCount = pointCount + 1\n\tend\nend"
+  - objectName: Door
+    spacing: 0.5
+    model: {fileID: 8718519196873657117, guid: 7b95a8093cb5d99449738531f61b9009, type: 3}
+    hiddenLogic: 
+    logic: "local leftDoor\nlocal rightDoor\nlocal leftDoorDistance = 5\nlocal rightDoorDistance
+      = 5\nfunction start()\n\tleftDoor = this.transform:GetChild(0)\n\trightDoor
+      = this.transform:GetChild(1)\n\n\tthis.cycle:Loop('move', -1, 0.05)\nend\n\nlocal
+      isOpen = false\nfunction move()\n\tif isOpen then\n\t\tleftDoor.position =
+      leftDoor.position + ((leftDoor.left * leftDoorDistance + leftDoor.position)
+      - leftDoor.position).normalized * speed\n\t\trightDoor.position = rightDoor.position
+      + ((rightDoor.left * leftDoorDistance + rightDoor.position) -rightDoor.position).normalized
+      * speed\n\telse\n\n\tend\nend"
