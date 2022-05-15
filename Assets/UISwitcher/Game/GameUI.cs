@@ -514,7 +514,7 @@ local Quaternion = Unity.Quaternion
                 TimeSpan t = TimeSpan.FromSeconds(leftTime);
                 message.text = $"{votingMessage} ({t.Seconds})";
                 await Task.Yield();
-                if (totalVoter >= totalPlayers)
+                if (LevelRound.Instance.isHost && totalVoter >= totalPlayers)
                 {
                     if (voteBoardCancelSource != null)
                         voteBoardCancelSource.Cancel();
