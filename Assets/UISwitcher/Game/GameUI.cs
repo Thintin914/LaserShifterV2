@@ -532,12 +532,14 @@ local Quaternion = Unity.Quaternion
                 voteBoardCancelSource = null;
             }
 
+            message.text = "-";
             yesButton.onClick.RemoveAllListeners();
             noButton.onClick.RemoveAllListeners();
 
             if (LevelRound.Instance.isHost)
             {
                 CommonUI.Instance.updateVote(LevelRound.Instance.levelCreator, LevelRound.Instance.levelIndex, votedScore);
+                LevelRound.Instance.isCreatingLevel = false;
                 LevelRound.Instance.FindLevelData();
             }
         }
