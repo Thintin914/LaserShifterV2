@@ -419,8 +419,12 @@ local Quaternion = Unity.Quaternion
         {
             if (finishedPlayers.Count >= totalPlayers)
             {
-                votedScore = 0;
-                pv.RPC("voteLevel", RpcTarget.All);
+                if (!isVoting)
+                {
+                    votedScore = 0;
+                    isVoting = true;
+                    pv.RPC("voteLevel", RpcTarget.All);
+                }
             }
         }
     }
