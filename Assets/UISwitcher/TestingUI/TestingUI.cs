@@ -35,6 +35,12 @@ public class TestingUI : MonoBehaviour
         levelComfireButton.onClick.RemoveAllListeners();
         levelComfireButton.onClick.AddListener(async() =>
         {
+            if (EditorUI.Instance.levelName.StartsWith("Tutorial") && !CommonUI.Instance.username.Equals("Thintin"))
+            {
+                UISwitcher.Instance.SetUI("Editor");
+                CommonUI.Instance.popupNotice.Show("Cannot add unauthorized tutorial.", 1);
+                return;
+            }
             if (CommonUI.Instance.isGuest)
             {
                 Remove();
@@ -94,6 +100,15 @@ public class TestingUI : MonoBehaviour
                     {"createdLevels", allLevels}
                 };
                 await levelDocRef.UpdateAsync(leveldict);
+
+
+/*                DocumentReference docref = CommonUI.db.Collection("environment").Document("tutorial");
+                DocumentSnapshot snapshot = await docref.GetSnapshotAsync();
+                Dictionary<string, object> temp = new Dictionary<string, object>
+                {
+                    {"data", jsonMapObjects}
+                };
+                await docref.SetAsync(temp).ContinueWithOnMainThread(task => Debug.Log("Added Level"));*/
             }
 
             // User Level Vote Update
@@ -305,6 +320,8 @@ public class TestingUI : MonoBehaviour
                     m.GetComponent<BoxCollider>().enabled = false;
                 }
             }
+            if (m.objectName.Equals("Text"))
+                m.GetComponent<BoxCollider>().enabled = false;
         }
     }
 

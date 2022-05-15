@@ -10,9 +10,9 @@ public class StudioUI : MonoBehaviour
 {
     public static StudioUI Instance;
     public GameObject selectBoxPrefab, studioModel, removeButtonPrefab;
-    private GameObject studioModelHolder,playerHolder;
+    public GameObject studioModelHolder,playerHolder;
     public List<MapObjectSelectionBox> selectBoxs = new List<MapObjectSelectionBox>();
-    private Button reeditButton;
+    private Button reeditButton, tutorialButton;
     public Transform verticalLayout;
 
     public List<Button> removeButtons = new List<Button>();
@@ -25,6 +25,8 @@ public class StudioUI : MonoBehaviour
     private DocumentReference previousVoteDocRef = null;
     private DocumentSnapshot previousVoteSnapshot = null;
 
+    public string tutorialData = "";
+
     private void Awake()
     {
         Instance = this;
@@ -34,6 +36,7 @@ public class StudioUI : MonoBehaviour
         vecticalLayoutOriginalPosition = verticalLayout.localPosition;
 
         reeditButton = transform.GetChild(0).GetComponent<Button>();
+        tutorialButton = transform.GetChild(1).GetComponent<Button>();
         reeditButton.onClick.RemoveAllListeners();
         reeditButton.onClick.AddListener(async() =>
         {
@@ -188,6 +191,27 @@ public class StudioUI : MonoBehaviour
                 CommonUI.Instance.popupNotice.SetColor(205, 46, 83, 0);
                 CommonUI.Instance.popupNotice.Show("You haven't created levels!", 2);
             }
+        });
+
+        tutorialButton.onClick.RemoveAllListeners();
+        tutorialButton.onClick.AddListener(async() =>
+        {
+            Debug.Log("Clicked Tutorial Button");
+            if (tutorialData == "")
+            {
+                DocumentReference tutorialDocRef = CommonUI.db.Collection("environment").Document("tutorial");
+                DocumentSnapshot tutorialSnapshot = await tutorialDocRef.GetSnapshotAsync();
+
+                Dictionary<string, object> tutorialDict = tutorialSnapshot.ToDictionary();
+                foreach (KeyValuePair<string, object> pair in tutorialDict)
+                {
+                    tutorialData = string.Format("{0}", pair.Value);
+                }
+            }
+            EditorUI.Instance.ConstructLevel(tutorialData);
+            GameUI.Instance.SetLevelInfo(true, "Thintin", EditorUI.Instance.levelName);
+            UISwitcher.Instance.SetUI("Testing");
+            TestingUI.Instance.SetUp();
         });
     }
 

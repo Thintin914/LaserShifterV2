@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using MPUIKIT;
 using UnityEngine.EventSystems;
+using System.Threading.Tasks;
 
 public class EditorUI : MonoBehaviour
 {
@@ -66,6 +67,7 @@ public class EditorUI : MonoBehaviour
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Auto Elevator", description = "Move between multiple positions automatically." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Elevator", description = "Move between multiple positions when triggered." });
         selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Door", description = "Can open and close." });
+        selectObjectDescriptions.Add(new SelectObjectDescription() { title = "Text", description = "Can writing something." });
 
         selectObjectButton = transform.GetChild(0).GetComponent<Button>();
         selectObjectButton.onClick.RemoveAllListeners();
@@ -154,6 +156,12 @@ public class EditorUI : MonoBehaviour
                         m.GetComponent<BoxCollider>().enabled = true;
                 }
                 GameUI.Instance.RemoveAllListeners();
+            }
+            if (levelName.StartsWith("Tutorial"))
+            {
+                Remove();
+                UISwitcher.Instance.SetUI("Studio");
+                StudioUI.Instance.GoToStudio();
             }
         }
         else
@@ -370,6 +378,10 @@ public class EditorUI : MonoBehaviour
                 {
                     mapObject.GetComponent<BoxCollider>().enabled = false;
                 }
+            }
+            if (mapObject.objectName.Equals("Text"))
+            {
+                mapObject.GetComponent<BoxCollider>().enabled = false;
             }
         }
     }

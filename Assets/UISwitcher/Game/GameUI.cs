@@ -355,6 +355,15 @@ local Quaternion = Unity.Quaternion
         return LaserManager.Instance.ShotLaser(t, source, rotation, speed, property);
     }
 
+    public TextMeshPro GetText(Transform t)
+    {
+        if (t.GetComponent<TextMeshPro>())
+        {
+            return t.GetComponent<TextMeshPro>();
+        }
+        return null;
+    }
+
     [CSharpCallLua]
     public delegate void OnWinDelegate(Transform winner);
     public event OnWinDelegate OnWinEvent;

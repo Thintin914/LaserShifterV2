@@ -128,10 +128,18 @@ MonoBehaviour:
     model: {fileID: 8718519196873657117, guid: 7b95a8093cb5d99449738531f61b9009, type: 3}
     hiddenLogic: 
     logic: "local leftDoor\nlocal rightDoor\nlocal leftDoorDistance = 5\nlocal rightDoorDistance
-      = 5\nfunction start()\n\tleftDoor = this.transform:GetChild(0)\n\trightDoor
-      = this.transform:GetChild(1)\n\n\tthis.cycle:Loop('move', -1, 0.05)\nend\n\nlocal
-      isOpen = false\nfunction move()\n\tif isOpen then\n\t\tleftDoor.position =
-      leftDoor.position + ((leftDoor.left * leftDoorDistance + leftDoor.position)
-      - leftDoor.position).normalized * speed\n\t\trightDoor.position = rightDoor.position
-      + ((rightDoor.left * leftDoorDistance + rightDoor.position) -rightDoor.position).normalized
-      * speed\n\telse\n\n\tend\nend"
+      = 5\nlocal speed = 10\nlocal leftTarget\nlocal rightTarget\nlocal leftOri\nlocal
+      rightOri\nfunction start()\n\tleftDoor = this.transform:GetChild(0)\n\trightDoor
+      = this.transform:GetChild(1)\n\tleftTarget = leftDoor.position + (-leftDoor.right
+      * leftDoorDistance)\n\trightTarget = rightDoor.position + (rightDoor.right
+      * rightDoorDistance)\n\tleftOri = leftDoor.position\n\trightOri = rightDoor.position\n\n\tthis.cycle:Loop('move',
+      -1, 0.05)\nend\n\nlocal isOpen = false\nfunction move()\n\tif isOpen then\n\t\tleftDoor.position
+      = leftDoor.position + (leftTarget - leftDoor.position).normalized * speed\n\t\trightDoor.position
+      = rightDoor.position + (rightTarget - rightDoor.position).normalized * speed\n\telse\n\t\tleftDoor.position
+      = leftDoor.position + (leftOri - leftDoor.position).normalized * speed\n\t\trightDoor.position
+      = rightDoor.position + (rightOri - rightDoor.position).normalized * speed\n\tend\nend"
+  - objectName: Text
+    spacing: 0.2
+    model: {fileID: 2966073756694511296, guid: af620c61312746c4894555ebdced1bd4, type: 3}
+    hiddenLogic: 
+    logic: "local textmesh\nfunction start()\n\ttextmesh = Game:GetText(this.transform)\nend"
