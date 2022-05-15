@@ -17,7 +17,9 @@ public class SoundManagerScript : MonoBehaviour
         clickButtonSound = Resources.Load<AudioClip>("buttonClick1");
         deathSound = Resources.Load<AudioClip>("death");
 
+
         audioSrc = GetComponent<AudioSource>();
+        audioSrc.volume = 0.4f;
     }
 
     // Update is called once per frame
