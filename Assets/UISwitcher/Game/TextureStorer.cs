@@ -24,8 +24,16 @@ public class TextureStorer : MonoBehaviour
             }
         }
         Texture2D tex = await GameUI.GetRemoteTexture(url);
-        data.Add(new TextureData{ url = url, texture = tex });
-        return tex;
+        if (tex != null)
+        {
+            data.Add(new TextureData { url = url, texture = tex });
+            if (data.Count > 25)
+            {
+                data.Clear();
+            }
+            return tex;
+        }
+        return null;
     }
 
     [System.Serializable]

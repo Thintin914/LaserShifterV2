@@ -135,7 +135,7 @@ public class EditorUI : MonoBehaviour
         currentMapObject = new CurrentMapObject();
     }
 
-    public void SwitchUI(string uiName)
+    public async void SwitchUI(string uiName)
     {
         if (uiName == "Editor")
         {
@@ -160,6 +160,7 @@ public class EditorUI : MonoBehaviour
             if (levelName.StartsWith("Tutorial"))
             {
                 Remove();
+                await Task.Delay(100);
                 UISwitcher.Instance.SetUI("Studio");
                 StudioUI.Instance.GoToStudio();
             }
