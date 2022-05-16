@@ -9563,15 +9563,15 @@ MonoBehaviour:
   - userId: 2
     index: 31
   - userId: 2
-    index: 31
+    index: 30
   - userId: 2
-    index: 28
+    index: 27
   - userId: 2
     index: 18
   - userId: 2
-    index: 29
+    index: 28
   - userId: 2
-    index: 30
+    index: 29
   - userId: 2
     index: 21
   - userId: 2
@@ -9580,8 +9580,6 @@ MonoBehaviour:
     index: 8
   - userId: 2
     index: 24
-  - userId: 2
-    index: 25
   - userId: 2
     index: 3
 --- !u!4 &1570975710
