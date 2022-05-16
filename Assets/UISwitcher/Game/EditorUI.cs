@@ -159,8 +159,8 @@ public class EditorUI : MonoBehaviour
             }
             if (levelName.StartsWith("Tutorial"))
             {
-                Remove();
                 await Task.Delay(100);
+                Remove();
                 UISwitcher.Instance.SetUI("Studio");
                 StudioUI.Instance.GoToStudio();
             }

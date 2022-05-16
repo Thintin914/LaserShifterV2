@@ -94,19 +94,12 @@ public class LifeCycle
                 {
                     lifeCycle.functions[functionName]?.Invoke(parameters);
 
-                    if (waitTime <= 0.05f)
+                    do
                     {
+                        eclipsedTime += Time.deltaTime;
                         await Task.Yield();
-                    }
-                    else
-                    {
-                        do
-                        {
-                            eclipsedTime += Time.deltaTime;
-                            await Task.Yield();
-                        } while (eclipsedTime < waitTime);
-                        eclipsedTime = 0;
-                    }
+                    } while (eclipsedTime < waitTime);
+                    eclipsedTime = 0;
                     if (cancelSource.IsCancellationRequested)
                     {
                         return;
